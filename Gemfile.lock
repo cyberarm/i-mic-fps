@@ -1,0 +1,21 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    glu (8.3.0)
+    glut (8.3.0)
+    gosu (0.13.1)
+    opengl (0.10.0)
+    wavefront (0.1.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  glu
+  glut
+  gosu
+  opengl
+  wavefront
+
+BUNDLED WITH
+   1.16.1
