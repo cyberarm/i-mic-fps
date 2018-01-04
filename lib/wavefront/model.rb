@@ -16,17 +16,16 @@ class IMICFPS
         @current_object= nil
         @vertex_count  = 0
         @objects  = []
+        @vertices = []
+        @uvs      = []
+        @normals  = []
+        @faces    = []
         @color = Color.new(0.5, 0.5, 0.5)
-        @verts = []
-        @norms = []
         parse
-        vertex_count = 0
-        face_count   = 0
-        @objects.each {|o| face_count+=o.vertexes.count}
-        puts "vertexes count: #{@vertex_count} Objects: #{face_count}"
-        form_faces
-        @objects.each do |o|
-          puts "LLF-#{o.faces.size}"
+        face_count = 0
+        @objects.each {|o| face_count+=o.faces.size}
+        @objects.each_with_index do |o, i|
+          puts "OBJECT FACES: Name: #{o.name} #{o.faces.size}, array size divided by 3: #{o.faces.size.to_f/3.0}"
         end
       end
 
@@ -35,25 +34,26 @@ class IMICFPS
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
         glBegin(GL_TRIANGLES) # begin drawing model
-        @objects.each do |o|
-          puts "LL..#{o.faces.size}"
-          o.faces.each do |vert|
+        # @objects.each_with_index do |o, i|
+          @faces.each do |vert|
             vertex = vert[0]
-            normal = vert[1]
+            uv     = vert[1]
+            normal = vert[2]
+            color = vert[3]
+            # p vert if i > 0
 
-            glColor3f(@color.red, @color.green, @color.blue)
+            glColor3f(color.red, color.green, color.blue)
             glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [@color.red, @color.green, @color.blue, 1.0])
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [@color.red, @color.green, @color.blue, 1.0])
             glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1,1,1,1])
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [10.0])
-
             glNormal3f(normal.x, normal.y, normal.z)
             glVertex3f(vertex.x, vertex.y, vertex.z)
           end
           glEnd
           glDisable(GL_CULL_FACE)
           glDisable(GL_COLOR_MATERIAL)
-        end
+        # end
       end
 
       def parse
@@ -81,9 +81,23 @@ class IMICFPS
             add_normal(array)
 
           when 'f'
+            verts = []
+            uvs   = []
+            norms = []
             array[1..3].each do |f|
-              @verts << f.split("/")[0]
-              @norms << f.split("/")[2]
+              verts << f.split("/")[0]
+              uvs   << f.split("/")[1]
+              norms << f.split("/")[2]
+            end
+
+            verts.each_with_index do |v, index|
+              if uvs.first != ""
+                face = [@vertices[Integer(v)-1], @uvs[Integer(uvs[index])-1], @normals[Integer(norms[index])-1], material]
+              else
+                face = [@vertices[Integer(v)-1], nil, @normals[Integer(norms[index])-1], material]
+              end
+              @current_object.faces << face
+              @faces << face
             end
           end
         end
@@ -118,6 +132,9 @@ class IMICFPS
       def set_material(name)
         # @current_object.
       end
+      def material
+        Color.new(rand(0.1..1.0), rand(0.1..1.0), rand(0.1..1.0))
+      end
 
       def faces_count
         count = 0
@@ -135,7 +152,7 @@ class IMICFPS
         else
           raise
         end
-        @current_object.vertexes << vert
+        @vertices << vert
       end
 
       def add_normal(array)
@@ -147,7 +164,7 @@ class IMICFPS
         else
           raise
         end
-        @current_object.normals << vert
+        @normals << vert
       end
 
       def add_texture_coordinate(array)
@@ -159,41 +176,7 @@ class IMICFPS
         else
           raise
         end
-        @current_object.textures << texture
-      end
-
-      def form_faces
-        @verts.each_with_index do |v, index|
-          active_object = nil
-          # Look for active object
-          search_index = Integer(v)-1
-          local_search = 0
-          search_object_index = 0
-          found = false
-          @objects.each_with_index do |o, i|
-            local_search=search_index-i
-            search_object_index = i
-            if  local_search.between?(local_search, local_search+o.vertexes.count-1)
-              active_object = o
-              found = true
-              break
-            end
-          end
-
-          raise "active_object is nil!" if active_object == nil
-          face = [active_object.vertexes[Integer(v)-local_search-1], active_object.normals[Integer(@norms[index])-1]]
-          if face.last == nil
-            p Integer(v)-local_search-1
-            p active_object.normals[@norms[index].to_i]
-            p Integer(@norms[index])-local_search-1
-            puts "V: #{active_object.vertexes.count-1}, T: #{Integer(v)-1}"
-            puts "Vertex: #{v}/#{Integer(v)-1}/#{Integer(v)-local_search-1}
-            Normal: #{index}/#{Integer(@norms[index])-1}/#{Integer(@norms[index])-local_search-1}"
-            raise "Bad data!"
-          end
-
-          active_object.faces << face
-        end
+        @uvs << texture
       end
     end
   end

@@ -2,7 +2,7 @@ class IMICFPS
   class Wavefront
     class Object
       attr_reader :name
-      attr_accessor :vertexes, :texures, :normals, :faces
+      attr_accessor :faces
 
       def initialize(name)
         @name = name

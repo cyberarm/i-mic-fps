@@ -10,7 +10,7 @@ class IMICFPS
       # super(Gosu.screen_width, Gosu.screen_height, true)
       $window = self
       @model = Wavefront::Model.new("objects/cube.obj")
-      # @model = Object.new("objects/sponza.obj")
+      # @model = Wavefront::Model.new("objects/sponza.obj")
       @camera = Wavefront::Model::Vertex.new(0,-1,0)
       @camera_target = Wavefront::Model::Vertex.new(0,-1,0)
       @speed = 0.05
