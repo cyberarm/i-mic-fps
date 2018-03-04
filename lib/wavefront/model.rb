@@ -5,17 +5,19 @@ class IMICFPS
       include GLU
       TextureCoordinate = Struct.new(:u, :v, :weight)
       Vertex = Struct.new(:x, :y, :z, :weight)
-      Color = Struct.new(:red, :green, :blue)
+      Color = Struct.new(:red, :green, :blue, :alpha)
 
-      attr_accessor :objects, :vertexes, :texures, :normals, :faces
+      attr_accessor :objects, :materials, :vertexes, :texures, :normals, :faces
 
       def initialize(object = "objects/cube.obj")
         @object_path = object
         @file = File.open(object, 'r')
-        @material_file = nil
-        @current_object= nil
+        @material_file  = nil
+        @current_object = nil
+        @current_material=nil
         @vertex_count  = 0
         @objects  = []
+        @materials= {}
         @vertices = []
         @uvs      = []
         @normals  = []
@@ -44,16 +46,15 @@ class IMICFPS
         glBegin(GL_TRIANGLES) # begin drawing model
         @objects.each_with_index do |o, i|
           o.faces.each do |vert|
-            vertex = vert[0]
-            uv     = vert[1]
-            normal = vert[2]
-            color  = vert[3]
-            # p vert if i > 0
+            vertex   = vert[0]
+            uv       = vert[1]
+            normal   = vert[2]
+            material = vert[3]
 
-            glColor3f(color.red, color.green, color.blue)
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [@color.red, @color.green, @color.blue, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [@color.red, @color.green, @color.blue, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1,1,1,1])
+            glColor3f(material.diffuse.red, material.diffuse.green, material.diffuse.blue)
+            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [material.ambient.red, material.ambient.green, material.ambient.blue, 1.0])
+            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [material.diffuse.red, material.diffuse.green, material.diffuse.blue, 1.0])
+            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [material.specular.red, material.specular.green, material.specular.blue, 1.0])
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [10.0])
             glNormal3f(normal.x*scale, normal.y*scale, normal.z*scale)
             glVertex3f(vertex.x*scale, vertex.y*scale, vertex.z*scale)
@@ -119,10 +120,16 @@ class IMICFPS
           # puts array.join
           case array.first
           when 'newmtl'
+            material = Material.new(array.last)
+            @current_material = array.last
+            @materials[array.last] = material
           when 'Ns' # Specular Exponent
           when 'Ka' # Ambient
+            @materials[@current_material].ambient  = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
           when 'Kd' # Diffuse
+            @materials[@current_material].diffuse  = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
           when 'Ks' # Specular
+            @materials[@current_material].specular = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
           when 'Ke' # Emissive
           when 'Ni' # Unknown (Blender Specific?)
           when 'd'  # Dissolved (Transparency)
@@ -137,11 +144,11 @@ class IMICFPS
       end
 
       def set_material(name)
-        # @current_object.
+        @current_material = name
       end
 
       def material
-        Color.new(rand(0.1..1.0), rand(0.1..1.0), rand(0.1..1.0))
+        @materials[@current_material]
       end
 
       def faces_count
