@@ -42,7 +42,6 @@ class IMICFPS
     def render
       gl do
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
-        glShadeModel(GL_SMOOTH)
 
         #glMatrixMode(matrix) indicates that following [matrix] is going to get used
         glMatrixMode(GL_PROJECTION) # The projection matrix is responsible for adding perspective to our scene.

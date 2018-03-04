@@ -22,7 +22,7 @@ class IMICFPS
         @uvs      = []
         @normals  = []
         @faces    = []
-        @color = Color.new(0.5, 0.5, 0.5)
+        @smoothing= 0
         parse
         face_count = 0
         @objects.each {|o| face_count+=o.faces.size}
@@ -40,11 +40,13 @@ class IMICFPS
       end
 
       def render(scale = 1)
-        glEnable(GL_CULL_FACE)
-        glEnable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
-        glBegin(GL_TRIANGLES) # begin drawing model
         @objects.each_with_index do |o, i|
+          glEnable(GL_CULL_FACE)
+          glEnable(GL_COLOR_MATERIAL)
+          glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+          glShadeModel(GL_FLAT) unless o.faces.first[4]
+          glShadeModel(GL_SMOOTH) if o.faces.first[4]
+          glBegin(GL_TRIANGLES) # begin drawing model
           o.faces.each do |vert|
             vertex   = vert[0]
             uv       = vert[1]
@@ -59,10 +61,10 @@ class IMICFPS
             glNormal3f(normal.x*scale, normal.y*scale, normal.z*scale)
             glVertex3f(vertex.x*scale, vertex.y*scale, vertex.z*scale)
           end
+          glEnd
+          glDisable(GL_CULL_FACE)
+          glDisable(GL_COLOR_MATERIAL)
         end
-        glEnd
-        glDisable(GL_CULL_FACE)
-        glDisable(GL_COLOR_MATERIAL)
       end
 
       def parse
@@ -80,6 +82,8 @@ class IMICFPS
             set_material(array[1])
           when 'o'
             change_object(array[1])
+          when 's'
+            set_smoothing(array[1])
           when 'v'
             add_vertex(array)
           when 'vt'
@@ -100,9 +104,9 @@ class IMICFPS
 
             verts.each_with_index do |v, index|
               if uvs.first != ""
-                face = [@vertices[Integer(v)-1], @uvs[Integer(uvs[index])-1], @normals[Integer(norms[index])-1], material]
+                face = [@vertices[Integer(v)-1], @uvs[Integer(uvs[index])-1], @normals[Integer(norms[index])-1], material, @smoothing]
               else
-                face = [@vertices[Integer(v)-1], nil, @normals[Integer(norms[index])-1], material]
+                face = [@vertices[Integer(v)-1], nil, @normals[Integer(norms[index])-1], material, @smoothing]
               end
               @current_object.faces << face
               @faces << face
@@ -141,6 +145,14 @@ class IMICFPS
       def change_object(name)
         @objects << Object.new(name)
         @current_object = @objects.last
+      end
+
+      def set_smoothing(value)
+        if value == "1"
+          @smoothing = true
+        else
+          @smoothing = false
+        end
       end
 
       def set_material(name)
