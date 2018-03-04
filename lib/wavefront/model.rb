@@ -29,17 +29,25 @@ class IMICFPS
         end
       end
 
-      def draw
+      def draw(scale = 1)
+        begin
+          render(scale)
+        rescue Gl::Error => e
+          p e
+        end
+      end
+
+      def render(scale = 1)
         glEnable(GL_CULL_FACE)
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
         glBegin(GL_TRIANGLES) # begin drawing model
-        # @objects.each_with_index do |o, i|
-          @faces.each do |vert|
+        @objects.each_with_index do |o, i|
+          o.faces.each do |vert|
             vertex = vert[0]
             uv     = vert[1]
             normal = vert[2]
-            color = vert[3]
+            color  = vert[3]
             # p vert if i > 0
 
             glColor3f(color.red, color.green, color.blue)
@@ -47,13 +55,13 @@ class IMICFPS
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [@color.red, @color.green, @color.blue, 1.0])
             glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1,1,1,1])
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [10.0])
-            glNormal3f(normal.x, normal.y, normal.z)
-            glVertex3f(vertex.x, vertex.y, vertex.z)
+            glNormal3f(normal.x*scale, normal.y*scale, normal.z*scale)
+            glVertex3f(vertex.x*scale, vertex.y*scale, vertex.z*scale)
           end
-          glEnd
-          glDisable(GL_CULL_FACE)
-          glDisable(GL_COLOR_MATERIAL)
-        # end
+        end
+        glEnd
+        glDisable(GL_CULL_FACE)
+        glDisable(GL_COLOR_MATERIAL)
       end
 
       def parse
@@ -68,7 +76,6 @@ class IMICFPS
             @material_file = array[1]
             parse_mtllib
           when 'usemtl'
-            # PI*(r*r)
             set_material(array[1])
           when 'o'
             change_object(array[1])
@@ -132,6 +139,7 @@ class IMICFPS
       def set_material(name)
         # @current_object.
       end
+
       def material
         Color.new(rand(0.1..1.0), rand(0.1..1.0), rand(0.1..1.0))
       end

@@ -29,13 +29,17 @@ class IMICFPS
       @diffuse_light = [1, 1, 1, 1]
       @specular_light = [1, 1, 1, 1]
       @light_postion = [1, 1, 1, 0]
-
-      # gl do
-        #
-      # end
     end
 
     def draw
+      begin
+        render
+      rescue Gl::Error => e
+        p e
+      end
+    end
+
+    def render
       gl do
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
         glShadeModel(GL_SMOOTH)
@@ -65,9 +69,10 @@ class IMICFPS
         gluLookAt(@camera.x,@camera.y,@camera.z, @angle_x,@angle_y,0, 0,1,0)
 
         color = [@c1, @c2, @c3]
-        @model.draw
+        @model.draw(1)
 
       end
+
       @text.split("~").each_with_index do |bit, i|
         @font.draw(bit.strip, 10, @font.height*i, Float::INFINITY)
       end
@@ -86,8 +91,8 @@ class IMICFPS
       @last_frame_time = Gosu.milliseconds
 
       # $window.caption = "Gosu OBJ object - FPS:#{Gosu.fps}"
-      @angle_x-=Integer(@mouse.x-self.mouse_x)
-      @angle_y-=Integer(@mouse.y-self.mouse_y)
+      @angle_x+=Integer(@mouse.x-self.mouse_x)
+      @angle_y+=Integer(@mouse.y-self.mouse_y)
       @angle_x = @angle_x.clamp(-360, 360)
       @angle_y = @angle_y.clamp(-360, 360)
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
