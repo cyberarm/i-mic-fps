@@ -96,7 +96,7 @@ class IMICFPS
       @angle_y = @angle_y.clamp(-360, 360)
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
 
-      @light_postion = [-@camera.x, -@camera.y, -@camera.z, 1]
+      @light_postion = [@camera.x, @camera.y, @camera.z, 1]
       # @light_postion = [1.0, 0.249, 4.09, 1]
 
       @camera.x-=@speed if $window.button_down?(Gosu::KbRight)

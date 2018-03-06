@@ -46,6 +46,7 @@ class IMICFPS
           glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
           glShadeModel(GL_FLAT) unless o.faces.first[4]
           glShadeModel(GL_SMOOTH) if o.faces.first[4]
+          # glBegin(GL_TRIANGLES) # begin drawing model
           glBegin(GL_TRIANGLES) # begin drawing model
           o.faces.each do |vert|
             vertex   = vert[0]
