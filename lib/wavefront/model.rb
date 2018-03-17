@@ -8,8 +8,10 @@ class IMICFPS
       Color = Struct.new(:red, :green, :blue, :alpha)
 
       attr_accessor :objects, :materials, :vertexes, :texures, :normals, :faces
+      attr_accessor :x, :y, :z
 
       def initialize(object = "objects/cube.obj")
+        @x, @y, @z = 0, 0, 0
         @object_path = object
         @file = File.open(object, 'r')
         @material_file  = nil
@@ -31,15 +33,17 @@ class IMICFPS
         end
       end
 
-      def draw(scale = 1)
+      def draw(x, y, z, scale = 1)
         begin
-          render(scale)
+          render(x,y,z, scale)
         rescue Gl::Error => e
           p e
         end
       end
 
-      def render(scale = 1)
+      def render(x,y,z, scale = 1)
+        glTranslatef(x,y,z)
+        glScalef(scale,scale,scale)
         @objects.each_with_index do |o, i|
           glEnable(GL_CULL_FACE)
           glEnable(GL_COLOR_MATERIAL)
@@ -59,8 +63,8 @@ class IMICFPS
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [material.diffuse.red, material.diffuse.green, material.diffuse.blue, 1.0])
             glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [material.specular.red, material.specular.green, material.specular.blue, 1.0])
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [10.0])
-            glNormal3f(normal.x*scale, normal.y*scale, normal.z*scale)
-            glVertex3f(vertex.x*scale, vertex.y*scale, vertex.z*scale)
+            glNormal3f(normal.x, normal.y, normal.z)
+            glVertex3f(vertex.x, vertex.y, vertex.z)
           end
           glEnd
           glDisable(GL_CULL_FACE)

@@ -9,7 +9,8 @@ class IMICFPS
       super(window_width, window_height, fullscreen)
       # super(Gosu.screen_width, Gosu.screen_height, true)
       $window = self
-      @model = Wavefront::Model.new("objects/cube.obj")
+      @model = Wavefront::Model.new("objects/biped.obj")
+      @model2 = Wavefront::Model.new("objects/tree.obj")
       # @model = Wavefront::Model.new("objects/sponza.obj")
       @camera = Wavefront::Model::Vertex.new(0,-1,0)
       @camera_target = Wavefront::Model::Vertex.new(0,-1,0)
@@ -68,7 +69,8 @@ class IMICFPS
         gluLookAt(@camera.x,@camera.y,@camera.z, @angle_x,@angle_y,0, 0,1,0)
 
         color = [@c1, @c2, @c3]
-        @model.draw(1)
+        @model.draw(0, 0, 0, 0.005)
+        @model2.draw(5, 0, 0, 0.005)
 
       end
 
