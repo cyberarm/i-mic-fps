@@ -3,7 +3,6 @@ require "glu"
 require "glut"
 require "gosu"
 require "fiddle"
-# require "wavefront"
 
 require_relative "lib/wavefront/model"
 require_relative "lib/wavefront/object"
