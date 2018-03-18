@@ -10,7 +10,7 @@ class IMICFPS
       # super(Gosu.screen_width, Gosu.screen_height, true)
       $window = self
       @model = Wavefront::Model.new("objects/biped.obj")
-      @model2 = Wavefront::Model.new("objects/tree.obj")
+      @tree = Wavefront::Model.new("objects/tree.obj")
       # @model = Wavefront::Model.new("objects/sponza.obj")
       @camera = Wavefront::Model::Vertex.new(0,-1,0)
       @camera_target = Wavefront::Model::Vertex.new(0,-1,0)
@@ -26,7 +26,7 @@ class IMICFPS
       @tick = 0
       @c1, @c2, @c3 = rand(0.0..1.0), rand(0.0..1.0), rand(0.0..1.0)
 
-      @ambient_light = [0, 0, 0, 1]
+      @ambient_light = [0.5, 0.5, 0.5, 1]
       @diffuse_light = [1, 1, 1, 1]
       @specular_light = [0.2, 0.2, 0.2, 1]
       @light_postion = [1, 1, 1, 0]
@@ -42,6 +42,7 @@ class IMICFPS
 
     def render
       gl do
+        glClearColor(0,0.2,0.5,1) # skyish blue
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
 
         #glMatrixMode(matrix) indicates that following [matrix] is going to get used
@@ -49,7 +50,7 @@ class IMICFPS
         glLoadIdentity # Resets current modelview matrix
 
         # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
-        gluPerspective(90.0, width / height, 0.1, 100.0)
+        gluPerspective(90.0, width / height, 0.1, 1000.0)
         glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
         glLoadIdentity
         # Think 3-d coordinate system (x,y,z). +- on each movies on that axis
@@ -69,8 +70,10 @@ class IMICFPS
         # gluLookAt(@camera.x,@camera.y,@camera.z, @angle_x,@angle_y,0, 0,1,0)
 
         color = [@c1, @c2, @c3]
-        @model.draw(0, 0, 0, 0.0009)
-        @model2.draw(5, 0, 0, 0.0009)
+        @model.draw(1, 0, 0, 0.0009)
+        @tree.draw(5, 0, 0, 0.0009)
+        @tree.draw(5, 0, 1, 0.0009)
+        @tree.draw(3, 0, 10, 0.0009)
 
       end
 
@@ -94,7 +97,8 @@ class IMICFPS
       # $window.caption = "Gosu OBJ object - FPS:#{Gosu.fps}"
       @angle_x-=Integer(@mouse.x-self.mouse_x)
       @angle_y-=Integer(@mouse.y-self.mouse_y)
-      @angle_x = @angle_x.clamp(-360, 360)
+      # @angle_x = @angle_x.clamp(-361, 361)
+      @angle_x %= 360
       @angle_y = @angle_y.clamp(-90, 90)
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
 
