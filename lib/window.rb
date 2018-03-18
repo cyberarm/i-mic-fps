@@ -28,7 +28,7 @@ class IMICFPS
 
       @ambient_light = [0, 0, 0, 1]
       @diffuse_light = [1, 1, 1, 1]
-      @specular_light = [1, 1, 1, 1]
+      @specular_light = [0.2, 0.2, 0.2, 1]
       @light_postion = [1, 1, 1, 0]
     end
 
@@ -62,11 +62,11 @@ class IMICFPS
         glEnable(GL_LIGHT0)
         glEnable(GL_DEPTH_TEST)
 
-        # glRotatef(@angle_y,0,1,0)
-        # glRotatef(@angle_x,1,0,0)
-        # glTranslate(@x, @y, @z)
+        glRotatef(@angle_y,1,0,0)
+        glRotatef(@angle_x,0,1,0)
+        glTranslate(@camera.x, @camera.y, @camera.z)
         # glPointSize(5.0)
-        gluLookAt(@camera.x,@camera.y,@camera.z, @angle_x,@angle_y,0, 0,1,0)
+        # gluLookAt(@camera.x,@camera.y,@camera.z, @angle_x,@angle_y,0, 0,1,0)
 
         color = [@c1, @c2, @c3]
         @model.draw(0, 0, 0, 0.0009)
@@ -92,10 +92,10 @@ class IMICFPS
       @last_frame_time = Gosu.milliseconds
 
       # $window.caption = "Gosu OBJ object - FPS:#{Gosu.fps}"
-      @angle_x+=Integer(@mouse.x-self.mouse_x)
-      @angle_y+=Integer(@mouse.y-self.mouse_y)
+      @angle_x-=Integer(@mouse.x-self.mouse_x)
+      @angle_y-=Integer(@mouse.y-self.mouse_y)
       @angle_x = @angle_x.clamp(-360, 360)
-      @angle_y = @angle_y.clamp(-360, 360)
+      @angle_y = @angle_y.clamp(-90, 90)
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
 
       @light_postion = [@camera.x, @camera.y, @camera.z, 0]
