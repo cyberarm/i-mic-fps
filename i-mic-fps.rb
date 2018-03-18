@@ -1,6 +1,6 @@
 require "opengl"
 require "glu"
-require "glut"
+# require "glut"
 require "gosu"
 require "fiddle"
 

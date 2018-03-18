@@ -2,7 +2,7 @@ class IMICFPS
   class Window < Gosu::Window
     include GL
     include GLU
-    include GLUT
+    # include GLUT
     Point = Struct.new(:x, :y)
 
     def initialize(window_width = 1280, window_height = 800, fullscreen = false)

@@ -2,7 +2,7 @@ class IMICFPS
   class Wavefront
     class Model
       include GL
-      include GLU
+      # include GLU
       TextureCoordinate = Struct.new(:u, :v, :weight)
       Vertex = Struct.new(:x, :y, :z, :weight)
       Color = Struct.new(:red, :green, :blue, :alpha)
@@ -42,7 +42,10 @@ class IMICFPS
       end
 
       def render(x,y,z, scale = 1)
+        glEnable(GL_NORMALIZE)
+        glPushMatrix
         glTranslatef(x,y,z)
+        glScalef(scale, scale, scale)
         @objects.each_with_index do |o, i|
           glEnable(GL_CULL_FACE)
           glEnable(GL_COLOR_MATERIAL)
@@ -63,12 +66,14 @@ class IMICFPS
             glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [material.specular.red, material.specular.green, material.specular.blue, 1.0])
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [10.0])
             glNormal3f(normal.x, normal.y, normal.z) # Don't scale normals
-            glVertex3f(vertex.x*scale, vertex.y*scale, vertex.z*scale)
+            # glVertex3f(vertex.x*scale, vertex.y*scale, vertex.z*scale)
+            glVertex3f(vertex.x, vertex.y, vertex.z)
           end
           glEnd
           glDisable(GL_CULL_FACE)
           glDisable(GL_COLOR_MATERIAL)
         end
+        glPopMatrix
       end
 
       def parse
