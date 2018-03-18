@@ -15,10 +15,11 @@ class IMICFPS
       @camera = Wavefront::Model::Vertex.new(0,-1,0)
       @camera_target = Wavefront::Model::Vertex.new(0,-1,0)
       @speed = 0.05
-      @angle_y = 0 # |
-      @angle_x = 0 # _
+      @angle_y = 0.0 # |
+      @angle_x = 0.0 # _
       @mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
+      @mouse_sesitivity = 5.0
 
       @font = Gosu::Font.new(18, name: "DejaVu Sans")
       @text = "Hello There"
@@ -27,7 +28,7 @@ class IMICFPS
       @c1, @c2, @c3 = rand(0.0..1.0), rand(0.0..1.0), rand(0.0..1.0)
 
       @ambient_light = [0.5, 0.5, 0.5, 1]
-      @diffuse_light = [1, 1, 1, 1]
+      @diffuse_light = [1, 0.5, 0, 1]
       @specular_light = [0.2, 0.2, 0.2, 1]
       @light_postion = [1, 1, 1, 0]
     end
@@ -83,7 +84,7 @@ class IMICFPS
     end
 
     def update
-      @text = "Open Vendor: #{glGetString(GL_VENDOR)}~
+      @text = "OpenGL Vendor: #{glGetString(GL_VENDOR)}~
       OpenGL Renderer: #{glGetString(GL_RENDERER)} ~
       OpenGL Version: #{glGetString(GL_VERSION)}~
       OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}~
@@ -95,20 +96,31 @@ class IMICFPS
       @last_frame_time = Gosu.milliseconds
 
       # $window.caption = "Gosu OBJ object - FPS:#{Gosu.fps}"
-      @angle_x-=Integer(@mouse.x-self.mouse_x)
-      @angle_y-=Integer(@mouse.y-self.mouse_y)
-      # @angle_x = @angle_x.clamp(-361, 361)
-      @angle_x %= 360
-      @angle_y = @angle_y.clamp(-90, 90)
+      @angle_x-=Float(@mouse.x-self.mouse_x)/@mouse_sesitivity
+      @angle_y-=Float(@mouse.y-self.mouse_y)/@mouse_sesitivity
+      @angle_x %= 360.0
+      @angle_y = @angle_y.clamp(-90.0, 90.0)
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
 
       @light_postion = [@camera.x, @camera.y, @camera.z, 0]
       # @light_postion = [0.0, 10, 0, 0]
 
-      @camera.x-=@speed if $window.button_down?(Gosu::KbRight)
-      @camera.x+=@speed if $window.button_down?(Gosu::KbLeft)
-      @camera.z+=@speed if $window.button_down?(Gosu::KbUp)
-      @camera.z-=@speed if $window.button_down?(Gosu::KbDown)
+      if button_down?(Gosu::KbUp) || button_down?(Gosu::KbW)
+        @camera.z+=Math.cos(@angle_x * Math::PI / 180)*@speed
+        @camera.x-=Math.sin(@angle_x * Math::PI / 180)*@speed
+      end
+      if button_down?(Gosu::KbDown) || button_down?(Gosu::KbS)
+        @camera.z-=Math.cos(@angle_x * Math::PI / 180)*@speed
+        @camera.x+=Math.sin(@angle_x * Math::PI / 180)*@speed
+      end
+      if button_down?(Gosu::KbLeft) || button_down?(Gosu::KbA)
+        @camera.z+=Math.sin(@angle_x * Math::PI / 180)*@speed
+        @camera.x+=Math.cos(@angle_x * Math::PI / 180)*@speed
+      end
+      if button_down?(Gosu::KbRight) || button_down?(Gosu::KbD)
+        @camera.z-=Math.sin(@angle_x * Math::PI / 180)*@speed
+        @camera.x-=Math.cos(@angle_x * Math::PI / 180)*@speed
+      end
 
       @camera.y+=@speed if $window.button_down?(Gosu::KbLeftShift)
       @camera.y-=@speed if $window.button_down?(Gosu::KbSpace)
