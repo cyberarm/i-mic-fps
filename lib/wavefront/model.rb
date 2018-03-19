@@ -1,7 +1,7 @@
 class IMICFPS
   class Wavefront
     class Model
-      include GL
+      include OpenGL
       # include GLU
       TextureCoordinate = Struct.new(:u, :v, :weight)
       Vertex = Struct.new(:x, :y, :z, :weight)
@@ -31,46 +31,55 @@ class IMICFPS
         @objects.each_with_index do |o, i|
           puts "OBJECT FACES: Name: #{o.name} #{o.faces.size}, array size divided by 3: #{o.faces.size.to_f/3.0}"
         end
+        $window.number_of_faces+=face_count
       end
 
-      def draw(x, y, z, scale = 1)
-        begin
-          render(x,y,z, scale)
-        rescue Gl::Error => e
-          p e
-        end
+      def draw(x, y, z, scale = MODEL_METER_SCALE, back_face_culling = true)
+        # begin
+          render(x,y,z, scale, back_face_culling)
+        # rescue Gl::Error => e
+          # p e
+        # end
       end
 
-      def render(x,y,z, scale = 1)
+      def render(x,y,z, scale, back_face_culling)
         glEnable(GL_NORMALIZE)
         glPushMatrix
         glTranslatef(x,y,z)
         glScalef(scale, scale, scale)
         @objects.each_with_index do |o, i|
-          glEnable(GL_CULL_FACE)
+          glEnable(GL_CULL_FACE) if back_face_culling
           glEnable(GL_COLOR_MATERIAL)
           glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
           glShadeModel(GL_FLAT) unless o.faces.first[4]
           glShadeModel(GL_SMOOTH) if o.faces.first[4]
+          glEnableClientState(GL_VERTEX_ARRAY)
+          glEnableClientState(GL_COLOR_ARRAY)
+          glEnableClientState(GL_NORMAL_ARRAY)
+          glVertexPointer(3, GL_FLOAT, 0, o.flattened_vertices)
+          glColorPointer(3, GL_FLOAT, 0, o.flattened_materials)
+          glNormalPointer(GL_FLOAT, 0, o.flattened_normals)
+          glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices.count/3)
           # glBegin(GL_TRIANGLES) # begin drawing model
-          glBegin(GL_TRIANGLES) # begin drawing model
-          o.faces.each do |vert|
-            vertex   = vert[0]
-            uv       = vert[1]
-            normal   = vert[2]
-            material = vert[3]
-
-            glColor3f(material.diffuse.red, material.diffuse.green, material.diffuse.blue)
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [material.ambient.red, material.ambient.green, material.ambient.blue, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [material.diffuse.red, material.diffuse.green, material.diffuse.blue, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [material.specular.red, material.specular.green, material.specular.blue, 1.0])
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [10.0])
-            glNormal3f(normal.x, normal.y, normal.z) # Don't scale normals
-            # glVertex3f(vertex.x*scale, vertex.y*scale, vertex.z*scale)
-            glVertex3f(vertex.x, vertex.y, vertex.z)
-          end
-          glEnd
-          glDisable(GL_CULL_FACE)
+          # o.faces.each do |vert|
+          #   vertex   = vert[0]
+          #   uv       = vert[1]
+          #   normal   = vert[2]
+          #   material = vert[3]
+          #
+          #   glColor3f(material.diffuse.red, material.diffuse.green, material.diffuse.blue)
+          #   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [material.ambient.red, material.ambient.green, material.ambient.blue, 1.0].pack("f*"))
+          #   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [material.diffuse.red, material.diffuse.green, material.diffuse.blue, 1.0].pack("f*"))
+          #   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [material.specular.red, material.specular.green, material.specular.blue, 1.0].pack("f*"))
+          #   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [10.0].pack("f*"))
+          #   glNormal3f(normal.x, normal.y, normal.z) # Don't scale normals
+          #   glVertex3f(vertex.x, vertex.y, vertex.z)
+          # end
+          # glEnd
+          glDisableClientState(GL_VERTEX_ARRAY)
+          glDisableClientState(GL_COLOR_ARRAY)
+          glDisableClientState(GL_NORMAL_ARRAY)
+          glDisable(GL_CULL_FACE) if back_face_culling
           glDisable(GL_COLOR_MATERIAL)
         end
         glPopMatrix
@@ -188,6 +197,7 @@ class IMICFPS
         else
           raise
         end
+        @current_object.vertices << vert
         @vertices << vert
       end
 
@@ -200,6 +210,7 @@ class IMICFPS
         else
           raise
         end
+        @current_object.normals << vert
         @normals << vert
       end
 
@@ -212,6 +223,7 @@ class IMICFPS
         else
           raise
         end
+        @current_object.textures << texture
         @uvs << texture
       end
     end

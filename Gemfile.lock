@@ -3,10 +3,8 @@ GEM
   specs:
     glu (8.3.0)
     glu (8.3.0-x86-mingw32)
-    glut (8.3.0)
-    glut (8.3.0-x86-mingw32)
-    gosu (0.13.2)
-    gosu (0.13.2-x86-mingw32)
+    gosu (0.13.3)
+    gosu (0.13.3-x86-mingw32)
     opengl (0.10.0)
     opengl (0.10.0-x86-mingw32)
     wavefront (0.1.2)
@@ -17,7 +15,6 @@ PLATFORMS
 
 DEPENDENCIES
   glu
-  glut
   gosu
   opengl
   wavefront

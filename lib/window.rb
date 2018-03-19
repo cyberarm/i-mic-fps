@@ -1,15 +1,21 @@
 class IMICFPS
   class Window < Gosu::Window
-    include GL
+    include OpenGL
     include GLU
     # include GLUT
     Point = Struct.new(:x, :y)
+
+    attr_accessor :number_of_faces
 
     def initialize(window_width = 1280, window_height = 800, fullscreen = false)
       super(window_width, window_height, fullscreen)
       # super(Gosu.screen_width, Gosu.screen_height, true)
       $window = self
+      @number_of_faces = 0
+      @draw_skydome = true
+      @skydome = Wavefront::Model.new("objects/skydome.obj")
       @model = Wavefront::Model.new("objects/biped.obj")
+      @scene = Wavefront::Model.new("objects/cube.obj")
       @tree = Wavefront::Model.new("objects/tree.obj")
       # @model = Wavefront::Model.new("objects/sponza.obj")
       @camera = Wavefront::Model::Vertex.new(0,-1,0)
@@ -34,11 +40,11 @@ class IMICFPS
     end
 
     def draw
-      begin
+      # begin
         render
-      rescue Gl::Error => e
-        p e
-      end
+      # rescue => e
+        # p e
+      # end
     end
 
     def render
@@ -55,6 +61,10 @@ class IMICFPS
         glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
         glLoadIdentity
         # Think 3-d coordinate system (x,y,z). +- on each movies on that axis
+        # glLightfv(GL_LIGHT0, GL_AMBIENT, @ambient_light.pack("f*"))
+        # glLightfv(GL_LIGHT0, GL_DIFFUSE, @diffuse_light.pack("f*"))
+        # glLightfv(GL_LIGHT0, GL_SPECULAR, @specular_light.pack("f*"))
+        # glLightfv(GL_LIGHT0, GL_POSITION, @light_postion.pack("f*"))
         glLightfv(GL_LIGHT0, GL_AMBIENT, @ambient_light)
         glLightfv(GL_LIGHT0, GL_DIFFUSE, @diffuse_light)
         glLightfv(GL_LIGHT0, GL_SPECULAR, @specular_light)
@@ -66,15 +76,17 @@ class IMICFPS
 
         glRotatef(@angle_y,1,0,0)
         glRotatef(@angle_x,0,1,0)
-        glTranslate(@camera.x, @camera.y, @camera.z)
+        glTranslatef(@camera.x, @camera.y, @camera.z)
         # glPointSize(5.0)
         # gluLookAt(@camera.x,@camera.y,@camera.z, @angle_x,@angle_y,0, 0,1,0)
 
         color = [@c1, @c2, @c3]
-        @model.draw(1, 0, 0, 0.0009)
-        @tree.draw(5, 0, 0, 0.0009)
-        @tree.draw(5, 0, 1, 0.0009)
-        @tree.draw(3, 0, 10, 0.0009)
+        @skydome.draw(0,0,0, 0.4, false) if @draw_skydome
+        @scene.draw(0,0,0, 1)
+        @model.draw(1, 0, 0)
+        @tree.draw(5, 0, 0)
+        @tree.draw(5, 0, 3)
+        @tree.draw(3, 0, 10)
 
       end
 
@@ -91,8 +103,10 @@ class IMICFPS
       ~
       Angle Y: #{@angle_y} Angle X: #{@angle_x} ~
       X:#{@camera.x} Y:#{@camera.y} Z:#{@camera.z} ~
-      Model Faces: #{@model.faces_count} ~
-      Last Frame: #{Gosu.milliseconds-@last_frame_time}ms (#{Gosu.fps} fps)"
+      Faces: #{@number_of_faces} ~
+      Last Frame: #{Gosu.milliseconds-@last_frame_time}ms (#{Gosu.fps} fps)~
+      ~
+      Draw Skydome: #{@draw_skydome}"
       @last_frame_time = Gosu.milliseconds
 
       # $window.caption = "Gosu OBJ object - FPS:#{Gosu.fps}"
@@ -126,6 +140,13 @@ class IMICFPS
       @camera.y-=@speed if $window.button_down?(Gosu::KbSpace)
 
       $window.close if $window.button_down?(Gosu::KbEscape)
+    end
+
+    def button_up(id)
+      case id
+      when Gosu::KbZ
+        @draw_skydome = !@draw_skydome
+      end
     end
   end
 end
