@@ -10,6 +10,12 @@ class IMICFPS
         @textures = []
         @normals  = []
         @faces    = []
+
+        # Faces array packs everything:
+        #   vertex   = index[0]
+        #   uv       = index[1]
+        #   normal   = index[2]
+        #   material = index[3]
       end
 
       def flattened_vertices
@@ -21,7 +27,7 @@ class IMICFPS
               list << v.x
               list << v.y
               list << v.z
-              # list << v.weight
+              list << v.weight
             end
           end
 
@@ -70,6 +76,23 @@ class IMICFPS
         end
 
         return @normals_list
+      end
+
+      def flattened_textures
+        unless @textures_list
+          list = []
+          @faces.each do |face|
+            [face[1]].each do |v|
+              next unless v
+              list << v.x
+              list << v.y
+            end
+          end
+
+          @textures_list = list
+        end
+
+        return @textures_list
       end
     end
   end

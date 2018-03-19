@@ -2,19 +2,19 @@ require 'opengl'
 require 'glu'
 require "gosu"
 
-# case OpenGL.get_platform
-# when :OPENGL_PLATFORM_WINDOWS
-#   OpenGL.load_lib('opengl32.dll', 'C:/Windows/System32')
-#   GLU.load_lib('GLU32.dll', 'C:/Windows/System32')
-# when :OPENGL_PLATFORM_MACOSX
-#   OpenGL.load_lib('libGL.dylib', '/System/Library/Frameworks/OpenGL.framework/Libraries')
-#   GLU.load_lib('libGLU.dylib', '/System/Library/Frameworks/OpenGL.framework/Libraries')
-# when :OPENGL_PLATFORM_LINUX
-#   OpenGL.load_lib('libGL.so', '/usr/lib/x86_64-linux-gnu')
-#   GLU.load_lib('libGLU.so', '/usr/lib/x86_64-linux-gnu')
-# else
-#   raise RuntimeError, "Unsupported platform."
-# end
+case OpenGL.get_platform
+when :OPENGL_PLATFORM_WINDOWS
+  OpenGL.load_lib('opengl32.dll', 'C:/Windows/System32')
+  GLU.load_lib('GLU32.dll', 'C:/Windows/System32')
+when :OPENGL_PLATFORM_MACOSX
+  OpenGL.load_lib('libGL.dylib', '/System/Library/Frameworks/OpenGL.framework/Libraries')
+  GLU.load_lib('libGLU.dylib', '/System/Library/Frameworks/OpenGL.framework/Libraries')
+when :OPENGL_PLATFORM_LINUX
+  OpenGL.load_lib('libGL.so', '/usr/lib/x86_64-linux-gnu')
+  GLU.load_lib('libGLU.so', '/usr/lib/x86_64-linux-gnu')
+else
+  raise RuntimeError, "Unsupported platform."
+end
 
 require_relative "lib/wavefront/model"
 require_relative "lib/wavefront/object"

@@ -43,7 +43,7 @@ class IMICFPS
     def draw
       # begin
         render
-      # rescue => e
+      # rescue Gl::Error => e
         # p e
       # end
     end
@@ -62,14 +62,10 @@ class IMICFPS
         glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
         glLoadIdentity
         # Think 3-d coordinate system (x,y,z). +- on each movies on that axis
-        # glLightfv(GL_LIGHT0, GL_AMBIENT, @ambient_light.pack("f*"))
-        # glLightfv(GL_LIGHT0, GL_DIFFUSE, @diffuse_light.pack("f*"))
-        # glLightfv(GL_LIGHT0, GL_SPECULAR, @specular_light.pack("f*"))
-        # glLightfv(GL_LIGHT0, GL_POSITION, @light_postion.pack("f*"))
-        glLightfv(GL_LIGHT0, GL_AMBIENT, @ambient_light)
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, @diffuse_light)
-        glLightfv(GL_LIGHT0, GL_SPECULAR, @specular_light)
-        glLightfv(GL_LIGHT0, GL_POSITION, @light_postion)
+        glLightfv(GL_LIGHT0, GL_AMBIENT, @ambient_light.pack("f*"))
+        glLightfv(GL_LIGHT0, GL_DIFFUSE, @diffuse_light.pack("f*"))
+        glLightfv(GL_LIGHT0, GL_SPECULAR, @specular_light.pack("f*"))
+        glLightfv(GL_LIGHT0, GL_POSITION, @light_postion.pack("f*"))
         glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1)
         glEnable(GL_LIGHTING)
         glEnable(GL_LIGHT0)
@@ -82,7 +78,7 @@ class IMICFPS
         # gluLookAt(@camera.x,@camera.y,@camera.z, @angle_x,@angle_y,0, 0,1,0)
 
         color = [@c1, @c2, @c3]
-        @skydome.draw(0,0,0, 0.4, false) if @draw_skydome
+        @skydome.draw(0,0,0, 0.004, false) if @draw_skydome
         @scene.draw(0,0,0, 1)
         @model.draw(1, 0, 0)
         @tree.draw(5, 0, 0)
@@ -141,6 +137,7 @@ class IMICFPS
       @camera.y-=@speed if $window.button_down?(Gosu::KbSpace)
 
       $window.close if $window.button_down?(Gosu::KbEscape)
+      @number_of_faces = 0
     end
 
     def button_up(id)
