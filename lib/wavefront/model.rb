@@ -41,13 +41,18 @@ class IMICFPS
         end
       end
 
-      def draw(x, y, z, scale = MODEL_METER_SCALE, back_face_culling = true)
+      def handleGlError
         e = glGetError()
         if e != GL_NO_ERROR
           $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
           exit
         end
+      end
+
+      def draw(x, y, z, scale = MODEL_METER_SCALE, back_face_culling = true)
+        handleGlError
         render(x,y,z, scale, back_face_culling)
+        handleGlError
       end
 
       def render(x,y,z, scale, back_face_culling)
@@ -82,10 +87,10 @@ class IMICFPS
           #   material = vert[3]
           #
           #   glColor3f(material.diffuse.red, material.diffuse.green, material.diffuse.blue)
-          #   glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [material.ambient.red, material.ambient.green, material.ambient.blue, 1.0].pack("f*"))
-          #   glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [material.diffuse.red, material.diffuse.green, material.diffuse.blue, 1.0].pack("f*"))
-          #   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [material.specular.red, material.specular.green, material.specular.blue, 1.0].pack("f*"))
-          #   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [10.0].pack("f*"))
+          #   # glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [material.ambient.red, material.ambient.green, material.ambient.blue, 1.0].pack("f*"))
+          #   # glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [material.diffuse.red, material.diffuse.green, material.diffuse.blue, 1.0].pack("f*"))
+          #   # glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [material.specular.red, material.specular.green, material.specular.blue, 1.0].pack("f*"))
+          #   # glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [10.0].pack("f*"))
           #   glNormal3f(normal.x, normal.y, normal.z) # Don't scale normals
           #   glVertex3f(vertex.x, vertex.y, vertex.z)
           # end

@@ -32,7 +32,7 @@ class IMICFPS
           end
 
           @vertices_list_size = list.size
-          @vertices_list = list.pack("i*")
+          @vertices_list = list.pack("f*")
         end
 
         return @vertices_list
@@ -40,6 +40,44 @@ class IMICFPS
 
       def flattened_vertices_size
         @vertices_list_size
+      end
+
+      def flattened_textures
+        unless @textures_list
+          list = []
+          @faces.each do |face|
+            [face[1]].each do |v|
+              next unless v
+              list << v.x
+              list << v.y
+            end
+          end
+
+          @textures_list_size = list.size
+          @textures_list = list.pack("f*")
+        end
+
+        return @textures_list
+      end
+
+      def flattened_normals
+        unless @normals_list
+          list = []
+          @faces.each do |face|
+            [face[2]].each do |v|
+              next unless v
+              list << v.x
+              list << v.y
+              list << v.z
+              # list << v.weight
+            end
+          end
+
+          @normals_list_size = list.size
+          @normals_list = list.pack("f*")
+        end
+
+        return @normals_list
       end
 
       def flattened_materials
@@ -59,48 +97,10 @@ class IMICFPS
           end
 
           @materials_list_size = list.size
-          @materials_list = list.pack("i*")
+          @materials_list = list.pack("f*")
         end
 
         return @materials_list
-      end
-
-      def flattened_normals
-        unless @normals_list
-          list = []
-          @faces.each do |face|
-            [face[2]].each do |v|
-              next unless v
-              list << v.x
-              list << v.y
-              list << v.z
-              # list << v.weight
-            end
-          end
-
-          @normals_list_size = list.size
-          @normals_list = list.pack("i*")
-        end
-
-        return @normals_list
-      end
-
-      def flattened_textures
-        unless @textures_list
-          list = []
-          @faces.each do |face|
-            [face[1]].each do |v|
-              next unless v
-              list << v.x
-              list << v.y
-            end
-          end
-
-          @textures_list_size = list.size
-          @textures_list = list.pack("i*")
-        end
-
-        return @textures_list
       end
     end
   end

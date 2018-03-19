@@ -64,9 +64,9 @@ class IMICFPS
         #glMatrixMode(matrix) indicates that following [matrix] is going to get used
         glMatrixMode(GL_PROJECTION) # The projection matrix is responsible for adding perspective to our scene.
         glLoadIdentity # Resets current modelview matrix
-
         # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
         gluPerspective(90.0, width / height, 0.1, 1000.0)
+
         glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
         glLoadIdentity
 
