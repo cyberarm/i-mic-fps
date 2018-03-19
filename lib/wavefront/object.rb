@@ -31,10 +31,15 @@ class IMICFPS
             end
           end
 
-          @vertices_list = list
+          @vertices_list_size = list.size
+          @vertices_list = list.pack("i*")
         end
 
         return @vertices_list
+      end
+
+      def flattened_vertices_size
+        @vertices_list_size
       end
 
       def flattened_materials
@@ -53,7 +58,8 @@ class IMICFPS
             end
           end
 
-          @materials_list = list
+          @materials_list_size = list.size
+          @materials_list = list.pack("i*")
         end
 
         return @materials_list
@@ -68,11 +74,12 @@ class IMICFPS
               list << v.x
               list << v.y
               list << v.z
-              # list << v.alpha
+              # list << v.weight
             end
           end
 
-          @normals_list = list
+          @normals_list_size = list.size
+          @normals_list = list.pack("i*")
         end
 
         return @normals_list
@@ -89,7 +96,8 @@ class IMICFPS
             end
           end
 
-          @textures_list = list
+          @textures_list_size = list.size
+          @textures_list = list.pack("i*")
         end
 
         return @textures_list

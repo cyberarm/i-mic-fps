@@ -44,7 +44,7 @@ class IMICFPS
       def draw(x, y, z, scale = MODEL_METER_SCALE, back_face_culling = true)
         e = glGetError()
         if e != GL_NO_ERROR
-          $stderr.puts "OpenGL error in \"#{desc}\": #{gluErrorString(e)} (#{e})\n"
+          $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
           exit
         end
         render(x,y,z, scale, back_face_culling)
@@ -64,16 +64,16 @@ class IMICFPS
           glEnableClientState(GL_VERTEX_ARRAY)
           glEnableClientState(GL_COLOR_ARRAY)
           glEnableClientState(GL_NORMAL_ARRAY)
-          if false#@model_has_texture
+          if @model_has_texture
             glEnable(GL_TEXTURE_2D)
             glBindTexture(GL_TEXTURE_2D, @materials[@textured_material].texture_id)
             glEnableClientState(GL_TEXTURE_COORD_ARRAY)
-            glTexCoordPointer(3, GL_FLOAT, 0, o.flattened_textures.pack("i*"))
+            glTexCoordPointer(3, GL_FLOAT, 0, o.flattened_textures)
           end
-          glVertexPointer(4, GL_FLOAT, 0, o.flattened_vertices.pack("i*"))
-          glColorPointer(3, GL_FLOAT, 0, o.flattened_materials.pack("i*"))
-          glNormalPointer(GL_FLOAT, 0, o.flattened_normals.pack("i*"))
-          glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices.count/4)
+          glVertexPointer(4, GL_FLOAT, 0, o.flattened_vertices)
+          glColorPointer(3, GL_FLOAT, 0, o.flattened_materials)
+          glNormalPointer(GL_FLOAT, 0, o.flattened_normals)
+          glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
           # glBegin(GL_TRIANGLES) # begin drawing model
           # o.faces.each do |vert|
           #   vertex   = vert[0]
@@ -93,9 +93,9 @@ class IMICFPS
           glDisableClientState(GL_VERTEX_ARRAY)
           glDisableClientState(GL_COLOR_ARRAY)
           glDisableClientState(GL_NORMAL_ARRAY)
-          if false#@model_has_texture
+          if @model_has_texture
             glDisableClientState(GL_TEXTURE_COORD_ARRAY)
-            glBindTexture(GL_TEXTURE_2D, 0)
+            # glBindTexture(GL_TEXTURE_2D, 0)
             glDisable(GL_TEXTURE_2D)
           end
           glDisable(GL_CULL_FACE) if back_face_culling

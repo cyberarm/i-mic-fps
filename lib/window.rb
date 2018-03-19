@@ -38,14 +38,21 @@ class IMICFPS
       @diffuse_light = [1, 0.5, 0, 1]
       @specular_light = [0.2, 0.2, 0.2, 1]
       @light_postion = [1, 1, 1, 0]
+
+      @camera_light = Light.new(0,0,0)
+      @camera_light.ambient = @ambient_light
+      @camera_light.diffuse = @diffuse_light
+      @camera_light.specular = @specular_light
+      @camera_light.specular = @specular_light
     end
 
     def draw
-      # begin
-        render
-      # rescue Gl::Error => e
-        # p e
-      # end
+      e = glGetError()
+      if e != GL_NO_ERROR
+        $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
+        exit
+      end
+      render
     end
 
     def render
@@ -61,20 +68,13 @@ class IMICFPS
         gluPerspective(90.0, width / height, 0.1, 1000.0)
         glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
         glLoadIdentity
-        # Think 3-d coordinate system (x,y,z). +- on each movies on that axis
-        glLightfv(GL_LIGHT0, GL_AMBIENT, @ambient_light.pack("f*"))
-        glLightfv(GL_LIGHT0, GL_DIFFUSE, @diffuse_light.pack("f*"))
-        glLightfv(GL_LIGHT0, GL_SPECULAR, @specular_light.pack("f*"))
-        glLightfv(GL_LIGHT0, GL_POSITION, @light_postion.pack("f*"))
-        glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1)
-        glEnable(GL_LIGHTING)
-        glEnable(GL_LIGHT0)
+
+        @camera_light.draw
         glEnable(GL_DEPTH_TEST)
 
         glRotatef(@angle_y,1,0,0)
         glRotatef(@angle_x,0,1,0)
         glTranslatef(@camera.x, @camera.y, @camera.z)
-        # glPointSize(5.0)
         # gluLookAt(@camera.x,@camera.y,@camera.z, @angle_x,@angle_y,0, 0,1,0)
 
         color = [@c1, @c2, @c3]
@@ -98,8 +98,8 @@ class IMICFPS
       OpenGL Version: #{glGetString(GL_VERSION)}~
       OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}~
       ~
-      Angle Y: #{@angle_y} Angle X: #{@angle_x} ~
-      X:#{@camera.x} Y:#{@camera.y} Z:#{@camera.z} ~
+      Angle Y: #{@angle_y.round(2)} Angle X: #{@angle_x.round(2)} ~
+      X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)} ~
       Faces: #{@number_of_faces} ~
       Last Frame: #{Gosu.milliseconds-@last_frame_time}ms (#{Gosu.fps} fps)~
       ~
@@ -114,27 +114,30 @@ class IMICFPS
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
 
       @light_postion = [@camera.x, @camera.y, @camera.z, 0]
+      @camera_light.postion = @light_postion
       # @light_postion = [0.0, 10, 0, 0]
 
+      relative_speed = @speed#*delta_time
+
       if button_down?(Gosu::KbUp) || button_down?(Gosu::KbW)
-        @camera.z+=Math.cos(@angle_x * Math::PI / 180)*@speed
-        @camera.x-=Math.sin(@angle_x * Math::PI / 180)*@speed
+        @camera.z+=Math.cos(@angle_x * Math::PI / 180)*relative_speed
+        @camera.x-=Math.sin(@angle_x * Math::PI / 180)*relative_speed
       end
       if button_down?(Gosu::KbDown) || button_down?(Gosu::KbS)
-        @camera.z-=Math.cos(@angle_x * Math::PI / 180)*@speed
-        @camera.x+=Math.sin(@angle_x * Math::PI / 180)*@speed
+        @camera.z-=Math.cos(@angle_x * Math::PI / 180)*relative_speed
+        @camera.x+=Math.sin(@angle_x * Math::PI / 180)*relative_speed
       end
       if button_down?(Gosu::KbLeft) || button_down?(Gosu::KbA)
-        @camera.z+=Math.sin(@angle_x * Math::PI / 180)*@speed
-        @camera.x+=Math.cos(@angle_x * Math::PI / 180)*@speed
+        @camera.z+=Math.sin(@angle_x * Math::PI / 180)*relative_speed
+        @camera.x+=Math.cos(@angle_x * Math::PI / 180)*relative_speed
       end
       if button_down?(Gosu::KbRight) || button_down?(Gosu::KbD)
-        @camera.z-=Math.sin(@angle_x * Math::PI / 180)*@speed
-        @camera.x-=Math.cos(@angle_x * Math::PI / 180)*@speed
+        @camera.z-=Math.sin(@angle_x * Math::PI / 180)*relative_speed
+        @camera.x-=Math.cos(@angle_x * Math::PI / 180)*relative_speed
       end
 
-      @camera.y+=@speed if $window.button_down?(Gosu::KbLeftShift)
-      @camera.y-=@speed if $window.button_down?(Gosu::KbSpace)
+      @camera.y+=relative_speed if $window.button_down?(Gosu::KbLeftShift)
+      @camera.y-=relative_speed if $window.button_down?(Gosu::KbSpace)
 
       $window.close if $window.button_down?(Gosu::KbEscape)
       @number_of_faces = 0

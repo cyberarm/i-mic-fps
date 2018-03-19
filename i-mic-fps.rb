@@ -16,6 +16,7 @@ else
   raise RuntimeError, "Unsupported platform."
 end
 
+require_relative "lib/objects/light"
 require_relative "lib/wavefront/model"
 require_relative "lib/wavefront/object"
 require_relative "lib/wavefront/material"
