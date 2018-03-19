@@ -78,23 +78,9 @@ class IMICFPS
           glVertexPointer(4, GL_FLOAT, 0, o.flattened_vertices)
           glColorPointer(3, GL_FLOAT, 0, o.flattened_materials)
           glNormalPointer(GL_FLOAT, 0, o.flattened_normals)
+
           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
-          # glBegin(GL_TRIANGLES) # begin drawing model
-          # o.faces.each do |vert|
-          #   vertex   = vert[0]
-          #   uv       = vert[1]
-          #   normal   = vert[2]
-          #   material = vert[3]
-          #
-          #   glColor3f(material.diffuse.red, material.diffuse.green, material.diffuse.blue)
-          #   # glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, [material.ambient.red, material.ambient.green, material.ambient.blue, 1.0].pack("f*"))
-          #   # glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, [material.diffuse.red, material.diffuse.green, material.diffuse.blue, 1.0].pack("f*"))
-          #   # glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [material.specular.red, material.specular.green, material.specular.blue, 1.0].pack("f*"))
-          #   # glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, [10.0].pack("f*"))
-          #   glNormal3f(normal.x, normal.y, normal.z) # Don't scale normals
-          #   glVertex3f(vertex.x, vertex.y, vertex.z)
-          # end
-          # glEnd
+
           glDisableClientState(GL_VERTEX_ARRAY)
           glDisableClientState(GL_COLOR_ARRAY)
           glDisableClientState(GL_NORMAL_ARRAY)
@@ -182,7 +168,7 @@ class IMICFPS
           when 'd'  # Dissolved (Transparency)
           when 'illum' # Illumination model
           when 'map_Kd'
-            # @materials[@current_material].set_texture(array[1])
+            @materials[@current_material].set_texture(array[1])
           end
         end
       end
