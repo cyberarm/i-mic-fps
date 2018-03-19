@@ -17,7 +17,8 @@ class IMICFPS
       @model = Wavefront::Model.new("objects/biped.obj")
       @scene = Wavefront::Model.new("objects/cube.obj")
       @tree = Wavefront::Model.new("objects/tree.obj")
-      # @model = Wavefront::Model.new("objects/sponza.obj")
+      # @mega_model = Wavefront::Model.new("objects/sponza.obj")
+
       @camera = Wavefront::Model::Vertex.new(0,-1,0)
       @camera_target = Wavefront::Model::Vertex.new(0,-1,0)
       @speed = 0.05
@@ -87,7 +88,7 @@ class IMICFPS
         @tree.draw(5, 0, 0)
         @tree.draw(5, 0, 3)
         @tree.draw(3, 0, 10)
-
+        # @mega_model.draw(0,0,0, 1)
       end
 
       @text.split("~").each_with_index do |bit, i|
