@@ -11,6 +11,7 @@ class IMICFPS
       super(window_width, window_height, fullscreen)
       # super(Gosu.screen_width, Gosu.screen_height, true)
       $window = self
+      @delta_time = Gosu.milliseconds
       @number_of_faces = 0
       @draw_skydome = true
       @skydome = Wavefront::Model.new("objects/skydome.obj")
@@ -117,7 +118,7 @@ class IMICFPS
       @camera_light.postion = @light_postion
       # @light_postion = [0.0, 10, 0, 0]
 
-      relative_speed = @speed#*delta_time
+      relative_speed = @speed*(delta_time/60.0)
 
       if button_down?(Gosu::KbUp) || button_down?(Gosu::KbW)
         @camera.z+=Math.cos(@angle_x * Math::PI / 180)*relative_speed
@@ -148,6 +149,12 @@ class IMICFPS
       when Gosu::KbZ
         @draw_skydome = !@draw_skydome
       end
+    end
+
+    def delta_time
+      t = Gosu.milliseconds-@delta_time
+      @delta_time = Gosu.milliseconds
+      return t
     end
   end
 end
