@@ -1,7 +1,7 @@
 class IMICFPS
   class Wavefront
     class Object
-      attr_reader :name, :vertices, :textures, :normals
+      attr_reader :name, :vertices, :textures, :normals, :bounding_box
       attr_accessor :faces
 
       def initialize(name)
@@ -10,6 +10,7 @@ class IMICFPS
         @textures = []
         @normals  = []
         @faces    = []
+        @bounding_box = BoundingBox.new(nil,nil,nil, nil,nil,nil)
 
         # Faces array packs everything:
         #   vertex   = index[0]

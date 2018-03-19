@@ -2,7 +2,7 @@ class IMICFPS
   class Light
     include OpenGL
     MAX_LIGHTS = GL_MAX_LIGHTS-1
-    attr_accessor :x, :y, :z, :ambient, :diffuse, :specular
+    attr_reader :x, :y, :z, :ambient, :diffuse, :specular, :position
     def self.number_of_lights
       @number_of_lights ||= 0
     end
@@ -16,7 +16,7 @@ class IMICFPS
       @ambient  = [0.0, 0.0, 0.0, 1].pack("f*")
       @diffuse  = [1, 0.5, 0, 1].pack("f*")
       @specular = [0.0, 0.0, 0.0, 1].pack("f*")
-      @postion  = [0, 0, 0, 0].pack("f*")
+      @position  = [0, 0, 0, 0].pack("f*")
       @light_id = available_light
     end
 
@@ -39,15 +39,15 @@ class IMICFPS
       @specular = array.pack("f*")
     end
 
-    def postion=(array)
-      @postion = array.pack("f*")
+    def position=(array)
+      @position = array.pack("f*")
     end
 
     def draw
       glLightfv(@light_id, GL_AMBIENT, @ambient)
       glLightfv(@light_id, GL_DIFFUSE, @diffuse)
       glLightfv(@light_id, GL_SPECULAR, @specular)
-      glLightfv(@light_id, GL_POSITION, @postion)
+      glLightfv(@light_id, GL_POSITION, @position)
       glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1)
       glEnable(GL_LIGHTING)
       glEnable(@light_id)

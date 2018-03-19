@@ -16,7 +16,10 @@ else
   raise RuntimeError, "Unsupported platform."
 end
 
+BoundingBox = Struct.new(:min_x, :min_y, :min_z, :max_x, :max_y, :max_z)
+
 require_relative "lib/objects/light"
+require_relative "lib/wavefront/parser"
 require_relative "lib/wavefront/model"
 require_relative "lib/wavefront/object"
 require_relative "lib/wavefront/material"

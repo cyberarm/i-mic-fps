@@ -16,9 +16,9 @@ class IMICFPS
       @draw_skydome = true
       @skydome = Wavefront::Model.new("objects/skydome.obj")
       @model = Wavefront::Model.new("objects/biped.obj")
-      @scene = Wavefront::Model.new("objects/cube.obj")
+      # @scene = Wavefront::Model.new("objects/cube.obj")
       @tree = Wavefront::Model.new("objects/tree.obj")
-      # @mega_model = Wavefront::Model.new("objects/sponza.obj")
+      @mega_model = Wavefront::Model.new("objects/sponza.obj")
 
       @camera = Wavefront::Model::Vertex.new(0,-1,0)
       @camera_target = Wavefront::Model::Vertex.new(0,-1,0)
@@ -38,13 +38,13 @@ class IMICFPS
       @ambient_light = [0.5, 0.5, 0.5, 1]
       @diffuse_light = [1, 0.5, 0, 1]
       @specular_light = [0.2, 0.2, 0.2, 1]
-      @light_postion = [1, 1, 1, 0]
+      @light_position = [3, 6, 6, 0]
 
       @camera_light = Light.new(0,0,0)
       @camera_light.ambient = @ambient_light
       @camera_light.diffuse = @diffuse_light
       @camera_light.specular = @specular_light
-      @camera_light.specular = @specular_light
+      @camera_light.position = @light_position
     end
 
     def draw
@@ -79,8 +79,8 @@ class IMICFPS
         # gluLookAt(@camera.x,@camera.y,@camera.z, @angle_x,@angle_y,0, 0,1,0)
 
         color = [@c1, @c2, @c3]
-        @skydome.draw(0,0,0, 0.004, false) if @draw_skydome
-        @scene.draw(0,0,0, 1)
+        @skydome.draw(0,0,0, 1, false) if @draw_skydome
+        # @scene.draw(0,0,0, 1)
         @model.draw(1, 0, 0)
         @tree.draw(5, 0, 0)
         @tree.draw(5, 0, 3)
@@ -115,7 +115,7 @@ class IMICFPS
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
 
       @light_postion = [@camera.x, @camera.y, @camera.z, 0]
-      @camera_light.postion = @light_postion
+      # @camera_light.position = @light_position
       # @light_postion = [0.0, 10, 0, 0]
 
       relative_speed = @speed*(delta_time/60.0)
