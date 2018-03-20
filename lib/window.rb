@@ -17,9 +17,9 @@ class IMICFPS
       @draw_skydome = true
       @skydome = Wavefront::Model.new("objects/skydome.obj")
       @cube = Wavefront::Model.new("objects/cube.obj")
-      # @model = Wavefront::Model.new("objects/biped.obj")
-      # @tree = Wavefront::Model.new("objects/tree.obj")
-      # @mega_model = Wavefront::Model.new("objects/sponza.obj")
+      @model = Wavefront::Model.new("objects/biped.obj")
+      @tree = Wavefront::Model.new("objects/tree.obj")
+      @mega_model = Wavefront::Model.new("objects/sponza.obj")
 
       @camera = Wavefront::Model::Vertex.new(0,-1,0)
       @camera_target = Wavefront::Model::Vertex.new(0,-1,0)
@@ -80,12 +80,12 @@ class IMICFPS
         # gluLookAt(@camera.x,@camera.y,@camera.z, @horizontal_angle,@vertical_angle,0, 0,1,0)
 
         @skydome.draw(0,0,0, 1, false) if @draw_skydome
-        @cube.draw(0,1,0)
-        # @model.draw(1, 0, 0)
-        # @tree.draw(5, 0, 0)
-        # @tree.draw(5, 0, 3)
-        # @tree.draw(3, 0, 10)
-        # @mega_model.draw(0,0,0, 1)
+        @cube.draw(0,1,-2, 0.0005)
+        @model.draw(1, 0, 0)
+        @tree.draw(5, 0, 0)
+        @tree.draw(5, 0, 3)
+        @tree.draw(3, 0, 10)
+        @mega_model.draw(0,0,0, 1)
       end
 
       @text.split("~").each_with_index do |bit, i|
