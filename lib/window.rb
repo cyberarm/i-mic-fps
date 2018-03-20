@@ -15,7 +15,7 @@ class IMICFPS
       @delta_time = Gosu.milliseconds
       @number_of_faces = 0
       @draw_skydome = true
-      # @skydome = Wavefront::Model.new("objects/skydome.obj")
+      @skydome = Wavefront::Model.new("objects/skydome.obj")
       @cube = Wavefront::Model.new("objects/cube.obj")
       # @model = Wavefront::Model.new("objects/biped.obj")
       # @tree = Wavefront::Model.new("objects/tree.obj")
@@ -28,7 +28,8 @@ class IMICFPS
       @vertical_angle = 0.0 # |
       @horizontal_angle = 0.0 # _
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
-      @mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
+      @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
+      @true_mouse_checked = 0
       @mouse_sesitivity = 5.0
 
       @font = Gosu::Font.new(18, name: "DejaVu Sans")
@@ -78,7 +79,7 @@ class IMICFPS
         glTranslatef(@camera.x, @camera.y, @camera.z)
         # gluLookAt(@camera.x,@camera.y,@camera.z, @horizontal_angle,@vertical_angle,0, 0,1,0)
 
-        # @skydome.draw(0,0,0, 0.005, false) if @draw_skydome
+        @skydome.draw(0,0,0, 1, false) if @draw_skydome
         @cube.draw(0,1,0)
         # @model.draw(1, 0, 0)
         # @tree.draw(5, 0, 0)
@@ -107,17 +108,20 @@ class IMICFPS
       Debug mode: <c=992200>#{$debug}</b>~"
       @last_frame_time = Gosu.milliseconds
 
-      # $window.caption = "Gosu OBJ object - FPS:#{Gosu.fps}"
-      puts "#{@mouse}"
-      @horizontal_angle-=Float(@mouse.x-self.mouse_x)/@mouse_sesitivity
-      @vertical_angle-=Float(@mouse.y-self.mouse_y)/@mouse_sesitivity
-      @horizontal_angle %= 360.0
-      @vertical_angle = @vertical_angle.clamp(-90.0, 90.0)
+      if @true_mouse_checked > 2
+        @horizontal_angle-=Float(@true_mouse.x-self.mouse_x)/@mouse_sesitivity
+        @vertical_angle-=Float(@true_mouse.y-self.mouse_y)/@mouse_sesitivity
+        @horizontal_angle %= 360.0
+        @vertical_angle = @vertical_angle.clamp(-90.0, 90.0)
+      else
+        @true_mouse_checked+=1
+        @true_mouse.x = self.mouse_x
+        @true_mouse.y = self.mouse_y
+      end
 
       self.mouse_x, self.mouse_y = Gosu.screen_width/2.0, Gosu.screen_height/2.0
-      # @mouse.x, @mouse.y = self.mouse_x, self.mouse_y
-      puts "#{@mouse.x}-#{self.mouse_x}" if @mouse.x != self.mouse_x
-      puts "#{@mouse.y}-#{self.mouse_y}" if @mouse.y != self.mouse_y
+      @true_mouse_checked = 0 if (button_down?(Gosu::KbLeftAlt) && (button_down?(Gosu::KbEnter) || button_down?(Gosu::KbReturn)))
+      @true_mouse_checked = 0 if (button_down?(Gosu::KbRightAlt) && (button_down?(Gosu::KbEnter) || button_down?(Gosu::KbReturn)))
 
       relative_speed = @speed
       if button_down?(Gosu::KbLeftControl)
