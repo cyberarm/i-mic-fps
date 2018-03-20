@@ -11,29 +11,28 @@ class IMICFPS
       super(window_width, window_height, fullscreen)
       # super(Gosu.screen_width, Gosu.screen_height, true)
       $window = self
+
       @delta_time = Gosu.milliseconds
       @number_of_faces = 0
       @draw_skydome = true
-      @skydome = Wavefront::Model.new("objects/skydome.obj")
-      @model = Wavefront::Model.new("objects/biped.obj")
-      # @scene = Wavefront::Model.new("objects/cube.obj")
-      @tree = Wavefront::Model.new("objects/tree.obj")
-      @mega_model = Wavefront::Model.new("objects/sponza.obj")
+      # @skydome = Wavefront::Model.new("objects/skydome.obj")
+      @cube = Wavefront::Model.new("objects/cube.obj")
+      # @model = Wavefront::Model.new("objects/biped.obj")
+      # @tree = Wavefront::Model.new("objects/tree.obj")
+      # @mega_model = Wavefront::Model.new("objects/sponza.obj")
 
       @camera = Wavefront::Model::Vertex.new(0,-1,0)
       @camera_target = Wavefront::Model::Vertex.new(0,-1,0)
       @speed = 0.05
-      @angle_y = 0.0 # |
-      @angle_x = 0.0 # _
-      @mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
+      @old_speed = @speed
+      @vertical_angle = 0.0 # |
+      @horizontal_angle = 0.0 # _
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
+      @mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
       @mouse_sesitivity = 5.0
 
       @font = Gosu::Font.new(18, name: "DejaVu Sans")
       @text = "Hello There"
-      @last_frame_time = 0
-      @tick = 0
-      @c1, @c2, @c3 = rand(0.0..1.0), rand(0.0..1.0), rand(0.0..1.0)
 
       @ambient_light = [0.5, 0.5, 0.5, 1]
       @diffuse_light = [1, 0.5, 0, 1]
@@ -65,7 +64,8 @@ class IMICFPS
         glMatrixMode(GL_PROJECTION) # The projection matrix is responsible for adding perspective to our scene.
         glLoadIdentity # Resets current modelview matrix
         # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
-        gluPerspective(90.0, width / height, 0.1, 1000.0)
+        gluPerspective(70.0, width / height, 0.1, 1000.0)
+        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 
         glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
         glLoadIdentity
@@ -73,18 +73,17 @@ class IMICFPS
         @camera_light.draw
         glEnable(GL_DEPTH_TEST)
 
-        glRotatef(@angle_y,1,0,0)
-        glRotatef(@angle_x,0,1,0)
+        glRotatef(@vertical_angle,1,0,0)
+        glRotatef(@horizontal_angle,0,1,0)
         glTranslatef(@camera.x, @camera.y, @camera.z)
-        # gluLookAt(@camera.x,@camera.y,@camera.z, @angle_x,@angle_y,0, 0,1,0)
+        # gluLookAt(@camera.x,@camera.y,@camera.z, @horizontal_angle,@vertical_angle,0, 0,1,0)
 
-        color = [@c1, @c2, @c3]
-        @skydome.draw(0,0,0, 1, false) if @draw_skydome
-        # @scene.draw(0,0,0, 1)
-        @model.draw(1, 0, 0)
-        @tree.draw(5, 0, 0)
-        @tree.draw(5, 0, 3)
-        @tree.draw(3, 0, 10)
+        # @skydome.draw(0,0,0, 0.005, false) if @draw_skydome
+        @cube.draw(0,1,0)
+        # @model.draw(1, 0, 0)
+        # @tree.draw(5, 0, 0)
+        # @tree.draw(5, 0, 3)
+        # @tree.draw(3, 0, 10)
         # @mega_model.draw(0,0,0, 1)
       end
 
@@ -99,62 +98,85 @@ class IMICFPS
       OpenGL Version: #{glGetString(GL_VERSION)}~
       OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}~
       ~
-      Angle Y: #{@angle_y.round(2)} Angle X: #{@angle_x.round(2)} ~
+      Vertical Angle: #{@vertical_angle.round(2)} Horizontal Angle: #{@horizontal_angle.round(2)} ~
       X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)} ~
       Faces: #{@number_of_faces} ~
-      Last Frame: #{Gosu.milliseconds-@last_frame_time}ms (#{Gosu.fps} fps)~
+      Last Frame: #{delta_time}ms (#{Gosu.fps} fps)~
       ~
-      Draw Skydome: #{@draw_skydome}"
+      Draw Skydome: #{@draw_skydome}~
+      Debug mode: <c=992200>#{$debug}</b>~"
       @last_frame_time = Gosu.milliseconds
 
       # $window.caption = "Gosu OBJ object - FPS:#{Gosu.fps}"
-      @angle_x-=Float(@mouse.x-self.mouse_x)/@mouse_sesitivity
-      @angle_y-=Float(@mouse.y-self.mouse_y)/@mouse_sesitivity
-      @angle_x %= 360.0
-      @angle_y = @angle_y.clamp(-90.0, 90.0)
-      self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
+      puts "#{@mouse}"
+      @horizontal_angle-=Float(@mouse.x-self.mouse_x)/@mouse_sesitivity
+      @vertical_angle-=Float(@mouse.y-self.mouse_y)/@mouse_sesitivity
+      @horizontal_angle %= 360.0
+      @vertical_angle = @vertical_angle.clamp(-90.0, 90.0)
 
-      @light_postion = [@camera.x, @camera.y, @camera.z, 0]
-      # @camera_light.position = @light_position
-      # @light_postion = [0.0, 10, 0, 0]
+      self.mouse_x, self.mouse_y = Gosu.screen_width/2.0, Gosu.screen_height/2.0
+      # @mouse.x, @mouse.y = self.mouse_x, self.mouse_y
+      puts "#{@mouse.x}-#{self.mouse_x}" if @mouse.x != self.mouse_x
+      puts "#{@mouse.y}-#{self.mouse_y}" if @mouse.y != self.mouse_y
 
-      relative_speed = @speed*(delta_time/60.0)
+      relative_speed = @speed
+      if button_down?(Gosu::KbLeftControl)
+        relative_speed = (@speed*10.0)*(delta_time/60.0)
+      else
+        relative_speed = @speed*(delta_time/60.0)
+      end
 
       if button_down?(Gosu::KbUp) || button_down?(Gosu::KbW)
-        @camera.z+=Math.cos(@angle_x * Math::PI / 180)*relative_speed
-        @camera.x-=Math.sin(@angle_x * Math::PI / 180)*relative_speed
+        @camera.z+=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
+        @camera.x-=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
       end
       if button_down?(Gosu::KbDown) || button_down?(Gosu::KbS)
-        @camera.z-=Math.cos(@angle_x * Math::PI / 180)*relative_speed
-        @camera.x+=Math.sin(@angle_x * Math::PI / 180)*relative_speed
+        @camera.z-=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
+        @camera.x+=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
       end
-      if button_down?(Gosu::KbLeft) || button_down?(Gosu::KbA)
-        @camera.z+=Math.sin(@angle_x * Math::PI / 180)*relative_speed
-        @camera.x+=Math.cos(@angle_x * Math::PI / 180)*relative_speed
+      if button_down?(Gosu::KbA)
+        @camera.z+=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
+        @camera.x+=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
       end
-      if button_down?(Gosu::KbRight) || button_down?(Gosu::KbD)
-        @camera.z-=Math.sin(@angle_x * Math::PI / 180)*relative_speed
-        @camera.x-=Math.cos(@angle_x * Math::PI / 180)*relative_speed
+      if button_down?(Gosu::KbD)
+        @camera.z-=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
+        @camera.x-=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
       end
 
-      @camera.y+=relative_speed if $window.button_down?(Gosu::KbLeftShift)
+      if button_down?(Gosu::KbLeft)
+        @horizontal_angle-=relative_speed*100
+      end
+      if button_down?(Gosu::KbRight)
+        @horizontal_angle+=relative_speed*100
+      end
+
+      @camera.y+=relative_speed if $window.button_down?(Gosu::KbC) || $window.button_down?(Gosu::KbLeftShift)
       @camera.y-=relative_speed if $window.button_down?(Gosu::KbSpace)
 
       $window.close if $window.button_down?(Gosu::KbEscape)
       @number_of_faces = 0
+      @delta_time = Gosu.milliseconds
     end
 
     def button_up(id)
       case id
       when Gosu::KbZ
         @draw_skydome = !@draw_skydome
+      when Gosu::KbBacktick
+        $debug = !$debug
       end
     end
 
+    def needs_cursor?
+      true
+    end
+
+    def lose_focus
+      puts 'Bye'
+    end
+
     def delta_time
-      t = Gosu.milliseconds-@delta_time
-      @delta_time = Gosu.milliseconds
-      return t
+      Gosu.milliseconds-@delta_time
     end
   end
 end

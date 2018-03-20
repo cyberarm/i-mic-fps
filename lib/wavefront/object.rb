@@ -1,7 +1,7 @@
 class IMICFPS
   class Wavefront
     class Object
-      attr_reader :name, :vertices, :textures, :normals, :bounding_box
+      attr_reader :name, :vertices, :textures, :normals, :bounding_box, :debug_color
       attr_accessor :faces
 
       def initialize(name)
@@ -11,6 +11,7 @@ class IMICFPS
         @normals  = []
         @faces    = []
         @bounding_box = BoundingBox.new(nil,nil,nil, nil,nil,nil)
+        @debug_color = Parser::Color.new(1.0,0.0,0.0)
 
         # Faces array packs everything:
         #   vertex   = index[0]
@@ -21,6 +22,8 @@ class IMICFPS
 
       def flattened_vertices
         unless @vertices_list
+          @debug_color = @faces.first[3].diffuse
+
           list = []
           @faces.each do |face|
             [face[0]].each do |v|

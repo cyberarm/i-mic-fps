@@ -25,7 +25,7 @@ class IMICFPS
         @faces    = []
         @smoothing= 0
 
-        @bounding_box = BoundingBox.new(0.0,0.0,0.0, 0.0,0.0,0.0)
+        @bounding_box = BoundingBox.new(nil,nil,nil, nil,nil,nil)
         @debug_color  = Color.new(rand(0.0..1.0), rand(0.0..1.0), rand(0.0..1.0))
         start_time = Time.now
         parse
@@ -35,7 +35,7 @@ class IMICFPS
         face_count = 0
         @objects.each {|o| face_count+=o.faces.size}
         @objects.each_with_index do |o, i|
-          puts "OBJECT FACES: Name: #{o.name} #{o.faces.size}, array size divided by 3: #{o.faces.size.to_f/3.0}"
+          puts "Model::Object Name: #{o.name} Faces: #{o.faces.size}, array size divided by 3: #{o.faces.size.to_f/3.0}"
         end
         $window.number_of_faces+=face_count
         @model_has_texture = false
@@ -97,9 +97,9 @@ class IMICFPS
           end
           glDisable(GL_CULL_FACE) if back_face_culling
           glDisable(GL_COLOR_MATERIAL)
-          render_bounding_box(o.bounding_box) if ARGV.join("--debug")
+          render_bounding_box(o.bounding_box, o.debug_color) if $debug
         end
-        render_bounding_box(@bounding_box) if ARGV.join("--debug")
+        render_bounding_box(@bounding_box) if $debug
         glPopMatrix
 
 
