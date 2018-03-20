@@ -110,6 +110,7 @@ class IMICFPS
       Vertical Angle: #{@vertical_angle.round(2)} Horizontal Angle: #{@horizontal_angle.round(2)} ~
       X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)} ~
       FOV: #{@initial_fov} ~
+      Mouse Sesitivity: #{@mouse_sesitivity} ~
       Faces: #{@number_of_faces} ~
       Last Frame: #{delta_time}ms (#{Gosu.fps} fps)~
       ~
@@ -178,6 +179,15 @@ class IMICFPS
       case id
       when Gosu::KbZ
         @draw_skydome = !@draw_skydome
+        @skydome.renderable = @draw_skydome
+      when Gosu::KB_NUMPAD_PLUS
+        @mouse_sesitivity+=1
+        @mouse_sesitivity = @mouse_sesitivity.clamp(1.0, 100.0)
+      when Gosu::KbMinus, Gosu::KB_NUMPAD_MINUS
+        @mouse_sesitivity-=1
+        @mouse_sesitivity = @mouse_sesitivity.clamp(1.0, 100.0)
+      when Gosu::KB_NUMPAD_MULTIPLY
+        @mouse_sesitivity = 20.0
       when Gosu::KbBacktick
         $debug = !$debug
       when Gosu::MsWheelUp
