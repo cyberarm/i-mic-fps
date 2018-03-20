@@ -186,8 +186,10 @@ class IMICFPS
         $debug = !$debug
       when Gosu::MsWheelUp
         @initial_fov += 1
+        @initial_fov = @initial_fov.clamp(1, 179)
       when Gosu::MsWheelDown
         @initial_fov -= 1
+        @initial_fov = @initial_fov.clamp(1, 179)
       end
     end
 
