@@ -5,12 +5,13 @@ class IMICFPS
     # include GLUT
     Point = Struct.new(:x, :y)
 
-    attr_accessor :number_of_faces
+    attr_accessor :number_of_faces, :needs_cursor
 
     def initialize(window_width = 1280, window_height = 800, fullscreen = false)
       super(window_width, window_height, fullscreen)
       # super(Gosu.screen_width, Gosu.screen_height, true)
       $window = self
+      @needs_cursor = false
 
       @delta_time = Gosu.milliseconds
       @number_of_faces = 0
@@ -31,6 +32,11 @@ class IMICFPS
       @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
       @true_mouse_checked = 0
       @mouse_sesitivity = 5.0
+      @initial_fov = 70.0
+
+      @crosshair_size = 10
+      @crosshair_thickness = 3
+      @crosshair_color = Gosu::Color.rgb(255,127,0)
 
       @font = Gosu::Font.new(18, name: "DejaVu Sans")
       @text = "Hello There"
@@ -65,7 +71,7 @@ class IMICFPS
         glMatrixMode(GL_PROJECTION) # The projection matrix is responsible for adding perspective to our scene.
         glLoadIdentity # Resets current modelview matrix
         # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
-        gluPerspective(70.0, width / height, 0.1, 1000.0)
+        gluPerspective(@initial_fov, width / height, 0.1, 1000.0)
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
 
         glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
@@ -88,6 +94,10 @@ class IMICFPS
         @mega_model.draw(0,0,0, 1)
       end
 
+      # Draw crosshair
+      draw_rect(width/2-@crosshair_size, (height/2-@crosshair_size)-@crosshair_thickness/2, @crosshair_size*2, @crosshair_thickness, @crosshair_color, 0, :default)
+      draw_rect((width/2)-@crosshair_thickness/2, height/2-(@crosshair_size*2), @crosshair_thickness, @crosshair_size*2, @crosshair_color, 0, :default)
+
       @text.split("~").each_with_index do |bit, i|
         @font.draw(bit.strip, 10, @font.height*i, Float::INFINITY)
       end
@@ -101,6 +111,7 @@ class IMICFPS
       ~
       Vertical Angle: #{@vertical_angle.round(2)} Horizontal Angle: #{@horizontal_angle.round(2)} ~
       X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)} ~
+      FOV: #{@initial_fov} ~
       Faces: #{@number_of_faces} ~
       Last Frame: #{delta_time}ms (#{Gosu.fps} fps)~
       ~
@@ -168,12 +179,16 @@ class IMICFPS
         @draw_skydome = !@draw_skydome
       when Gosu::KbBacktick
         $debug = !$debug
+      when Gosu::MsWheelUp
+        @initial_fov += 1
+      when Gosu::MsWheelDown
+        @initial_fov -= 1
       end
     end
 
     def needs_cursor?
-      true
-    end
+      @needs_cursor
+     end
 
     def lose_focus
       puts 'Bye'
