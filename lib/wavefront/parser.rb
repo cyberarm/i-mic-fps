@@ -59,7 +59,6 @@ class IMICFPS
         file = File.open(@object_path.sub(File.basename(@object_path), '')+@material_file, 'r')
         file.readlines.each do |line|
           array = line.strip.split(' ')
-          # puts array.join
           case array.first
           when 'newmtl'
             material = Material.new(array.last)
@@ -143,7 +142,7 @@ class IMICFPS
         if array.size == 4
           texture = Vertex.new(Float(array[1]), 1-Float(array[2]), Float(array[3]))
         elsif array.size == 3
-          texture = Vertex.new(Float(array[1]), 1-Float(array[2]), 0.0)
+          texture = Vertex.new(Float(array[1]), 1-Float(array[2]), 1.0)
         else
           raise
         end

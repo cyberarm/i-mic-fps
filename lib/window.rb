@@ -8,8 +8,11 @@ class IMICFPS
     attr_accessor :number_of_faces, :needs_cursor
 
     def initialize(window_width = 1280, window_height = 800, fullscreen = false)
-      super(window_width, window_height, fullscreen)
-      # super(Gosu.screen_width, Gosu.screen_height, true)
+      if ARGV.join.include?("--native")
+        super(Gosu.screen_width, Gosu.screen_height, true)
+      else
+        super(window_width, window_height, fullscreen)
+      end
       $window = self
       @needs_cursor = false
 
@@ -17,6 +20,7 @@ class IMICFPS
       @number_of_faces = 0
       @draw_skydome = true
       @skydome = Wavefront::Model.new("objects/skydome.obj")
+      @plane = Wavefront::Model.new("objects/plane.obj")
       @cube = Wavefront::Model.new("objects/cube.obj")
       @model = Wavefront::Model.new("objects/biped.obj")
       @tree = Wavefront::Model.new("objects/tree.obj")
@@ -87,11 +91,12 @@ class IMICFPS
 
         @skydome.draw(0,0,0, 1, false) if @draw_skydome
         @cube.draw(0,1,-2, 0.0005)
+        @plane.draw(0,-1,-4, 0.0005, false)
         @model.draw(1, 0, 0)
         @tree.draw(5, 0, 0)
         @tree.draw(5, 0, 3)
         @tree.draw(3, 0, 10)
-        @mega_model.draw(0,0,0, 1)
+        # @mega_model.draw(0,0,0, 1)
       end
 
       # Draw crosshair

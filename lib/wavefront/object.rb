@@ -49,11 +49,12 @@ class IMICFPS
       def flattened_textures
         unless @textures_list
           list = []
-          @faces.each do |face|
+          @faces.each_with_index do |face, i|
             [face[1]].each do |v|
               next unless v
               list << v.x
               list << v.y
+              list << v.z
             end
           end
 
