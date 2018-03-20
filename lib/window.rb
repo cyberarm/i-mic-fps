@@ -3,7 +3,6 @@ class IMICFPS
     include OpenGL
     include GLU
     # include GLUT
-    Point = Struct.new(:x, :y)
 
     attr_accessor :number_of_faces, :needs_cursor
 
@@ -19,15 +18,16 @@ class IMICFPS
       @delta_time = Gosu.milliseconds
       @number_of_faces = 0
       @draw_skydome = true
-      @skydome = Wavefront::Model.new("objects/skydome.obj")
-      @plane = Wavefront::Model.new("objects/plane.obj")
-      @cube = Wavefront::Model.new("objects/cube.obj")
-      @model = Wavefront::Model.new("objects/biped.obj")
-      @tree = Wavefront::Model.new("objects/tree.obj")
-      @mega_model = Wavefront::Model.new("objects/sponza.obj")
+      Model.new(type: :obj, file_path: "objects/skydome.obj", x: 0, y: 0,z: 0, scale: 1, backface_culling: false)
+      Model.new(type: :obj, file_path: "objects/cube.obj", x: 0,y: 1,z: -2, scale: 0.0005)
+      Model.new(type: :obj, file_path: "objects/biped.obj", x: 1, y: 0, z: 0)
+      Model.new(type: :obj, file_path: "objects/tree.obj", x: 3)
+      Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
+      Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
+      Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
 
-      @camera = Wavefront::Model::Vertex.new(0,-1,0)
-      @camera_target = Wavefront::Model::Vertex.new(0,-1,0)
+      @camera = Vertex.new(0,-1,0)
+      @camera_target = Vertex.new(0,-1,0)
       @speed = 0.05
       @old_speed = @speed
       @vertical_angle = 0.0 # |
@@ -35,7 +35,7 @@ class IMICFPS
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
       @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
       @true_mouse_checked = 0
-      @mouse_sesitivity = 5.0
+      @mouse_sesitivity = 20.0
       @initial_fov = 70.0
 
       @crosshair_size = 10
@@ -81,22 +81,17 @@ class IMICFPS
         glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
         glLoadIdentity
 
-        @camera_light.draw
         glEnable(GL_DEPTH_TEST)
+        @camera_light.draw
 
         glRotatef(@vertical_angle,1,0,0)
         glRotatef(@horizontal_angle,0,1,0)
         glTranslatef(@camera.x, @camera.y, @camera.z)
         # gluLookAt(@camera.x,@camera.y,@camera.z, @horizontal_angle,@vertical_angle,0, 0,1,0)
 
-        @skydome.draw(0,0,0, 1, false) if @draw_skydome
-        @cube.draw(0,1,-2, 0.0005)
-        @plane.draw(0,-1,-4, 0.0005, false)
-        @model.draw(1, 0, 0)
-        @tree.draw(5, 0, 0)
-        @tree.draw(5, 0, 3)
-        @tree.draw(3, 0, 10)
-        # @mega_model.draw(0,0,0, 1)
+        ObjectManager.objects.each do |object|
+          object.draw if object.visible && object.renderable
+        end
       end
 
       # Draw crosshair
@@ -109,6 +104,7 @@ class IMICFPS
     end
 
     def update
+      @last_frame_time = Gosu.milliseconds
       @text = "OpenGL Vendor: #{glGetString(GL_VENDOR)}~
       OpenGL Renderer: #{glGetString(GL_RENDERER)} ~
       OpenGL Version: #{glGetString(GL_VERSION)}~
@@ -122,7 +118,10 @@ class IMICFPS
       ~
       Draw Skydome: #{@draw_skydome}~
       Debug mode: <c=992200>#{$debug}</b>~"
-      @last_frame_time = Gosu.milliseconds
+
+      ObjectManager.objects.each do |object|
+        object.update
+      end
 
       if @true_mouse_checked > 2
         @horizontal_angle-=Float(@true_mouse.x-self.mouse_x)/@mouse_sesitivity

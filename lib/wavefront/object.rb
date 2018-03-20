@@ -11,7 +11,7 @@ class IMICFPS
         @normals  = []
         @faces    = []
         @bounding_box = BoundingBox.new(nil,nil,nil, nil,nil,nil)
-        @debug_color = Parser::Color.new(1.0,0.0,0.0)
+        @debug_color = Color.new(1.0,0.0,0.0)
 
         # Faces array packs everything:
         #   vertex   = index[0]

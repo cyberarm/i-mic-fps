@@ -6,9 +6,9 @@ class IMICFPS
       attr_reader :texture
       def initialize(name)
         @name    = name
-        @ambient = Wavefront::Model::Color.new(1, 1, 1, 1)
-        @diffuse = Wavefront::Model::Color.new(1, 1, 1, 1)
-        @specular= Wavefront::Model::Color.new(1, 1, 1, 1)
+        @ambient = Color.new(1, 1, 1, 1)
+        @diffuse = Color.new(1, 1, 1, 1)
+        @specular= Color.new(1, 1, 1, 1)
         @texture = nil
         @texture_id = nil
       end

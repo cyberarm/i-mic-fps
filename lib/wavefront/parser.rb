@@ -1,10 +1,6 @@
 class IMICFPS
   class Wavefront
     module Parser
-      TextureCoordinate = Struct.new(:u, :v, :weight)
-      Vertex = Struct.new(:x, :y, :z, :weight)
-      Color = Struct.new(:red, :green, :blue, :alpha)
-
       def parse
         lines = 0
         @file.each_line do |line|

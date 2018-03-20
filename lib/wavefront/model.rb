@@ -1,3 +1,7 @@
+require_relative "parser"
+require_relative "object"
+require_relative "material"
+
 class IMICFPS
   class Wavefront
     class Model
@@ -47,25 +51,7 @@ class IMICFPS
         end
       end
 
-      def handleGlError
-        e = glGetError()
-        if e != GL_NO_ERROR
-          $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
-          exit
-        end
-      end
-
-      def draw(x, y, z, scale = MODEL_METER_SCALE, back_face_culling = true)
-        handleGlError
-        render(x,y,z, scale, back_face_culling)
-        handleGlError
-      end
-
-      def render(x,y,z, scale, back_face_culling)
-        glEnable(GL_NORMALIZE)
-        glPushMatrix
-        glTranslatef(x,y,z)
-        glScalef(scale, scale, scale)
+      def draw(x,y,z, scale, back_face_culling)
         @objects.each_with_index do |o, i|
           glEnable(GL_CULL_FACE) if back_face_culling
           glEnable(GL_COLOR_MATERIAL)
@@ -95,12 +81,11 @@ class IMICFPS
             # glBindTexture(GL_TEXTURE_2D, 0)
             glDisable(GL_TEXTURE_2D)
           end
+          render_bounding_box(o.bounding_box, o.debug_color) if $debug
           glDisable(GL_CULL_FACE) if back_face_culling
           glDisable(GL_COLOR_MATERIAL)
-          render_bounding_box(o.bounding_box, o.debug_color) if $debug
         end
         render_bounding_box(@bounding_box) if $debug
-        glPopMatrix
 
 
         $window.number_of_faces+=self.faces.size
