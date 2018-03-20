@@ -18,13 +18,13 @@ class IMICFPS
       @delta_time = Gosu.milliseconds
       @number_of_faces = 0
       @draw_skydome = true
-      Model.new(type: :obj, file_path: "objects/skydome.obj", x: 0, y: 0,z: 0, scale: 1, backface_culling: false)
+      @skydome = Model.new(type: :obj, file_path: "objects/skydome.obj", x: 0, y: 0,z: 0, scale: 1, backface_culling: false)
       Model.new(type: :obj, file_path: "objects/cube.obj", x: 0,y: 1,z: -2, scale: 0.0005)
       Model.new(type: :obj, file_path: "objects/biped.obj", x: 1, y: 0, z: 0)
       Model.new(type: :obj, file_path: "objects/tree.obj", x: 3)
-      Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
-      Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
-      Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
+      # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
+      # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
+      # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
 
       @camera = Vertex.new(0,-1,0)
       @camera_target = Vertex.new(0,-1,0)
@@ -63,10 +63,7 @@ class IMICFPS
         $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
         exit
       end
-      render
-    end
 
-    def render
       gl do
         glClearColor(0,0.2,0.5,1) # skyish blue
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
@@ -124,8 +121,8 @@ class IMICFPS
       end
 
       if @true_mouse_checked > 2
-        @horizontal_angle-=Float(@true_mouse.x-self.mouse_x)/@mouse_sesitivity
-        @vertical_angle-=Float(@true_mouse.y-self.mouse_y)/@mouse_sesitivity
+        @horizontal_angle-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sesitivity*@initial_fov)*70
+        @vertical_angle-=Float(@true_mouse.y-self.mouse_y)/(@mouse_sesitivity*@initial_fov)*70
         @horizontal_angle %= 360.0
         @vertical_angle = @vertical_angle.clamp(-90.0, 90.0)
       else

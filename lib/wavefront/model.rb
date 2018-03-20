@@ -12,6 +12,7 @@ class IMICFPS
 
       attr_accessor :objects, :materials, :vertexes, :texures, :normals, :faces
       attr_accessor :x, :y, :z
+      attr_reader :bounding_box
 
       def initialize(object = "objects/cube.obj")
         @x, @y, @z = 0, 0, 0
@@ -30,7 +31,6 @@ class IMICFPS
         @smoothing= 0
 
         @bounding_box = BoundingBox.new(nil,nil,nil, nil,nil,nil)
-        @debug_color  = Color.new(rand(0.0..1.0), rand(0.0..1.0), rand(0.0..1.0))
         start_time = Time.now
         parse
         puts "#{object.split('/').last} took #{(Time.now-start_time).round(2)} seconds to parse"
@@ -81,82 +81,10 @@ class IMICFPS
             # glBindTexture(GL_TEXTURE_2D, 0)
             glDisable(GL_TEXTURE_2D)
           end
-          render_bounding_box(o.bounding_box, o.debug_color) if $debug
           glDisable(GL_CULL_FACE) if back_face_culling
           glDisable(GL_COLOR_MATERIAL)
         end
-        render_bounding_box(@bounding_box) if $debug
-
-
         $window.number_of_faces+=self.faces.size
-      end
-
-      def render_bounding_box(bounding_box, color = @debug_color)
-        # TODO: Minimize number of calls in here
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-        glBegin(GL_TRIANGLES)
-          # TOP
-          glNormal3f(0,1,0)
-          glColor3f(color.red, color.green, color.blue)
-          glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-          glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.min_z)
-          glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.min_z)
-
-          glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-          glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.max_z)
-          glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.min_z)
-
-          # BOTTOM
-          glNormal3f(0,-1,0)
-          glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-          glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.max_z)
-          glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.max_z)
-
-          glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-          glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.min_z)
-          glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.max_z)
-
-          # RIGHT SIDE
-          glNormal3f(0,0,1)
-          glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-          glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.min_z)
-          glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.min_z)
-
-          glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.max_z)
-          glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.min_z)
-          glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-
-          # LEFT SIDE
-          glNormal3f(1,0,0)
-          glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.max_z)
-          glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.min_z)
-          glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-
-          glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.max_z)
-          glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-          glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.max_z)
-
-          # FRONT
-          glNormal3f(-1,0,0)
-          glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-          glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.max_z)
-          glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.max_z)
-
-          glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-          glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.max_z)
-          glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.max_z)
-
-          # BACK
-          glNormal3f(-1,0,0)
-          glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-          glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.min_z)
-          glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.min_z)
-
-          glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-          glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.min_z)
-          glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.min_z)
-        glEnd
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
       end
     end
   end
