@@ -5,6 +5,7 @@ class IMICFPS
     include GLU
 
     attr_accessor :x,:y,:z, :field_of_view, :vertical_angle, :horizontal_angle, :mouse_sensitivity
+    attr_reader :bound_model
     def initialize(x: 0, y: 0, z: 0, fov: 70.0)
       @x,@y,@z = x,y,z
       @vertical_angle = 0.0
@@ -17,6 +18,16 @@ class IMICFPS
       @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
       @true_mouse_checked = 0
       @mouse_sensitivity = 20.0
+
+      @bound_model = nil
+    end
+
+    def bind_model(model)
+      @bound_model = model
+    end
+
+    def unbind
+      @bound_model = nil
     end
 
     def draw
@@ -86,6 +97,17 @@ class IMICFPS
 
       @y+=relative_speed if button_down?(Gosu::KbC) || button_down?(Gosu::KbLeftShift)
       @y-=relative_speed if button_down?(Gosu::KbSpace)
+
+      if @bound_model
+        distance = 2.0
+        x_offset = distance * Math.cos(@bound_model.y_rotation)
+        z_offset = distance * Math.sin(@bound_model.y_rotation)
+        @bound_model.x = @x*-1+x_offset
+        @bound_model.y = @y*-1-2
+        @bound_model.z = @z*-1-z_offset
+
+        @bound_model.y_rotation = (@horizontal_angle*-1)+180
+      end
     end
 
     def button_up(id)

@@ -52,7 +52,7 @@ class IMICFPS
       end
 
       def parse_mtllib
-        file = File.open(@object_path.sub(File.basename(@object_path), '')+@material_file, 'r')
+        file = File.open(@file_path.sub(File.basename(@file_path), '')+@material_file, 'r')
         file.readlines.each do |line|
           array = line.strip.split(' ')
           case array.first
@@ -78,7 +78,7 @@ class IMICFPS
       end
 
       def change_object(name)
-        @objects << Object.new(name)
+        @objects << Object.new(self, name)
         @current_object = @objects.last
       end
 

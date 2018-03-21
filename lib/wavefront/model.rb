@@ -11,13 +11,14 @@ class IMICFPS
       include Parser
 
       attr_accessor :objects, :materials, :vertexes, :texures, :normals, :faces
-      attr_accessor :x, :y, :z
+      attr_accessor :x, :y, :z, :scale
       attr_reader :bounding_box
 
-      def initialize(object = "objects/cube.obj")
-        @x, @y, @z = 0, 0, 0
-        @object_path = object
-        @file = File.open(object, 'r')
+      def initialize(file_path:, x: 0, y: 0, z: 0, scale: MODEL_METER_SCALE)
+        @x, @y, @z = x, y, z
+        @scale = scale
+        @file_path = file_path
+        @file = File.open(file_path, 'r')
         @material_file  = nil
         @current_object = nil
         @current_material=nil
@@ -33,7 +34,7 @@ class IMICFPS
         @bounding_box = BoundingBox.new(nil,nil,nil, nil,nil,nil)
         start_time = Time.now
         parse
-        puts "#{object.split('/').last} took #{(Time.now-start_time).round(2)} seconds to parse"
+        puts "#{@file_path.split('/').last} took #{(Time.now-start_time).round(2)} seconds to parse"
         p @bounding_box
 
         face_count = 0

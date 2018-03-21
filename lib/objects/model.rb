@@ -31,7 +31,7 @@ class IMICFPS
       unless load_model_from_cache
         case type
         when :obj
-          @model = Wavefront::Model.new(@file_path)
+          @model = Wavefront::Model.new(file_path: @file_path, x: x, y: y, z: z, scale: scale)
         else
           raise "Unsupported model type, supported models are: #{Model.supported_models.join(', ')}"
         end
@@ -59,9 +59,7 @@ class IMICFPS
       render_bounding_box(@model.bounding_box) if $debug
       @model.objects.each {|o| render_bounding_box(o.bounding_box, o.debug_color)} if $debug
 
-      glTranslatef(x,y,z)
-      glScalef(scale, scale, scale)
-
+      glTranslatef(@x, @y, @z)
       glRotatef(@x_rotation,1.0, 0, 0)
       glRotatef(@y_rotation,0, 1.0, 0)
       glRotatef(@z_rotation,0, 0, 1.0)
@@ -78,8 +76,10 @@ class IMICFPS
       ObjectManager.objects.each do |a|
         ObjectManager.objects.each do |b|
           next if a == b
+          next if b.name == "skydome"
           if a.intersect(a.model.bounding_box, b.model.bounding_box)
             if a.name == "tree"
+              puts "#{b.name} is touching me"
               a.y_rotation+=0.01
             end
           end
@@ -112,9 +112,9 @@ class IMICFPS
      if (a.min_x <= b.max_x && a.max_x >= b.min_x) &&
         (a.min_y <= b.max_y && a.max_y >= b.min_y) &&
         (a.min_z <= b.max_z && a.max_z >= b.min_z)
-       true
+       return true
      else
-       false
+       return false
      end
    end
 

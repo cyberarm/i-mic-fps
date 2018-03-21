@@ -1,10 +1,11 @@
 class IMICFPS
   class Wavefront
     class Object
-      attr_reader :name, :vertices, :textures, :normals, :bounding_box, :debug_color
+      attr_reader :parent, :name, :vertices, :textures, :normals, :bounding_box, :debug_color
       attr_accessor :faces
 
-      def initialize(name)
+      def initialize(parent, name)
+        @parent = parent
         @name = name
         @vertices = []
         @textures = []
@@ -28,9 +29,9 @@ class IMICFPS
           @faces.each do |face|
             [face[0]].each do |v|
               next unless v
-              list << v.x
-              list << v.y
-              list << v.z
+              list << v.x*@parent.scale#+@parent.x
+              list << v.y*@parent.scale#+@parent.y
+              list << v.z*@parent.scale#+@parent.z
               list << v.weight
             end
           end

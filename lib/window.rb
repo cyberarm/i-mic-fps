@@ -19,14 +19,14 @@ class IMICFPS
       @number_of_faces = 0
       @draw_skydome = true
       @skydome = Model.new(type: :obj, file_path: "objects/skydome.obj", x: 0, y: 0,z: 0, scale: 1, backface_culling: false)
-      Model.new(type: :obj, file_path: "objects/cube.obj", x: 0,y: 1,z: -2, scale: 0.0005)
-      Model.new(type: :obj, file_path: "objects/biped.obj", x: 1, y: 0, z: 0)
+      @actor = Model.new(type: :obj, file_path: "objects/biped.obj", x: 1, y: 0, z: 0)
       Model.new(type: :obj, file_path: "objects/tree.obj", x: 3)
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
 
       @camera = Camera.new
+      @camera.bind_model(@actor)
 
       @crosshair_size = 10
       @crosshair_thickness = 3
@@ -77,7 +77,8 @@ class IMICFPS
       OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}~
       ~
       Vertical Angle: #{@camera.vertical_angle.round(2)} Horizontal Angle: #{@camera.horizontal_angle.round(2)} ~
-      X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)} ~
+      Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)} ~
+      Actor X:#{@camera.bound_model.x.round(2)} Y:#{@camera.bound_model.y.round(2)} Z:#{@camera.bound_model.z.round(2)} ~
       FOV: #{@camera.field_of_view} ~
       Mouse Sesitivity: #{@camera.mouse_sensitivity} ~
       Faces: #{@number_of_faces} ~
