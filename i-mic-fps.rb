@@ -20,10 +20,12 @@ BoundingBox = Struct.new(:min_x, :min_y, :min_z, :max_x, :max_y, :max_z)
 
 $debug = ARGV.join.include?("--debug") ? true : false
 
+require_relative "lib/common_methods"
 require_relative "lib/managers/object_manager"
 require_relative "lib/managers/light_manager"
 
 require_relative "lib/objects/light"
+require_relative "lib/objects/camera"
 require_relative "lib/objects/model"
 
 require_relative "lib/wavefront/model"

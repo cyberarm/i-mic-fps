@@ -80,7 +80,7 @@ class IMICFPS
           next if a == b
           if a.intersect(a.model.bounding_box, b.model.bounding_box)
             if a.name == "tree"
-              a.y_rotation+=0.1
+              a.y_rotation+=0.01
             end
           end
         end
@@ -132,8 +132,6 @@ class IMICFPS
    def render_bounding_box(bounding_box, color = @debug_color)
      # TODO: Minimize number of calls in here
      bounding_box = normalize_bounding_box(bounding_box)
-     puts bounding_box
-     puts
 
      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
      glBegin(GL_TRIANGLES)

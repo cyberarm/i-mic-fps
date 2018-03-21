@@ -26,17 +26,7 @@ class IMICFPS
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
 
-      @camera = Vertex.new(0,-1,0)
-      @camera_target = Vertex.new(0,-1,0)
-      @speed = 0.05
-      @old_speed = @speed
-      @vertical_angle = 0.0 # |
-      @horizontal_angle = 0.0 # _
-      self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
-      @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
-      @true_mouse_checked = 0
-      @mouse_sesitivity = 20.0
-      @initial_fov = 70.0
+      @camera = Camera.new
 
       @crosshair_size = 10
       @crosshair_thickness = 3
@@ -68,22 +58,9 @@ class IMICFPS
         glClearColor(0,0.2,0.5,1) # skyish blue
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
 
-        #glMatrixMode(matrix) indicates that following [matrix] is going to get used
-        glMatrixMode(GL_PROJECTION) # The projection matrix is responsible for adding perspective to our scene.
-        glLoadIdentity # Resets current modelview matrix
-        # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
-        gluPerspective(@initial_fov, width / height, 0.1, 1000.0)
-        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-
-        glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
-        glLoadIdentity
-
-        glEnable(GL_DEPTH_TEST)
+        @camera.draw
         @camera_light.draw
 
-        glRotatef(@vertical_angle,1,0,0)
-        glRotatef(@horizontal_angle,0,1,0)
-        glTranslatef(@camera.x, @camera.y, @camera.z)
         # gluLookAt(@camera.x,@camera.y,@camera.z, @horizontal_angle,@vertical_angle,0, 0,1,0)
 
         ObjectManager.objects.each do |object|
@@ -107,10 +84,10 @@ class IMICFPS
       OpenGL Version: #{glGetString(GL_VERSION)}~
       OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}~
       ~
-      Vertical Angle: #{@vertical_angle.round(2)} Horizontal Angle: #{@horizontal_angle.round(2)} ~
+      Vertical Angle: #{@camera.vertical_angle.round(2)} Horizontal Angle: #{@camera.horizontal_angle.round(2)} ~
       X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)} ~
-      FOV: #{@initial_fov} ~
-      Mouse Sesitivity: #{@mouse_sesitivity} ~
+      FOV: #{@camera.field_of_view} ~
+      Mouse Sesitivity: #{@camera.mouse_sensitivity} ~
       Faces: #{@number_of_faces} ~
       Last Frame: #{delta_time}ms (#{Gosu.fps} fps)~
       ~
@@ -121,54 +98,7 @@ class IMICFPS
         object.update
       end
 
-      if @true_mouse_checked > 2
-        @horizontal_angle-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sesitivity*@initial_fov)*70
-        @vertical_angle-=Float(@true_mouse.y-self.mouse_y)/(@mouse_sesitivity*@initial_fov)*70
-        @horizontal_angle %= 360.0
-        @vertical_angle = @vertical_angle.clamp(-90.0, 90.0)
-      else
-        @true_mouse_checked+=1
-        @true_mouse.x = self.mouse_x
-        @true_mouse.y = self.mouse_y
-      end
-
-      self.mouse_x, self.mouse_y = Gosu.screen_width/2.0, Gosu.screen_height/2.0
-      @true_mouse_checked = 0 if (button_down?(Gosu::KbLeftAlt) && (button_down?(Gosu::KbEnter) || button_down?(Gosu::KbReturn)))
-      @true_mouse_checked = 0 if (button_down?(Gosu::KbRightAlt) && (button_down?(Gosu::KbEnter) || button_down?(Gosu::KbReturn)))
-
-      relative_speed = @speed
-      if button_down?(Gosu::KbLeftControl)
-        relative_speed = (@speed*10.0)*(delta_time/60.0)
-      else
-        relative_speed = @speed*(delta_time/60.0)
-      end
-
-      if button_down?(Gosu::KbUp) || button_down?(Gosu::KbW)
-        @camera.z+=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
-        @camera.x-=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
-      end
-      if button_down?(Gosu::KbDown) || button_down?(Gosu::KbS)
-        @camera.z-=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
-        @camera.x+=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
-      end
-      if button_down?(Gosu::KbA)
-        @camera.z+=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
-        @camera.x+=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
-      end
-      if button_down?(Gosu::KbD)
-        @camera.z-=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
-        @camera.x-=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
-      end
-
-      if button_down?(Gosu::KbLeft)
-        @horizontal_angle-=relative_speed*100
-      end
-      if button_down?(Gosu::KbRight)
-        @horizontal_angle+=relative_speed*100
-      end
-
-      @camera.y+=relative_speed if $window.button_down?(Gosu::KbC) || $window.button_down?(Gosu::KbLeftShift)
-      @camera.y-=relative_speed if $window.button_down?(Gosu::KbSpace)
+      @camera.update
 
       $window.close if $window.button_down?(Gosu::KbEscape)
       @number_of_faces = 0
@@ -176,26 +106,18 @@ class IMICFPS
     end
 
     def button_up(id)
+      ObjectManager.objects.each do |object|
+        object.button_up(id) if defined?(object.button_up)
+      end
+
+      @camera.button_up(id)
+
       case id
       when Gosu::KbZ
         @draw_skydome = !@draw_skydome
         @skydome.renderable = @draw_skydome
-      when Gosu::KB_NUMPAD_PLUS
-        @mouse_sesitivity+=1
-        @mouse_sesitivity = @mouse_sesitivity.clamp(1.0, 100.0)
-      when Gosu::KbMinus, Gosu::KB_NUMPAD_MINUS
-        @mouse_sesitivity-=1
-        @mouse_sesitivity = @mouse_sesitivity.clamp(1.0, 100.0)
-      when Gosu::KB_NUMPAD_MULTIPLY
-        @mouse_sesitivity = 20.0
       when Gosu::KbBacktick
         $debug = !$debug
-      when Gosu::MsWheelUp
-        @initial_fov += 1
-        @initial_fov = @initial_fov.clamp(1, 179)
-      when Gosu::MsWheelDown
-        @initial_fov -= 1
-        @initial_fov = @initial_fov.clamp(1, 179)
       end
     end
 
