@@ -1,46 +1,43 @@
 class IMICFPS
   class Light
     include OpenGL
-    MAX_LIGHTS = GL_MAX_LIGHTS-1
-    attr_reader :x, :y, :z, :ambient, :diffuse, :specular, :position
-    def self.number_of_lights
-      @number_of_lights ||= 0
-    end
+    attr_reader :ambient, :diffuse, :specular, :position, :light_id
+    attr_accessor :x, :y, :z, :intensity
+    def initialize(x:,y:,z:, ambient: Vertex.new(0.5, 0.5, 0.5, 1),
+                   diffuse: Vertex.new(1, 0.5, 0, 1), specular: Vertex.new(0.2, 0.2, 0.2, 1),
+                   position: Vertex.new(x, y, z, 0), intensity: 1)
+      @x,@y,@z = x,y,z
+      @intensity = intensity
 
-    # use as Light.number_of_lights+=n
-    def self.number_of_lights=(int)
-      @number_of_lights = int
-    end
-
-    def initialize(x,y,z)
-      @ambient  = [0.0, 0.0, 0.0, 1].pack("f*")
-      @diffuse  = [1, 0.5, 0, 1].pack("f*")
-      @specular = [0.0, 0.0, 0.0, 1].pack("f*")
-      @position  = [0, 0, 0, 0].pack("f*")
+      self.ambient   = ambient
+      self.diffuse   = diffuse
+      self.specular  = specular
+      self.position  = position
       @light_id = available_light
+
+      LightManager.add_light(self)
     end
 
     def available_light
-      raise "Using to many lights, #{Light.number_of_lights}/#{MAX_LIGHTS}" if Light.number_of_lights > MAX_LIGHTS
-      Light.number_of_lights+=1
-      puts "OpenGL::GL_LIGHT#{Light.number_of_lights}"
-      @light_id = Object.const_get "OpenGL::GL_LIGHT#{Light.number_of_lights}"
+      raise "Using to many lights, #{LightManager.light_count}/#{LightManager::MAX_LIGHTS}" if LightManager.light_count > LightManager::MAX_LIGHTS
+      puts "OpenGL::GL_LIGHT#{LightManager.light_count}"
+      @light_id = Object.const_get "OpenGL::GL_LIGHT#{LightManager.light_count}"
     end
 
-    def ambient=(array)
-      @ambient = array.pack("f*")
+    def ambient=(color)
+      @ambient = convert(color).pack("f*")
     end
 
-    def diffuse=(array)
-      @diffuse = array.pack("f*")
+    def diffuse=(color)
+      @diffuse = convert(color, true).pack("f*")
     end
 
-    def specular=(array)
-      @specular = array.pack("f*")
+    def specular=(color)
+      @specular = convert(color, true).pack("f*")
     end
 
-    def position=(array)
-      @position = array.pack("f*")
+    def position=(vertex)
+      @position = convert(vertex).pack("f*")
     end
 
     def draw
@@ -51,6 +48,14 @@ class IMICFPS
       glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1)
       glEnable(GL_LIGHTING)
       glEnable(@light_id)
+    end
+
+    def convert(struct, apply_intensity = false)
+      if apply_intensity
+        return struct.to_a.compact.map{|i| i*@intensity}
+      else
+        return struct.to_a.compact
+      end
     end
   end
 end

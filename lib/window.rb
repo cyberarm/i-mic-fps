@@ -35,16 +35,8 @@ class IMICFPS
       @font = Gosu::Font.new(18, name: "DejaVu Sans")
       @text = "Hello There"
 
-      @ambient_light = [0.5, 0.5, 0.5, 1]
-      @diffuse_light = [1, 0.5, 0, 1]
-      @specular_light = [0.2, 0.2, 0.2, 1]
-      @light_position = [3, 6, 6, 0]
-
-      @camera_light = Light.new(0,0,0)
-      @camera_light.ambient = @ambient_light
-      @camera_light.diffuse = @diffuse_light
-      @camera_light.specular = @specular_light
-      @camera_light.position = @light_position
+      Light.new(x: 3, y: -6, z: 6)
+      Light.new(x: 0, y: -100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1))
     end
 
     def draw
@@ -58,10 +50,10 @@ class IMICFPS
         glClearColor(0,0.2,0.5,1) # skyish blue
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
 
+        LightManager.lights.each do |light|
+          light.draw
+        end
         @camera.draw
-        @camera_light.draw
-
-        # gluLookAt(@camera.x,@camera.y,@camera.z, @horizontal_angle,@vertical_angle,0, 0,1,0)
 
         ObjectManager.objects.each do |object|
           object.draw if object.visible && object.renderable
