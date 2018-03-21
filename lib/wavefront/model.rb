@@ -31,7 +31,7 @@ class IMICFPS
         @faces    = []
         @smoothing= 0
 
-        @bounding_box = BoundingBox.new(nil,nil,nil, nil,nil,nil)
+        @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
         start_time = Time.now
         parse
         puts "#{@file_path.split('/').last} took #{(Time.now-start_time).round(2)} seconds to parse"

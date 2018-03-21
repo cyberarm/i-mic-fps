@@ -11,7 +11,7 @@ class IMICFPS
         @textures = []
         @normals  = []
         @faces    = []
-        @bounding_box = BoundingBox.new(nil,nil,nil, nil,nil,nil)
+        @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
         @debug_color = Color.new(1.0,0.0,0.0)
 
         # Faces array packs everything:

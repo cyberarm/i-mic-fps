@@ -49,6 +49,10 @@ class IMICFPS
         end
 
         puts "Total Lines: #{lines}"
+        calculate_bounding_box(@vertices, @bounding_box)
+        @objects.each do |o|
+          calculate_bounding_box(o.vertices, o.bounding_box)
+        end
       end
 
       def parse_mtllib
@@ -114,8 +118,6 @@ class IMICFPS
         else
           raise
         end
-        recalculate_bounding_box(vert, @bounding_box)
-        recalculate_bounding_box(vert, @current_object.bounding_box)
         @current_object.vertices << vert
         @vertices << vert
       end
@@ -146,9 +148,9 @@ class IMICFPS
         @uvs << texture
       end
 
-      def recalculate_bounding_box(vertex, bounding_box)
-        # Set a default relative to the model
+      def calculate_bounding_box(vertices, bounding_box)
         unless bounding_box.min_x.is_a?(Float)
+          vertex = vertices.first
           bounding_box.min_x = vertex.x
           bounding_box.min_y = vertex.y
           bounding_box.min_z = vertex.z
@@ -158,13 +160,15 @@ class IMICFPS
           bounding_box.max_z = vertex.z
         end
 
-        bounding_box.min_x = vertex.x if vertex.x < bounding_box.min_x
-        bounding_box.min_y = vertex.y if vertex.y < bounding_box.min_y
-        bounding_box.min_z = vertex.z if vertex.z < bounding_box.min_z
+        vertices.each do |vertex|
+          bounding_box.min_x = vertex.x if vertex.x < bounding_box.min_x
+          bounding_box.min_y = vertex.y if vertex.y < bounding_box.min_y
+          bounding_box.min_z = vertex.z if vertex.z < bounding_box.min_z
 
-        bounding_box.max_x = vertex.x if vertex.x > bounding_box.max_x
-        bounding_box.max_y = vertex.y if vertex.y > bounding_box.max_y
-        bounding_box.max_z = vertex.z if vertex.z > bounding_box.max_z
+          bounding_box.max_x = vertex.x if vertex.x > bounding_box.max_x
+          bounding_box.max_y = vertex.y if vertex.y > bounding_box.max_y
+          bounding_box.max_z = vertex.z if vertex.z > bounding_box.max_z
+        end
       end
     end
   end

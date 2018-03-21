@@ -14,7 +14,7 @@ class IMICFPS
     attr_accessor :x_rotation, :y_rotation, :z_rotation
     attr_reader :model, :name, :debug_color
 
-    def initialize(type:, file_path:, x: 0, y: 0, z: 0, scale: MODEL_METER_SCALE, backface_culling: true)
+    def initialize(type:, file_path:, x: 0, y: 0, z: 0, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true)
       @type = type
       @file_path = file_path
       @x,@y,@z,@scale = x,y,z,scale
@@ -24,7 +24,6 @@ class IMICFPS
       @x_rotation,@y_rotation,@z_rotation = 0,0,0
       @name = file_path.split("/").last.split(".").first
       @debug_color  = Color.new(rand(0.0..1.0), rand(0.0..1.0), rand(0.0..1.0))
-      @temp_bounding_box = BoundingBox.new(0,0,0, 0,0,0)
 
       @model = nil
 
@@ -40,7 +39,7 @@ class IMICFPS
       end
 
 
-      ObjectManager.add_object(self)
+      ObjectManager.add_object(self) if auto_manage
 
       setup
 
@@ -73,16 +72,16 @@ class IMICFPS
     end
 
     def update
-      ObjectManager.objects.each do |a|
-        ObjectManager.objects.each do |b|
-          next if a == b
-          next if b.name == "skydome"
-          if a.intersect(a.model.bounding_box, b.model.bounding_box)
-            if a.name == "tree"
-              puts "#{b.name} is touching me"
-              a.y_rotation+=0.01
-            end
-          end
+      ObjectManager.objects.each do |b|
+        next if b.name == self.name
+        raise if b.name == self.name
+
+        if self.intersect(self.model.bounding_box, b.model.bounding_box)
+          self.y_rotation+=0.02
+
+          puts "#{b.name} is touching me"
+        else
+          # puts "!=! No Collision"
         end
       end
     end
@@ -109,95 +108,106 @@ class IMICFPS
     def intersect(a, b)
       a = normalize_bounding_box(a)
       b = normalize_bounding_box(b)
-     if (a.min_x <= b.max_x && a.max_x >= b.min_x) &&
-        (a.min_y <= b.max_y && a.max_y >= b.min_y) &&
-        (a.min_z <= b.max_z && a.max_z >= b.min_z)
-       return true
-     else
-       return false
-     end
-   end
 
-   def normalize_bounding_box(bounding_box)
-     @temp_bounding_box.min_x = bounding_box.min_x*scale+x
-     @temp_bounding_box.min_y = bounding_box.min_y*scale+y
-     @temp_bounding_box.min_z = bounding_box.min_z*scale+z
+      puts "bounding boxes match!" if a == b
+      # maxx1 > minx2 && minx1 < maxx2 # && maxy1 > miny1 && miny1 < maxy2
+      if (a.max_x >= b.max_x && a.min_x <= b.max_x) && (a.max_y >= b.min_y && a.min_y <= b.max_y)  && (a.max_z >= b.min_z && a.min_z <= b.max_z)
+        # puts a
+        # puts b
+        # exit
+        return true
+      end
+    end
 
-     @temp_bounding_box.max_x = bounding_box.max_x*scale+x
-     @temp_bounding_box.max_y = bounding_box.max_y*scale+y
-     @temp_bounding_box.max_z = bounding_box.max_z*scale+z
-     return @temp_bounding_box
-   end
+    def normalize_bounding_box(box)
+      temp = BoundingBox.new
+      temp.min_x = box.min_x.to_f*scale+x
+      temp.min_y = box.min_y.to_f*scale+y
+      temp.min_z = box.min_z.to_f*scale+z
 
-   def render_bounding_box(bounding_box, color = @debug_color)
+      temp.max_x = box.max_x.to_f*scale+x
+      temp.max_y = box.max_y.to_f*scale+y
+      temp.max_z = box.max_z.to_f*scale+z
+
+      # puts "b: #{box}, Temp: #{temp}"
+      return temp
+    end
+
+    def render_bounding_box(box, color = @debug_color)
      # TODO: Minimize number of calls in here
-     bounding_box = normalize_bounding_box(bounding_box)
+      box = normalize_bounding_box(box)
 
-     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-     glBegin(GL_TRIANGLES)
-       # TOP
-       glNormal3f(0,1,0)
-       glColor3f(color.red, color.green, color.blue)
-       glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-       glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.min_z)
-       glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.min_z)
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+      glBegin(GL_LINES)
+        glColor3f(0,0,1.0)
+        glVertex3f(box.min_x, box.min_y, box.min_z)
+        glColor3f(1.0,0,0)
+        glVertex3f(box.max_x, box.max_y, box.max_z)
+      glEnd
+      glBegin(GL_TRIANGLES)
+        # TOP
+        glNormal3f(0,1,0)
+        glColor3f(color.red, color.green, color.blue)
+        glVertex3f(box.min_x, box.max_y, box.max_z)
+        glVertex3f(box.min_x, box.max_y, box.min_z)
+        glVertex3f(box.max_x, box.max_y, box.min_z)
 
-       glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-       glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.max_z)
-       glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.min_z)
+        glVertex3f(box.min_x, box.max_y, box.max_z)
+        glVertex3f(box.max_x, box.max_y, box.max_z)
+        glVertex3f(box.max_x, box.max_y, box.min_z)
 
-       # BOTTOM
-       glNormal3f(0,-1,0)
-       glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-       glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.max_z)
-       glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.max_z)
+        # BOTTOM
+        glNormal3f(0,-1,0)
+        glVertex3f(box.max_x, box.min_y, box.min_z)
+        glVertex3f(box.max_x, box.min_y, box.max_z)
+        glVertex3f(box.min_x, box.min_y, box.max_z)
 
-       glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-       glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.min_z)
-       glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.max_z)
+        glVertex3f(box.max_x, box.min_y, box.min_z)
+        glVertex3f(box.min_x, box.min_y, box.min_z)
+        glVertex3f(box.min_x, box.min_y, box.max_z)
 
-       # RIGHT SIDE
-       glNormal3f(0,0,1)
-       glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-       glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.min_z)
-       glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.min_z)
+        # RIGHT SIDE
+        glNormal3f(0,0,1)
+        glVertex3f(box.min_x, box.max_y, box.max_z)
+        glVertex3f(box.min_x, box.max_y, box.min_z)
+        glVertex3f(box.min_x, box.min_y, box.min_z)
 
-       glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.max_z)
-       glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.min_z)
-       glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
+        glVertex3f(box.min_x, box.min_y, box.max_z)
+        glVertex3f(box.min_x, box.min_y, box.min_z)
+        glVertex3f(box.min_x, box.max_y, box.max_z)
 
-       # LEFT SIDE
-       glNormal3f(1,0,0)
-       glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.max_z)
-       glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.min_z)
-       glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
+        # LEFT SIDE
+        glNormal3f(1,0,0)
+        glVertex3f(box.max_x, box.max_y, box.max_z)
+        glVertex3f(box.max_x, box.max_y, box.min_z)
+        glVertex3f(box.max_x, box.min_y, box.min_z)
 
-       glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.max_z)
-       glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-       glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.max_z)
+        glVertex3f(box.max_x, box.min_y, box.max_z)
+        glVertex3f(box.max_x, box.min_y, box.min_z)
+        glVertex3f(box.max_x, box.max_y, box.max_z)
 
-       # FRONT
-       glNormal3f(-1,0,0)
-       glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-       glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.max_z)
-       glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.max_z)
+        # FRONT
+        glNormal3f(-1,0,0)
+        glVertex3f(box.min_x, box.max_y, box.max_z)
+        glVertex3f(box.max_x, box.max_y, box.max_z)
+        glVertex3f(box.max_x, box.min_y, box.max_z)
 
-       glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.max_z)
-       glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.max_z)
-       glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.max_z)
+        glVertex3f(box.min_x, box.max_y, box.max_z)
+        glVertex3f(box.max_x, box.min_y, box.max_z)
+        glVertex3f(box.min_x, box.min_y, box.max_z)
 
-       # BACK
-       glNormal3f(-1,0,0)
-       glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-       glVertex3f(bounding_box.min_x, bounding_box.min_y, bounding_box.min_z)
-       glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.min_z)
+        # BACK
+        glNormal3f(-1,0,0)
+        glVertex3f(box.max_x, box.min_y, box.min_z)
+        glVertex3f(box.min_x, box.min_y, box.min_z)
+        glVertex3f(box.min_x, box.max_y, box.min_z)
 
-       glVertex3f(bounding_box.max_x, bounding_box.min_y, bounding_box.min_z)
-       glVertex3f(bounding_box.min_x, bounding_box.max_y, bounding_box.min_z)
-       glVertex3f(bounding_box.max_x, bounding_box.max_y, bounding_box.min_z)
-     glEnd
-     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-   end
+        glVertex3f(box.max_x, box.min_y, box.min_z)
+        glVertex3f(box.min_x, box.max_y, box.min_z)
+        glVertex3f(box.max_x, box.max_y, box.min_z)
+      glEnd
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+    end
 
     def handleGlError
       e = glGetError()

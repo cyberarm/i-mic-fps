@@ -27,6 +27,7 @@ require_relative "lib/managers/light_manager"
 require_relative "lib/objects/light"
 require_relative "lib/objects/camera"
 require_relative "lib/objects/model"
+require_relative "lib/objects/terrain"
 
 require_relative "lib/wavefront/model"
 

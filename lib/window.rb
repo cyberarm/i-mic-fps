@@ -18,14 +18,15 @@ class IMICFPS
       @delta_time = Gosu.milliseconds
       @number_of_faces = 0
       @draw_skydome = true
-      @skydome = Model.new(type: :obj, file_path: "objects/skydome.obj", x: 0, y: 0,z: 0, scale: 1, backface_culling: false)
-      @actor = Model.new(type: :obj, file_path: "objects/biped.obj", x: 1, y: 0, z: 0)
-      Model.new(type: :obj, file_path: "objects/tree.obj", x: 3)
+      @skydome = Model.new(type: :obj, file_path: "objects/skydome.obj", x: 0, y: 0,z: 0, scale: 1, backface_culling: false, auto_manage: false)
+      @actor = Model.new(type: :obj, file_path: "objects/biped.obj", x: 0, y: 0, z: -2)
+      Model.new(type: :obj, file_path: "objects/tree.obj", x: 0, y: 0, z: -10)
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
+      @terrain = Terrain.new(size: 100)
 
-      @camera = Camera.new
+      @camera = Camera.new(x: 0, y: -2, z: 1)
       @camera.bind_model(@actor)
 
       @crosshair_size = 10
@@ -54,10 +55,11 @@ class IMICFPS
           light.draw
         end
         @camera.draw
-
+        @skydome.draw if @skydome.renderable
         ObjectManager.objects.each do |object|
           object.draw if object.visible && object.renderable
         end
+        @terrain.draw
       end
 
       # Draw crosshair
@@ -78,8 +80,8 @@ class IMICFPS
       ~
       Vertical Angle: #{@camera.vertical_angle.round(2)} Horizontal Angle: #{@camera.horizontal_angle.round(2)} ~
       Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)} ~
-      Actor X:#{@camera.bound_model.x.round(2)} Y:#{@camera.bound_model.y.round(2)} Z:#{@camera.bound_model.z.round(2)} ~
-      FOV: #{@camera.field_of_view} ~
+      #{if @camera.bound_model then "Actor X:#{@camera.bound_model.x.round(2)} Y:#{@camera.bound_model.y.round(2)} Z:#{@camera.bound_model.z.round(2)}";end} ~
+      Field Of View: #{@camera.field_of_view} ~
       Mouse Sesitivity: #{@camera.mouse_sensitivity} ~
       Faces: #{@number_of_faces} ~
       Last Frame: #{delta_time}ms (#{Gosu.fps} fps)~

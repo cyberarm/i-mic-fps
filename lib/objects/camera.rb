@@ -37,15 +37,14 @@ class IMICFPS
       # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
       gluPerspective(@field_of_view, $window.width / $window.height, 0.1, 1000.0)
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
+      glRotatef(@vertical_angle,1,0,0)
+      glRotatef(@horizontal_angle,0,1,0)
+      glTranslatef(@x, @y, @z)
 
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
       glLoadIdentity
 
       glEnable(GL_DEPTH_TEST)
-
-      glRotatef(@vertical_angle,1,0,0)
-      glRotatef(@horizontal_angle,0,1,0)
-      glTranslatef(@x, @y, @z)
     end
 
     def update
@@ -122,10 +121,10 @@ class IMICFPS
         @mouse_sensitivity = 20.0
       when Gosu::MsWheelUp
         @field_of_view += 1
-        @field_of_view = @field_of_view.clamp(1, 179)
+        @field_of_view = @field_of_view.clamp(1, 100)
       when Gosu::MsWheelDown
         @field_of_view -= 1
-        @field_of_view = @field_of_view.clamp(1, 179)
+        @field_of_view = @field_of_view.clamp(1, 100)
       end
     end
   end
