@@ -13,6 +13,7 @@ class IMICFPS
         @faces    = []
         @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
         @debug_color = Color.new(1.0,0.0,0.0)
+        @x,@y,@z = 0,0,0
 
         # Faces array packs everything:
         #   vertex   = index[0]
@@ -21,17 +22,28 @@ class IMICFPS
         #   material = index[3]
       end
 
+      def at_same_position?
+        if @x == @parent.x
+          if @x == @parent.x
+            if @x == @parent.x
+              true
+            end
+          end
+        end
+      end
+
       def flattened_vertices
-        unless @vertices_list
+        unless @vertices_list && at_same_position?
           @debug_color = @faces.first[3].diffuse
+          @x,@y,@z = @parent.x,@parent.y,@parent.z
 
           list = []
           @faces.each do |face|
             [face[0]].each do |v|
               next unless v
-              list << v.x*@parent.scale#+@parent.x
-              list << v.y*@parent.scale#+@parent.y
-              list << v.z*@parent.scale#+@parent.z
+              list << v.x*@parent.scale+@parent.x
+              list << v.y*@parent.scale+@parent.y
+              list << v.z*@parent.scale+@parent.z
               list << v.weight
             end
           end

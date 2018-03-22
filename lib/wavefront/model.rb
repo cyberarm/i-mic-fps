@@ -34,8 +34,11 @@ class IMICFPS
         @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
         start_time = Time.now
         parse
+        # point = rand(1.0..10.0)
+        # @bounding_box = BoundingBox.new(point.to_f/2, point.to_f/2, point.to_f/2, point, point, point)
+        # puts "!!!!!!!!!!!!!!"
+        # puts @bounding_box
         puts "#{@file_path.split('/').last} took #{(Time.now-start_time).round(2)} seconds to parse"
-        p @bounding_box
 
         face_count = 0
         @objects.each {|o| face_count+=o.faces.size}

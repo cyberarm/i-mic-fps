@@ -5,6 +5,7 @@ class IMICFPS
     # include GLUT
 
     attr_accessor :number_of_faces, :needs_cursor
+    attr_reader :camera
 
     def initialize(window_width = 1280, window_height = 800, fullscreen = false)
       if ARGV.join.include?("--native")
@@ -17,17 +18,17 @@ class IMICFPS
 
       @delta_time = Gosu.milliseconds
       @number_of_faces = 0
-      @draw_skydome = true
-      @skydome = Model.new(type: :obj, file_path: "objects/skydome.obj", x: 0, y: 0,z: 0, scale: 1, backface_culling: false, auto_manage: false)
-      @actor = Model.new(type: :obj, file_path: "objects/biped.obj", x: 0, y: 0, z: -2)
-      Model.new(type: :obj, file_path: "objects/tree.obj", x: 0, y: 0, z: -10)
+      @draw_skydome = false
+      @skydome = Model.new(type: :obj, file_path: "objects/skydome.obj", x: 0, y: 0,z: 0, scale: 0.8, backface_culling: false, auto_manage: false)
+      @actor = Model.new(type: :obj, file_path: "objects/biped.obj", x: 1, y: 0, z: 8)
+      Model.new(type: :obj, file_path: "objects/tree.obj", x: 10, y: 0, z: 10)
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
-      @terrain = Terrain.new(size: 100)
+      # @terrain = Terrain.new(size: 20)
 
       @camera = Camera.new(x: 0, y: -2, z: 1)
-      @camera.bind_model(@actor)
+      # @camera.bind_model(@actor)
 
       @crosshair_size = 10
       @crosshair_thickness = 3
@@ -59,7 +60,7 @@ class IMICFPS
         ObjectManager.objects.each do |object|
           object.draw if object.visible && object.renderable
         end
-        @terrain.draw
+        @terrain.draw if @terrain
       end
 
       # Draw crosshair

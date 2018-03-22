@@ -150,7 +150,7 @@ class IMICFPS
 
       def calculate_bounding_box(vertices, bounding_box)
         unless bounding_box.min_x.is_a?(Float)
-          vertex = vertices.first
+          vertex = vertices.last
           bounding_box.min_x = vertex.x
           bounding_box.min_y = vertex.y
           bounding_box.min_z = vertex.z
@@ -161,13 +161,13 @@ class IMICFPS
         end
 
         vertices.each do |vertex|
-          bounding_box.min_x = vertex.x if vertex.x < bounding_box.min_x
-          bounding_box.min_y = vertex.y if vertex.y < bounding_box.min_y
-          bounding_box.min_z = vertex.z if vertex.z < bounding_box.min_z
+          bounding_box.min_x = vertex.x if vertex.x <= bounding_box.min_x
+          bounding_box.min_y = vertex.y if vertex.y <= bounding_box.min_y
+          bounding_box.min_z = vertex.z if vertex.z <= bounding_box.min_z
 
-          bounding_box.max_x = vertex.x if vertex.x > bounding_box.max_x
-          bounding_box.max_y = vertex.y if vertex.y > bounding_box.max_y
-          bounding_box.max_z = vertex.z if vertex.z > bounding_box.max_z
+          bounding_box.max_x = vertex.x if vertex.x >= bounding_box.max_x
+          bounding_box.max_y = vertex.y if vertex.y >= bounding_box.max_y
+          bounding_box.max_z = vertex.z if vertex.z >= bounding_box.max_z
         end
       end
     end

@@ -2,7 +2,7 @@ class IMICFPS
   class Terrain
     include OpenGL
     def initialize(size:, heightmap: nil)
-      @size = size
+      @size = size.to_f
       @heightmap = heightmap
     end
 
@@ -13,14 +13,14 @@ class IMICFPS
       glBegin(GL_TRIANGLES)
         glNormal3f(0,1,0)
         glColor3f(1, 0.5, 0.0)
-        glVertex3f(-@size,height,-@size)
-        glVertex3f(-@size,height,@size)
-        glVertex3f(@size,height,@size)
+        glVertex3f(-@size/2,height,-@size/2)
+        glVertex3f(-@size/2,height,@size/2)
+        glVertex3f(@size/2,height,@size/2)
 
         glColor3f(0, 0.5, 0.0)
-        glVertex3f(@size,height,@size)
-        glVertex3f(@size,height,-@size)
-        glVertex3f(-@size,height,-@size)
+        glVertex3f(@size/2,height,@size/2)
+        glVertex3f(@size/2,height,-@size/2)
+        glVertex3f(-@size/2,height,-@size/2)
       glEnd
 
       glDisable(GL_COLOR_MATERIAL)
