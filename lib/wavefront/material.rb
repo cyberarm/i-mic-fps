@@ -15,7 +15,7 @@ class IMICFPS
 
       def set_texture(texture_path)
         puts "#{name} texture #{texture_path}"
-        @texture = Gosu::Image.new(texture_path, retro: true)
+        @texture = Gosu::Image.new(texture_path, retro: false)
         array_of_pixels = @texture.to_blob
 
         tex_names_buf = ' ' * 8

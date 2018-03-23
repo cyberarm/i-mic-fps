@@ -72,7 +72,13 @@ class IMICFPS
           glColorPointer(3, GL_FLOAT, 0, o.flattened_materials)
           glNormalPointer(GL_FLOAT, 0, o.flattened_normals)
 
-          glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+         if $debug
+           glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+           glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+         else
+           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+         end
 
           glDisableClientState(GL_VERTEX_ARRAY)
           glDisableClientState(GL_COLOR_ARRAY)
