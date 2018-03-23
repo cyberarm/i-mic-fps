@@ -80,6 +80,7 @@ class IMICFPS
 
         @render_pitch-=Float(@true_mouse.y-self.mouse_y)/(@mouse_sensitivity*@field_of_view)*70 #unless @game_object
         @yaw %= 360.0
+        @render_pitch = @render_pitch.clamp(-90.0, 90.0)
         @pitch = @pitch.clamp(-90.0, 90.0)
       else
         @true_mouse_checked+=1
