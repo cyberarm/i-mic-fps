@@ -27,8 +27,9 @@ class IMICFPS
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
       @terrain = Terrain.new(size: 20, height: 0)
 
-      @camera = Camera.new(x: 0, y: -2, z: 1)
       @player = Player.new(x: 1, y: 0, z: -10)
+      @camera = Camera.new(x: 0, y: -2, z: 1)
+      @camera.attach_to(@player)
 
       @crosshair_size = 10
       @crosshair_thickness = 3
@@ -81,9 +82,9 @@ class IMICFPS
       OpenGL Version: #{glGetString(GL_VERSION)}~
       OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}~
       ~
-      Vertical Angle: #{@camera.vertical_angle.round(2)} Horizontal Angle: #{@camera.horizontal_angle.round(2)} ~
+      Camera pitch: #{@camera.pitch.round(2)} Yaw: #{@camera.yaw.round(2)} Roll #{@camera.roll.round(2)} ~
       Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)} ~
-      #{if @camera.bound_model then "Actor X:#{@camera.bound_model.x.round(2)} Y:#{@camera.bound_model.y.round(2)} Z:#{@camera.bound_model.z.round(2)}";end} ~
+      #{if @camera.game_object then "Actor X:#{@camera.game_object.x.round(2)} Y:#{@camera.game_object.y.round(2)} Z:#{@camera.game_object.z.round(2)}";end} ~
       Field Of View: #{@camera.field_of_view} ~
       Mouse Sesitivity: #{@camera.mouse_sensitivity} ~
       Faces: #{@number_of_faces} ~

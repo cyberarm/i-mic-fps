@@ -4,19 +4,55 @@ class IMICFPS
     include OpenGL
     include GLU
 
-    attr_accessor :x,:y,:z, :field_of_view, :vertical_angle, :horizontal_angle, :mouse_sensitivity
-    attr_reader :bound_model
+    attr_accessor :x,:y,:z, :field_of_view, :pitch, :yaw, :roll, :mouse_sensitivity
+    attr_reader :game_object
     def initialize(x: 0, y: 0, z: 0, fov: 70.0, distance: 100.0)
       @x,@y,@z = x,y,z
-      @vertical_angle = 0.0
-      @horizontal_angle = 0.0
+      @pitch = 0.0
+      @yaw   = 0.0
+      @roll  = 0.0
       @field_of_view = fov
       @view_distance = distance
+
+      @game_object = nil
+      @distance = 2
 
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
       @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
       @true_mouse_checked = 0
       @mouse_sensitivity = 20.0
+    end
+
+    def attach_to(game_object)
+      raise "Not a game object!" unless game_object.is_a?(GameObject)
+      @game_object = game_object
+    end
+
+    def detach
+      @game_object = nil
+    end
+
+    def distance_from_object
+      @distance
+    end
+
+    def horizontal_distance_from_object
+      distance_from_object * Math.cos(@pitch)
+    end
+
+    def vertical_distance_from_object
+      distance_from_object * Math.sin(@pitch)
+    end
+
+    def position_camera
+      x_offset = horizontal_distance_from_object * Math.sin(@game_object.y_rotation.degrees_to_radians)
+      z_offset = horizontal_distance_from_object * Math.cos(@game_object.y_rotation.degrees_to_radians)
+      # p @game_object.x, @game_object.z;exit
+      @x = @game_object.x - x_offset
+      @y = @game_object.y - 2
+      @z = @game_object.z - z_offset
+
+      @yaw = 180 - @game_object.y_rotation
     end
 
     def draw
@@ -26,8 +62,8 @@ class IMICFPS
       # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
       gluPerspective(@field_of_view, $window.width / $window.height, 0.1, @view_distance)
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-      glRotatef(@vertical_angle,1,0,0)
-      glRotatef(@horizontal_angle,0,1,0)
+      glRotatef(@pitch,1,0,0)
+      glRotatef(@yaw,0,1,0)
       glTranslatef(@x, @y, @z)
 
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
@@ -35,11 +71,13 @@ class IMICFPS
     end
 
     def update
+      position_camera if @game_object
+
       if @true_mouse_checked > 2
-        @horizontal_angle-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70
-        @vertical_angle-=Float(@true_mouse.y-self.mouse_y)/(@mouse_sensitivity*@field_of_view)*70
-        @horizontal_angle %= 360.0
-        @vertical_angle = @vertical_angle.clamp(-90.0, 90.0)
+        @yaw-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
+        @pitch-=Float(@true_mouse.y-self.mouse_y)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
+        @yaw %= 360.0
+        @pitch = @pitch.clamp(-90.0, 90.0)
       else
         @true_mouse_checked+=1
         @true_mouse.x = self.mouse_x
