@@ -39,7 +39,7 @@ class IMICFPS
       @text = "Hello There"
 
       Light.new(x: 3, y: -6, z: 6)
-      Light.new(x: 0, y: -100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1))
+      Light.new(x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1))
     end
 
     def draw

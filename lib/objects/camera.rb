@@ -15,7 +15,7 @@ class IMICFPS
       @view_distance = distance
 
       @game_object = nil
-      @distance = 2
+      @distance = 5
 
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
       @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
@@ -49,10 +49,11 @@ class IMICFPS
       z_offset = horizontal_distance_from_object * Math.cos(@game_object.y_rotation.degrees_to_radians)
       # p @game_object.x, @game_object.z;exit
       @x = @game_object.x - x_offset
-      @y = @game_object.y - 2
+      @y = @game_object.y + 2
       @z = @game_object.z - z_offset
 
       @yaw = 180 - @game_object.y_rotation
+      @pitch = 20.0
     end
 
     def draw
@@ -64,7 +65,7 @@ class IMICFPS
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
       glRotatef(@pitch,1,0,0)
       glRotatef(@yaw,0,1,0)
-      glTranslatef(-@x, @y, -@z)
+      glTranslatef(-@x, -@y, -@z)
 
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
       glLoadIdentity
@@ -74,6 +75,9 @@ class IMICFPS
       position_camera if @game_object
 
       if @true_mouse_checked > 2
+        @yaw-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
+        @game_object.y_rotation+=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 if @game_object
+
         @yaw-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
         @pitch-=Float(@true_mouse.y-self.mouse_y)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
         @yaw %= 360.0
