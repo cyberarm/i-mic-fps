@@ -25,7 +25,7 @@ class IMICFPS
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
-      @terrain = Terrain.new(size: 20)
+      @terrain = Terrain.new(size: 20, height: 0)
 
       @camera = Camera.new(x: 0, y: -2, z: 1)
       @player = Player.new(x: 1, y: 0, z: -10)

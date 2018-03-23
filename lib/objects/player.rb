@@ -20,28 +20,30 @@ class IMICFPS
         relative_speed = @speed*(delta_time/60.0)
       end
 
+      relative_y_rotation = @y_rotation*-1
+
       if button_down?(Gosu::KbUp) || button_down?(Gosu::KbW)
-        @z-=Math.cos(@y_rotation * Math::PI / 180)*relative_speed
-        @x+=Math.sin(@y_rotation * Math::PI / 180)*relative_speed
+        @z+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+        @x-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
       end
       if button_down?(Gosu::KbDown) || button_down?(Gosu::KbS)
-        @z+=Math.cos(@y_rotation * Math::PI / 180)*relative_speed
-        @x-=Math.sin(@y_rotation * Math::PI / 180)*relative_speed
+        @z-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+        @x+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
       end
       if button_down?(Gosu::KbA)
-        @z-=Math.sin(@y_rotation * Math::PI / 180)*relative_speed
-        @x-=Math.cos(@y_rotation * Math::PI / 180)*relative_speed
+        @z+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+        @x+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
       end
       if button_down?(Gosu::KbD)
-        @z+=Math.sin(@y_rotation * Math::PI / 180)*relative_speed
-        @x+=Math.cos(@y_rotation * Math::PI / 180)*relative_speed
+        @z-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+        @x-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
       if button_down?(Gosu::KbLeft)
-        @y_rotation-=relative_speed*100
+        @y_rotation+=relative_speed*100
       end
       if button_down?(Gosu::KbRight)
-        @y_rotation+=relative_speed*100
+        @y_rotation-=relative_speed*100
       end
 
       @y-=relative_speed if button_down?(Gosu::KbC) || button_down?(Gosu::KbLeftShift) unless @y <= 0
