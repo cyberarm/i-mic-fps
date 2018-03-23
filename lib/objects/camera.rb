@@ -64,7 +64,7 @@ class IMICFPS
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
       glRotatef(@pitch,1,0,0)
       glRotatef(@yaw,0,1,0)
-      glTranslatef(@x, @y, @z)
+      glTranslatef(-@x, @y, -@z)
 
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
       glLoadIdentity
