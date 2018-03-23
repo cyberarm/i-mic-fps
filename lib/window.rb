@@ -19,13 +19,13 @@ class IMICFPS
       @delta_time = Gosu.milliseconds
       @number_of_faces = 0
       @draw_skydome = true
-      @skydome = Skydome.new(scale: 0.1, backface_culling: false, auto_manage: false)
+      @skydome = Skydome.new(scale: 0.02, backface_culling: false, auto_manage: false)
       Tree.new(x: 1, y: 0, z: -5)
       p ObjectManager.objects.map {|o| o.name}
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
-      # @terrain = Terrain.new(size: 20)
+      @terrain = Terrain.new(size: 20)
 
       @camera = Camera.new(x: 0, y: -2, z: 1)
       @player = Player.new(x: 1, y: 0, z: -10)
@@ -56,7 +56,7 @@ class IMICFPS
           light.draw
         end
         @camera.draw
-        @skydome.draw# if @skydome.renderable
+        @skydome.draw if @skydome.renderable
         glEnable(GL_DEPTH_TEST)
 
         ObjectManager.objects.each do |object|

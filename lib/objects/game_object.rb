@@ -63,6 +63,7 @@ class IMICFPS
     end
 
     def update
+      model.update
     end
     # Do two Axis Aligned Bounding Boxes intersect?
     def intersect(a, b)

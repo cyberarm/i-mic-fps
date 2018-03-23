@@ -16,8 +16,7 @@ class IMICFPS
 
       def initialize(file_path:, game_object:)
         @game_object = game_object
-        @x, @y, @z = game_object.x, game_object.y, game_object.z
-        @scale = game_object.scale
+        update
         @file_path = file_path
         @file = File.open(file_path, 'r')
         @material_file  = nil
@@ -87,6 +86,11 @@ class IMICFPS
           glDisable(GL_COLOR_MATERIAL)
         end
         $window.number_of_faces+=self.faces.size
+      end
+
+      def update
+        @x, @y, @z = @game_object.x, @game_object.y, @game_object.z
+        @scale = @game_object.scale
       end
     end
   end

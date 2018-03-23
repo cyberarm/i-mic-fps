@@ -21,20 +21,20 @@ class IMICFPS
       end
 
       if button_down?(Gosu::KbUp) || button_down?(Gosu::KbW)
-        @z+=Math.cos(@y_rotation * Math::PI / 180)*relative_speed
-        @x-=Math.sin(@y_rotation * Math::PI / 180)*relative_speed
-      end
-      if button_down?(Gosu::KbDown) || button_down?(Gosu::KbS)
         @z-=Math.cos(@y_rotation * Math::PI / 180)*relative_speed
         @x+=Math.sin(@y_rotation * Math::PI / 180)*relative_speed
       end
-      if button_down?(Gosu::KbA)
-        @z+=Math.sin(@y_rotation * Math::PI / 180)*relative_speed
-        @x+=Math.cos(@y_rotation * Math::PI / 180)*relative_speed
+      if button_down?(Gosu::KbDown) || button_down?(Gosu::KbS)
+        @z+=Math.cos(@y_rotation * Math::PI / 180)*relative_speed
+        @x-=Math.sin(@y_rotation * Math::PI / 180)*relative_speed
       end
-      if button_down?(Gosu::KbD)
+      if button_down?(Gosu::KbA)
         @z-=Math.sin(@y_rotation * Math::PI / 180)*relative_speed
         @x-=Math.cos(@y_rotation * Math::PI / 180)*relative_speed
+      end
+      if button_down?(Gosu::KbD)
+        @z+=Math.sin(@y_rotation * Math::PI / 180)*relative_speed
+        @x+=Math.cos(@y_rotation * Math::PI / 180)*relative_speed
       end
 
       if button_down?(Gosu::KbLeft)
@@ -44,17 +44,13 @@ class IMICFPS
         @y_rotation+=relative_speed*100
       end
 
-      @y-=relative_speed if button_down?(Gosu::KbC) || button_down?(Gosu::KbLeftShift)
+      @y-=relative_speed if button_down?(Gosu::KbC) || button_down?(Gosu::KbLeftShift) unless @y <= 0
       @y+=relative_speed if button_down?(Gosu::KbSpace)
 
+      @y = 0 if @y < 0
       # distance = 2.0
       # x_offset = distance * Math.cos(@bound_model.y_rotation)
       # z_offset = distance * Math.sin(@bound_model.y_rotation)
-      model.x = @x
-      model.y = @y
-      model.z = @z
-
-      # model.y_rotation = (@y_rotation)
     end
   end
 end
