@@ -8,7 +8,8 @@ class IMICFPS
     attr_reader :game_object
     def initialize(x: 0, y: 0, z: 0, fov: 70.0, distance: 100.0)
       @x,@y,@z = x,y,z
-      @pitch = 0.0
+      @render_pitch = 20.0
+      @pitch = 20.0
       @yaw   = 0.0
       @roll  = 0.0
       @field_of_view = fov
@@ -53,7 +54,6 @@ class IMICFPS
       @z = @game_object.z - z_offset
 
       @yaw = 180 - @game_object.y_rotation
-      @pitch = 20.0
     end
 
     def draw
@@ -63,7 +63,7 @@ class IMICFPS
       # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
       gluPerspective(@field_of_view, $window.width / $window.height, 0.1, @view_distance)
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-      glRotatef(@pitch,1,0,0)
+      glRotatef(@render_pitch,1,0,0)
       glRotatef(@yaw,0,1,0)
       glTranslatef(-@x, -@y, -@z)
 
@@ -78,8 +78,7 @@ class IMICFPS
         @yaw-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
         @game_object.y_rotation+=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 if @game_object
 
-        @yaw-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
-        @pitch-=Float(@true_mouse.y-self.mouse_y)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
+        @render_pitch-=Float(@true_mouse.y-self.mouse_y)/(@mouse_sensitivity*@field_of_view)*70 #unless @game_object
         @yaw %= 360.0
         @pitch = @pitch.clamp(-90.0, 90.0)
       else
