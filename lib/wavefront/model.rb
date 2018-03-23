@@ -14,9 +14,10 @@ class IMICFPS
       attr_accessor :x, :y, :z, :scale
       attr_reader :bounding_box
 
-      def initialize(file_path:, x: 0, y: 0, z: 0, scale: MODEL_METER_SCALE)
-        @x, @y, @z = x, y, z
-        @scale = scale
+      def initialize(file_path:, game_object:)
+        @game_object = game_object
+        @x, @y, @z = game_object.x, game_object.y, game_object.z
+        @scale = game_object.scale
         @file_path = file_path
         @file = File.open(file_path, 'r')
         @material_file  = nil
@@ -34,16 +35,12 @@ class IMICFPS
         @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
         start_time = Time.now
         parse
-        # point = rand(1.0..10.0)
-        # @bounding_box = BoundingBox.new(point.to_f/2, point.to_f/2, point.to_f/2, point, point, point)
-        # puts "!!!!!!!!!!!!!!"
-        # puts @bounding_box
         puts "#{@file_path.split('/').last} took #{(Time.now-start_time).round(2)} seconds to parse"
 
         face_count = 0
         @objects.each {|o| face_count+=o.faces.size}
         @objects.each_with_index do |o, i|
-          puts "Model::Object Name: #{o.name} Faces: #{o.faces.size}, array size divided by 3: #{o.faces.size.to_f/3.0}"
+          puts "    Model::Object Name: #{o.name} Faces: #{o.faces.size}"
         end
         $window.number_of_faces+=face_count
         @model_has_texture = false
@@ -56,6 +53,7 @@ class IMICFPS
       end
 
       def draw(x,y,z, scale, back_face_culling)
+        @x,@y,@z,@scale,@back_face_culling = x,y,z, scale, back_face_culling
         @objects.each_with_index do |o, i|
           glEnable(GL_CULL_FACE) if back_face_culling
           glEnable(GL_COLOR_MATERIAL)

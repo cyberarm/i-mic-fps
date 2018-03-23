@@ -6,28 +6,17 @@ class IMICFPS
 
     attr_accessor :x,:y,:z, :field_of_view, :vertical_angle, :horizontal_angle, :mouse_sensitivity
     attr_reader :bound_model
-    def initialize(x: 0, y: 0, z: 0, fov: 70.0)
+    def initialize(x: 0, y: 0, z: 0, fov: 70.0, distance: 100.0)
       @x,@y,@z = x,y,z
       @vertical_angle = 0.0
       @horizontal_angle = 0.0
       @field_of_view = fov
+      @view_distance = distance
 
-      @speed = 0.05
-      @old_speed = @speed
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
       @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
       @true_mouse_checked = 0
       @mouse_sensitivity = 20.0
-
-      @bound_model = nil
-    end
-
-    def bind_model(model)
-      @bound_model = model
-    end
-
-    def unbind
-      @bound_model = nil
     end
 
     def draw
@@ -35,7 +24,7 @@ class IMICFPS
       glMatrixMode(GL_PROJECTION) # The projection matrix is responsible for adding perspective to our scene.
       glLoadIdentity # Resets current modelview matrix
       # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
-      gluPerspective(@field_of_view, $window.width / $window.height, 0.1, 1000.0)
+      gluPerspective(@field_of_view, $window.width / $window.height, 0.1, @view_distance)
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
       glRotatef(@vertical_angle,1,0,0)
       glRotatef(@horizontal_angle,0,1,0)
@@ -43,8 +32,6 @@ class IMICFPS
 
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
       glLoadIdentity
-
-      glEnable(GL_DEPTH_TEST)
     end
 
     def update
@@ -62,51 +49,6 @@ class IMICFPS
       self.mouse_x, self.mouse_y = Gosu.screen_width/2.0, Gosu.screen_height/2.0
       @true_mouse_checked = 0 if (button_down?(Gosu::KbLeftAlt) && (button_down?(Gosu::KbEnter) || button_down?(Gosu::KbReturn)))
       @true_mouse_checked = 0 if (button_down?(Gosu::KbRightAlt) && (button_down?(Gosu::KbEnter) || button_down?(Gosu::KbReturn)))
-
-      relative_speed = @speed
-      if button_down?(Gosu::KbLeftControl)
-        relative_speed = (@speed*10.0)*(delta_time/60.0)
-      else
-        relative_speed = @speed*(delta_time/60.0)
-      end
-
-      if button_down?(Gosu::KbUp) || button_down?(Gosu::KbW)
-        @z+=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
-        @x-=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
-      end
-      if button_down?(Gosu::KbDown) || button_down?(Gosu::KbS)
-        @z-=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
-        @x+=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
-      end
-      if button_down?(Gosu::KbA)
-        @z+=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
-        @x+=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
-      end
-      if button_down?(Gosu::KbD)
-        @z-=Math.sin(@horizontal_angle * Math::PI / 180)*relative_speed
-        @x-=Math.cos(@horizontal_angle * Math::PI / 180)*relative_speed
-      end
-
-      if button_down?(Gosu::KbLeft)
-        @horizontal_angle-=relative_speed*100
-      end
-      if button_down?(Gosu::KbRight)
-        @horizontal_angle+=relative_speed*100
-      end
-
-      @y+=relative_speed if button_down?(Gosu::KbC) || button_down?(Gosu::KbLeftShift)
-      @y-=relative_speed if button_down?(Gosu::KbSpace)
-
-      if @bound_model
-        distance = 2.0
-        x_offset = distance * Math.cos(@bound_model.y_rotation)
-        z_offset = distance * Math.sin(@bound_model.y_rotation)
-        @bound_model.x = @x*-1+x_offset
-        @bound_model.y = @y*-1-2
-        @bound_model.z = @z*-1-z_offset
-
-        @bound_model.y_rotation = (@horizontal_angle*-1)+180
-      end
     end
 
     def button_up(id)
@@ -120,11 +62,15 @@ class IMICFPS
       when Gosu::KB_NUMPAD_MULTIPLY
         @mouse_sensitivity = 20.0
       when Gosu::MsWheelUp
-        @field_of_view += 1
-        @field_of_view = @field_of_view.clamp(1, 100)
+        # @field_of_view += 1
+        # @field_of_view = @field_of_view.clamp(1, 100)
+        @view_distance += 1
+        @view_distance = @view_distance.clamp(1, 1000)
       when Gosu::MsWheelDown
-        @field_of_view -= 1
-        @field_of_view = @field_of_view.clamp(1, 100)
+        # @field_of_view -= 1
+        # @field_of_view = @field_of_view.clamp(1, 100)
+        @view_distance -= 1
+        @view_distance = @view_distance.clamp(1, 1000)
       end
     end
   end

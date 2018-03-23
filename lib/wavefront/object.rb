@@ -12,7 +12,7 @@ class IMICFPS
         @normals  = []
         @faces    = []
         @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
-        @debug_color = Color.new(1.0,0.0,0.0)
+        @debug_color = Color.new(1.0,1.0,1.0)
         @x,@y,@z = 0,0,0
 
         # Faces array packs everything:
@@ -25,7 +25,7 @@ class IMICFPS
       def at_same_position?
         if @x == @parent.x
           if @x == @parent.x
-            if @x == @parent.x
+            if @z == @parent.z
               true
             end
           end
@@ -41,9 +41,9 @@ class IMICFPS
           @faces.each do |face|
             [face[0]].each do |v|
               next unless v
-              list << v.x*@parent.scale+@parent.x
-              list << v.y*@parent.scale+@parent.y
-              list << v.z*@parent.scale+@parent.z
+              list << v.x*@parent.scale#+@parent.x
+              list << v.y*@parent.scale#+@parent.y
+              list << v.z*@parent.scale#+@parent.z
               list << v.weight
             end
           end

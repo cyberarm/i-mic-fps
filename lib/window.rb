@@ -18,17 +18,17 @@ class IMICFPS
 
       @delta_time = Gosu.milliseconds
       @number_of_faces = 0
-      @draw_skydome = false
-      @skydome = Model.new(type: :obj, file_path: "objects/skydome.obj", x: 0, y: 0,z: 0, scale: 0.8, backface_culling: false, auto_manage: false)
-      @actor = Model.new(type: :obj, file_path: "objects/biped.obj", x: 1, y: 0, z: 8)
-      Model.new(type: :obj, file_path: "objects/tree.obj", x: 10, y: 0, z: 10)
+      @draw_skydome = true
+      @skydome = Skydome.new(scale: 0.1, backface_culling: false, auto_manage: false)
+      Tree.new(x: 1, y: 0, z: -5)
+      p ObjectManager.objects.map {|o| o.name}
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
       # @terrain = Terrain.new(size: 20)
 
       @camera = Camera.new(x: 0, y: -2, z: 1)
-      # @camera.bind_model(@actor)
+      @player = Player.new(x: 1, y: 0, z: -10)
 
       @crosshair_size = 10
       @crosshair_thickness = 3
@@ -56,7 +56,9 @@ class IMICFPS
           light.draw
         end
         @camera.draw
-        @skydome.draw if @skydome.renderable
+        @skydome.draw# if @skydome.renderable
+        glEnable(GL_DEPTH_TEST)
+
         ObjectManager.objects.each do |object|
           object.draw if object.visible && object.renderable
         end
@@ -111,10 +113,10 @@ class IMICFPS
       case id
       when Gosu::KbZ
         @draw_skydome = !@draw_skydome
-        @skydome.renderable = @draw_skydome
       when Gosu::KbBacktick
         $debug = !$debug
       end
+      @skydome.renderable = @draw_skydome
     end
 
     def needs_cursor?
