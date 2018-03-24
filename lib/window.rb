@@ -21,13 +21,15 @@ class IMICFPS
       @draw_skydome = true
       @skydome = Skydome.new(scale: 0.02, backface_culling: false, auto_manage: false)
       Tree.new(x: 1, y: 0, z: -5)
+      Tree.new(x: 5, y: 0, z: 5)
+      Tree.new(x: -5, y: 0, z: 1)
       p ObjectManager.objects.map {|o| o.name}
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
       @terrain = Terrain.new(size: 20, height: 0)
 
-      @player = Player.new(x: 1, y: 0, z: -10)
+      @player = Player.new(x: 1, y: 0, z: -1)
       @camera = Camera.new(x: 0, y: -2, z: 1)
       @camera.attach_to(@player)
 

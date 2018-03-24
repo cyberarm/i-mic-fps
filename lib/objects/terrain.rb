@@ -2,7 +2,7 @@ class IMICFPS
   class Terrain
     include OpenGL
     def initialize(size:, height: nil, width: nil, length: nil, heightmap: nil)
-      @size = size
+      @size = 3#size
       @heightmap = heightmap
       @map = []
 
@@ -18,19 +18,22 @@ class IMICFPS
 
     def generate
       # x
-        row = []
-        @width.times do |x|
-          @length.times do |z|
-            @map << Vertex.new(x-@width.to_f/2, @height, z-@length.to_f/2)
-            @map << Vertex.new(x+1-@width.to_f/2, @height, z-@length.to_f/2)
-            # @map << Vertex.new(x+1, height, z)
-            # @map << Vertex.new(x+1, height, z-1)
-            #
-            # @map << Vertex.new(x, height, z)
-            # @map << Vertex.new(x+1, height, z)
-            # @map << Vertex.new(x+1, height, z-1)
-            # height +=0.5
+      row = []
+      @width.times do |x|
+        @length.times do |z|
+          @map << Vertex.new(x-@width.to_f/2, @height, z-@length.to_f/2)
+          @map << Vertex.new(x+1-@width.to_f/2, @height, z-@length.to_f/2)
+          @map << Vertex.new(x-@width.to_f/2, @height, z+1-@length.to_f/2)
+
+          # @map << Vertex.new(x+1, height, z)
+          # @map << Vertex.new(x+1, height, z-1)
+          #
+          # @map << Vertex.new(x, height, z)
+          # @map << Vertex.new(x+1, height, z)
+          # @map << Vertex.new(x+1, height, z-1)
+          # height +=0.5
         end
+
 
         # @map << row
       end
@@ -55,22 +58,22 @@ class IMICFPS
     end
 
     def draw
-      new_draw
+      # new_draw
       old_draw
     end
 
     def old_draw
       glEnable(GL_COLOR_MATERIAL)
 
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+      # glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
       glPointSize(5)
       # glBegin(GL_LINES)
       # glBegin(GL_POINTS)
-      glBegin(GL_TRIANGLE_STRIP)
+      glBegin(GL_TRIANGLES)
         @map.each_with_index do |vertex, index|
           glNormal3f(0,1,0)
           glColor3f(0.0, 0.5, 0) if index.even?
-          glColor3f(0.5, 0, 0) if index.odd?
+          glColor3f(0, 1.0, 0) if index.odd?
           glVertex3f(vertex.x, vertex.y, vertex.z)
         end
       glEnd
