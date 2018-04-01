@@ -19,7 +19,7 @@ class IMICFPS
       @delta_time = Gosu.milliseconds
       @number_of_faces = 0
       @draw_skydome = true
-      @skydome = Skydome.new(scale: 0.02, backface_culling: false, auto_manage: false)
+      @skydome = Skydome.new(scale: 0.08, backface_culling: false, auto_manage: false)
       Tree.new(x: 1, y: 0, z: -5)
       Tree.new(x: 5, y: 0, z: 5)
       Tree.new(x: -5, y: 0, z: 1)
@@ -27,7 +27,7 @@ class IMICFPS
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
-      @terrain = Terrain.new(size: 20, height: 0)
+      @terrain = Terrain.new(size: 40, height: 0)
 
       @player = Player.new(x: 1, y: 0, z: -1)
       @camera = Camera.new(x: 0, y: -2, z: 1)
@@ -58,14 +58,15 @@ class IMICFPS
         LightManager.lights.each do |light|
           light.draw
         end
+
         @camera.draw
         @skydome.draw if @skydome.renderable
         glEnable(GL_DEPTH_TEST)
 
+        @terrain.draw if @terrain
         ObjectManager.objects.each do |object|
           object.draw if object.visible && object.renderable
         end
-        @terrain.draw if @terrain
       end
 
       # Draw crosshair

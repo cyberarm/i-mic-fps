@@ -2,7 +2,7 @@ class IMICFPS
   class Player < GameObject
 
     attr_accessor :speed
-    attr_reader :name, :bound_model
+    attr_reader :name, :bound_model, :first_person_view
     def setup
       bind_model(ModelLoader.new(type: :obj, file_path: "objects/biped.obj", game_object: self))
 
@@ -76,8 +76,10 @@ class IMICFPS
     end
 
     def draw
-      draw_nameplate
-      super
+      if !@first_person_view
+        draw_nameplate
+        super
+      end
     end
 
     def update

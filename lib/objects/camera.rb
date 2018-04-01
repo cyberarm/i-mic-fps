@@ -46,6 +46,14 @@ class IMICFPS
     end
 
     def position_camera
+      if defined?(@game_object.first_person_view)
+        if @game_object.first_person_view
+          @distance = 0
+        else
+          @distance = 5
+        end
+      end
+
       x_offset = horizontal_distance_from_object * Math.sin(@game_object.y_rotation.degrees_to_radians)
       z_offset = horizontal_distance_from_object * Math.cos(@game_object.y_rotation.degrees_to_radians)
       # p @game_object.x, @game_object.z;exit
