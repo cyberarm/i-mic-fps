@@ -100,6 +100,7 @@ class IMICFPS
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
       # glDrawArrays(GL_TRIANGLE_STRIP, 0, @vertices.size/3)
       glDrawArrays(GL_TRIANGLES, 0, @vertices.size/3)
+      $window.number_of_faces+=@vertices.size/3
 
       glDisableClientState(GL_VERTEX_ARRAY)
       glDisableClientState(GL_NORMAL_ARRAY)

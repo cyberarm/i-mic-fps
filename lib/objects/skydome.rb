@@ -9,5 +9,11 @@ class IMICFPS
       super
       glEnable(GL_LIGHTING)
     end
+
+    def update
+      super
+      @y_rotation+=0.01
+      @y_rotation%=360
+    end
   end
 end

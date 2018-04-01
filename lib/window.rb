@@ -27,7 +27,7 @@ class IMICFPS
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
-      @terrain = Terrain.new(size: 40, height: 0)
+      @terrain = Terrain.new(size: 170, height: 0)
 
       @player = Player.new(x: 1, y: 0, z: -1)
       @camera = Camera.new(x: 0, y: -2, z: 1)
@@ -99,6 +99,8 @@ class IMICFPS
       ObjectManager.objects.each do |object|
         object.update
       end
+
+      @skydome.update if @skydome.renderable
 
       @camera.update
 
