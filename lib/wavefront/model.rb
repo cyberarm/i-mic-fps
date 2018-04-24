@@ -74,11 +74,13 @@ class IMICFPS
 
          if $debug
            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+	   #glPolygonOffset(1, 0)
            glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+	   #glPolygonOffset(0, 0)
            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-         else
-           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
-         end
+	 end
+
+	 glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
 
           glDisableClientState(GL_VERTEX_ARRAY)
           glDisableClientState(GL_COLOR_ARRAY)

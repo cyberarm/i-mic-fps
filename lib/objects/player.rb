@@ -1,3 +1,5 @@
+require "etc"
+
 class IMICFPS
   class Player < GameObject
 
@@ -11,7 +13,7 @@ class IMICFPS
       @first_person_view = true
 
       @devisor = 500.0
-      @name_image = Gosu::Image.from_text("Player", 100, font: "Consolas", align: :center)
+      @name_image = Gosu::Image.from_text("#{Etc.getlogin}", 100, font: "Consolas", align: :center)
       # @name_image.save("temp.png")
       p @name_image.width/@devisor
       p @name_image.height/@devisor

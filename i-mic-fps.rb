@@ -2,6 +2,8 @@ require "opengl"
 require "glu"
 require "gosu"
 
+Dir.chdir(File.dirname(__FILE__))
+
 case OpenGL.get_platform
 when :OPENGL_PLATFORM_WINDOWS
   OpenGL.load_lib("opengl32.dll", "C:/Windows/System32")
@@ -24,6 +26,8 @@ require_relative "lib/common_methods"
 require_relative "lib/managers/object_manager"
 require_relative "lib/managers/light_manager"
 
+require_relative "lib/objects/text"
+require_relative "lib/objects/multi_line_text"
 require_relative "lib/objects/game_object"
 require_relative "lib/objects/light"
 require_relative "lib/objects/camera"

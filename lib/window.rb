@@ -37,8 +37,8 @@ class IMICFPS
       @crosshair_thickness = 3
       @crosshair_color = Gosu::Color.rgb(255,127,0)
 
-      @font = Gosu::Font.new(18, name: "DejaVu Sans")
-      @text = "Hello There"
+      # @font = Gosu::Font.new(18, name: "DejaVu Sans")
+      @text = MultiLineText.new("Pending...", x: 10, y: 10, z: 1, size: 18, font: "DejaVu Sans")
 
       Light.new(x: 3, y: -6, z: 6)
       Light.new(x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1))
@@ -73,28 +73,29 @@ class IMICFPS
       draw_rect(width/2-@crosshair_size, (height/2-@crosshair_size)-@crosshair_thickness/2, @crosshair_size*2, @crosshair_thickness, @crosshair_color, 0, :default)
       draw_rect((width/2)-@crosshair_thickness/2, height/2-(@crosshair_size*2), @crosshair_thickness, @crosshair_size*2, @crosshair_color, 0, :default)
 
-      @text.split("~").each_with_index do |bit, i|
-        @font.draw(bit.strip, 10, @font.height*i, Float::INFINITY)
-      end
+      @text.draw
     end
 
     def update
       @last_frame_time = Gosu.milliseconds
-      @text = "OpenGL Vendor: #{glGetString(GL_VENDOR)}~
-      OpenGL Renderer: #{glGetString(GL_RENDERER)} ~
-      OpenGL Version: #{glGetString(GL_VERSION)}~
-      OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}~
-      ~
-      Camera pitch: #{@camera.pitch.round(2)} Yaw: #{@camera.yaw.round(2)} Roll #{@camera.roll.round(2)} ~
-      Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)} ~
-      #{if @camera.game_object then "Actor X:#{@camera.game_object.x.round(2)} Y:#{@camera.game_object.y.round(2)} Z:#{@camera.game_object.z.round(2)}";end} ~
-      Field Of View: #{@camera.field_of_view} ~
-      Mouse Sesitivity: #{@camera.mouse_sensitivity} ~
-      Faces: #{@number_of_faces} ~
-      Last Frame: #{delta_time}ms (#{Gosu.fps} fps)~
-      ~
-      Draw Skydome: #{@draw_skydome}~
-      Debug mode: <c=992200>#{$debug}</b>~"
+      string = <<-eos
+OpenGL Vendor: #{glGetString(GL_VENDOR)}
+OpenGL Renderer: #{glGetString(GL_RENDERER)}
+OpenGL Version: #{glGetString(GL_VERSION)}
+OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}
+
+Camera pitch: #{@camera.pitch.round(2)} Yaw: #{@camera.yaw.round(2)} Roll #{@camera.roll.round(2)}
+Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)}
+#{if @camera.game_object then "Actor X:#{@camera.game_object.x.round(2)} Y:#{@camera.game_object.y.round(2)} Z:#{@camera.game_object.z.round(2)}";end}
+Field Of View: #{@camera.field_of_view}
+Mouse Sesitivity: #{@camera.mouse_sensitivity}
+Faces: #{@number_of_faces}
+Last Frame: #{delta_time}ms (#{Gosu.fps} fps)
+
+Draw Skydome: #{@draw_skydome}
+Debug mode: <c=992200>#{$debug}</b>
+eos
+      @text.text = string
 
       ObjectManager.objects.each do |object|
         object.update

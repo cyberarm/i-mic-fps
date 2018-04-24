@@ -18,17 +18,20 @@ class IMICFPS
     end
 
     def generate
+      #@width.times do |x|
+      #  @length.times do |z|
+      #    # TRIANGLE STRIP (BROKEN)
+      #    @map << Vertex.new((x+1)-@width.to_f/2, 0, z-@legth.to_f/2)
+      #    @map << Vertex.new(x-@width.to_f/2, 0, (z+1)-@length.to_f/2)
+      #  end
+      #end
       @width.times do |x|
         @length.times do |z|
-          # TRIANGLE STRIP (BROKEN)
-          # @map << Vertex.new((x+1)-@width.to_f/2, 0, z-@legth.to_f/2)
-          # @map << Vertex.new(x-@width.to_f/2, 0, (z+1)-@length.to_f/2)
-
           # WORKING TRIANGLES
           @map << Vertex.new(x-@width.to_f/2, @height, z-@length.to_f/2)
           @map << Vertex.new((x+1)-@width.to_f/2, @height, z-@length.to_f/2)
           @map << Vertex.new(x-@width.to_f/2, @height, (z+1)-@length.to_f/2)
-
+          #
           @map << Vertex.new(x-@width.to_f/2, @height, (z+1)-@length.to_f/2)
           @map << Vertex.new((x+1)-@width.to_f/2, @height, z-@length.to_f/2)
           @map << Vertex.new((x+1)-@width.to_f/2, @height, (z+1)-@length.to_f/2)
@@ -95,11 +98,10 @@ class IMICFPS
       glColorPointer(3, GL_FLOAT, 0, @colors_packed)
 
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-      # glDrawArrays(GL_TRIANGLE_STRIP, 0, @vertices.size/3)
       glDrawArrays(GL_TRIANGLES, 0, @vertices.size/3)
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+
       # glDrawArrays(GL_TRIANGLE_STRIP, 0, @vertices.size/3)
-      glDrawArrays(GL_TRIANGLES, 0, @vertices.size/3)
       $window.number_of_faces+=@vertices.size/3
 
       glDisableClientState(GL_VERTEX_ARRAY)
