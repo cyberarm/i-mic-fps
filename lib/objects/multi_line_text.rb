@@ -5,7 +5,6 @@ class MultiLineText
     @texts = []
     text.split("\n").each_with_index do |line, i|
       _options = options
-      _options[:y]+=_options[:size]
       @texts << Text.new(line, _options)
     end
     @options = options
@@ -46,12 +45,13 @@ class MultiLineText
 
   def y=(int)
     @y = int
+    puts "Hi, #{int}"
     @texts.each_with_index {|t, i| t.y=int+(i*t.size)}
   end
 
   def calculate_stack
     @texts.each_with_index do |text, index|
-      text.y = text.size*index
+      text.y = (text.size*index)+@options[:y]
     end
   end
 
