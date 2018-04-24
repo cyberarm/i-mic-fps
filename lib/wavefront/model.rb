@@ -6,7 +6,7 @@ class IMICFPS
   class Wavefront
     class Model
       include OpenGL
-      include GLU
+      # include GLU
 
       include Parser
 
@@ -72,15 +72,19 @@ class IMICFPS
           glColorPointer(3, GL_FLOAT, 0, o.flattened_materials)
           glNormalPointer(GL_FLOAT, 0, o.flattened_normals)
 
-         if $debug
-           glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-	   #glPolygonOffset(1, 0)
-           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
-	   #glPolygonOffset(0, 0)
-           glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-	 end
+          glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
 
-	 glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+          if $debug
+            glDisable(GL_LIGHTING)
+            glLineWidth(3)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+            glPolygonOffset(2, 0.5)
+            glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+            glPolygonOffset(0, 0)
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+            glLineWidth(1)
+            glEnable(GL_LIGHTING)
+          end
 
           glDisableClientState(GL_VERTEX_ARRAY)
           glDisableClientState(GL_COLOR_ARRAY)
