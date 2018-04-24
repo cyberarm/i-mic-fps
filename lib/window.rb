@@ -8,10 +8,11 @@ class IMICFPS
     attr_reader :camera
 
     def initialize(window_width = 1280, window_height = 800, fullscreen = false)
+      fps_target = (ARGV.first.to_i != 0) ? ARGV.first.to_i : 60
       if ARGV.join.include?("--native")
-        super(Gosu.screen_width, Gosu.screen_height, true)
+        super(Gosu.screen_width, Gosu.screen_height, fullscreen: true, resizable: false, update_interval: 1000.0/fps_target)
       else
-        super(window_width, window_height, fullscreen)
+        super(window_width, window_height, fullscreen: fullscreen, resizable: false, update_interval: 1000.0/fps_target)
       end
       $window = self
       @needs_cursor = false
@@ -55,9 +56,7 @@ class IMICFPS
         glClearColor(0,0.2,0.5,1) # skyish blue
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
 
-        LightManager.lights.each do |light|
-          light.draw
-        end
+        LightManager.lights.each(&:draw)
 
         @camera.draw
         @skydome.draw if @skydome.renderable

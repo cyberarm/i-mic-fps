@@ -39,7 +39,7 @@ class IMICFPS
         face_count = 0
         @objects.each {|o| face_count+=o.faces.size}
         @objects.each_with_index do |o, i|
-          puts "    Model::Object Name: #{o.name} Faces: #{o.faces.size}"
+          puts "    Model::Object Name: #{o.name}, Faces: #{o.faces.size}"
         end
         $window.number_of_faces+=face_count
         @model_has_texture = false
@@ -76,13 +76,13 @@ class IMICFPS
 
           if $debug
             glDisable(GL_LIGHTING)
-            glLineWidth(3)
             glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
             glPolygonOffset(2, 0.5)
+            glLineWidth(3)
             glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+            glLineWidth(1)
             glPolygonOffset(0, 0)
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
-            glLineWidth(1)
             glEnable(GL_LIGHTING)
           end
 
