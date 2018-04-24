@@ -32,9 +32,9 @@ class IMICFPS
         @smoothing= 0
 
         @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
-        start_time = Time.now
+        start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
         parse
-        puts "#{@file_path.split('/').last} took #{(Time.now-start_time).round(2)} seconds to parse"
+        puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse"
 
         face_count = 0
         @objects.each {|o| face_count+=o.faces.size}
