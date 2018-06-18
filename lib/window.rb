@@ -97,9 +97,10 @@ Debug mode: <c=992200>#{$debug}</b>
 eos
       @text.text = string
 
-      ObjectManager.objects.each do |object|
-        object.update
-      end
+      # ObjectManager.objects.each do |object|
+      #   object.update
+      # end
+      ObjectManager.objects.each(&:update)
 
       @skydome.update if @skydome.renderable
 
