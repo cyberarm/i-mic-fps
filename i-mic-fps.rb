@@ -20,6 +20,25 @@ end
 
 BoundingBox = Struct.new(:min_x, :min_y, :min_z, :max_x, :max_y, :max_z)
 
+if RUBY_VERSION < "2.5.0"
+  puts "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
+  puts "|NOTICE| Ruby is #{RUBY_VERSION} not 2.5.0+..............................|Notice|"
+  puts "|NOTICE| Monkey Patching Float to add required '.clamp' method.|Notice|"
+  puts "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
+  puts
+  class Float
+    def clamp(min, max)
+      if self < min
+        min
+      elsif self > max
+        max
+      else
+        return self
+      end
+    end
+  end
+end
+
 $debug = ARGV.join.include?("--debug") ? true : false
 
 require_relative "lib/common_methods"
