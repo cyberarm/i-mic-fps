@@ -24,6 +24,7 @@ class IMICFPS
       Tree.new(x: 1, y: 0, z: -5)
       Tree.new(x: 5, y: 0, z: 5)
       Tree.new(x: -5, y: 0, z: 1)
+      TestObject.new(scale: 1)
       p ObjectManager.objects.map {|o| o.name}
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)

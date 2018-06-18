@@ -53,6 +53,7 @@ require_relative "lib/objects/camera"
 require_relative "lib/objects/player"
 require_relative "lib/objects/tree"
 require_relative "lib/objects/skydome"
+require_relative "lib/objects/test_object"
 require_relative "lib/objects/model_loader"
 require_relative "lib/objects/terrain"
 
