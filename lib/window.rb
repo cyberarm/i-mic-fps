@@ -24,7 +24,7 @@ class IMICFPS
       Tree.new(x: 1, y: 0, z: -5)
       Tree.new(x: 5, y: 0, z: 5)
       Tree.new(x: -5, y: 0, z: 1)
-      TestObject.new(scale: 1)
+      # TestObject.new(scale: 1)
       p ObjectManager.objects.map {|o| o.name}
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
@@ -97,10 +97,17 @@ Debug mode: <c=992200>#{$debug}</c>
 eos
       @text.text = string
 
-      # ObjectManager.objects.each do |object|
-      #   object.update
-      # end
-      ObjectManager.objects.each(&:update)
+      ObjectManager.objects.each do |object|
+        ObjectManager.objects.each do |b|
+          next if b == object
+          if object.intersect(object, b)
+            puts "#{object} is intersecting #{b}"
+            puts "#{object.x}, #{object.y} | #{b.x}, #{b.y}"
+          end
+        end
+        object.update
+      end
+      # ObjectManager.objects.each(&:update)
 
       @skydome.update if @skydome.renderable
 

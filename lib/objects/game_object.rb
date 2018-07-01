@@ -65,16 +65,17 @@ class IMICFPS
     def update
       model.update
     end
+
     # Do two Axis Aligned Bounding Boxes intersect?
     def intersect(a, b)
-      a = normalize_bounding_box(a)
-      b = normalize_bounding_box(b)
+      a = a.normalize_bounding_box(a.model.bounding_box)
+      b = b.normalize_bounding_box(b.model.bounding_box)
 
       puts "bounding boxes match!" if a == b
-      # if (((a.min_x <= b.min_x && b.max_x <= a.max_x) || (b.min_x <= a.min_x && a.min_x <= b.max_x)) &&
-      #     ((a.min_y <= b.min_y && b.max_y <= a.max_y) || (b.min_y <= a.min_y && a.min_y <= b.max_y)) &&
-      #     ((a.min_z <= b.min_z && b.max_z <= a.max_z) || (b.min_z <= a.min_z && a.min_z <= b.max_z)))
-      if (a.max_x >= b.max_x && a.min_x <= b.max_x) && (a.max_y >= b.min_y && a.min_y <= b.max_y)  && (a.max_z >= b.min_z && a.min_z <= b.max_z)
+      if (((a.min_x <= b.min_x && b.max_x <= a.max_x) || (b.min_x <= a.min_x && a.min_x <= b.max_x)) &&
+          ((a.min_y <= b.min_y && b.max_y <= a.max_y) || (b.min_y <= a.min_y && a.min_y <= b.max_y)) &&
+          ((a.min_z <= b.min_z && b.max_z <= a.max_z) || (b.min_z <= a.min_z && a.min_z <= b.max_z)))
+      # if (a.max_x >= b.max_x && a.min_x <= b.max_x) && (a.max_y >= b.min_y && a.min_y <= b.max_y)  && (a.max_z >= b.min_z && a.min_z <= b.max_z)
         return true
       else
         return false
@@ -100,12 +101,6 @@ class IMICFPS
       box = normalize_bounding_box(box)
 
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-      # glBegin(GL_LINES)
-      #   glColor3f(0,0,1.0)
-      #   glVertex3f(box.min_x, box.min_y, box.min_z)
-      #   glColor3f(1.0,0,0)
-      #   glVertex3f(box.max_x, box.max_y, box.max_z)
-      # glEnd
       glBegin(GL_TRIANGLES)
         # TOP
         glNormal3f(0,1,0)
