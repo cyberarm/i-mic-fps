@@ -29,7 +29,7 @@ class IMICFPS
     end
 
     def find_nearest_vertex(vertex)
-      _canidate_for_floor = nil
+      nearest = nil
       smaller_list = []
       smaller_list << @nearest_vertex_lookup.dig(vertex.x.round-1, vertex.y.round-1)
       smaller_list << @nearest_vertex_lookup.dig(vertex.x.round, vertex.y.round)
@@ -38,16 +38,16 @@ class IMICFPS
 
       smaller_list.each do |vert|
         next if vert.nil?
-        if _canidate_for_floor
-          if Gosu.distance(vertex.x, vertex.z, vert.x, vert.z) < Gosu.distance(_canidate_for_floor.x, _canidate_for_floor.z, vert.x, vert.z)
-            _canidate_for_floor = vert
+        if nearest
+          if Gosu.distance(vertex.x, vertex.z, vert.x, vert.z) < Gosu.distance(nearest.x, nearest.z, vert.x, vert.z)
+            nearest = vert
           end
         end
 
-        _canidate_for_floor = vert unless _canidate_for_floor
+        nearest = vert unless nearest
       end
 
-      return _canidate_for_floor
+      return nearest
     end
   end
 end

@@ -5,10 +5,7 @@ class IMICFPS
 
     attr_accessor :speed
     attr_reader :name, :bound_model, :first_person_view
-    def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, terrain: nil)
-      @terrain = terrain
-      super(x: x, y: y, z: z, bound_model: model, scale: scale, backface_culling: backface_culling, auto_manage: auto_manage)
-    end
+
     def setup
       bind_model(ModelLoader.new(type: :obj, file_path: "objects/biped.obj", game_object: self))
       @speed = 2.5 # meter's per second

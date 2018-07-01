@@ -17,20 +17,25 @@ class IMICFPS
       end
       $window = self
       @needs_cursor = false
+      @number_of_faces = 0
 
       @delta_time = Gosu.milliseconds
-      @number_of_faces = 0
+
+      @terrain = Terrain.new#(size: 170, height: 0)
       @draw_skydome = true
       @skydome = Skydome.new(scale: 0.08, backface_culling: false, auto_manage: false)
-      Tree.new(x: 1, y: 0, z: -5)
-      Tree.new(x: 5, y: 0, z: 5)
-      Tree.new(x: -5, y: 0, z: 1)
+
+      25.times do
+        p @terrain.width
+        Tree.new(x: rand(@terrain.width)-(@terrain.width/2.0), z: rand(@terrain.depth)-(@terrain.depth/2.0), terrain: @terrain)
+      end
+      # Tree.new(x: 1, z: -5, terrain: @terrain)
+      # Tree.new(x: 5, z: 5,  terrain: @terrain)
       # TestObject.new(scale: 1)
       p ObjectManager.objects.map {|o| o.name}
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
-      @terrain = Terrain.new#(size: 170, height: 0)
 
       @player = Player.new(x: 1, y: 0, z: -1, terrain: @terrain)
       @camera = Camera.new(x: 0, y: -2, z: 1)
