@@ -3,7 +3,9 @@ class IMICFPS
     module Parser
       def parse
         lines = 0
-        @file.each_line do |line|
+        list = @file.read.split("\n")
+        # @file.each_line do |line|
+        list.each do |line|
           lines+=1
           line = line.strip
 
@@ -65,17 +67,17 @@ class IMICFPS
             @current_material = array.last
             @materials[array.last] = material
           when 'Ns' # Specular Exponent
-          when 'Ka' # Ambient
+          when 'Ka' # Ambient color
             @materials[@current_material].ambient  = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
-          when 'Kd' # Diffuse
+          when 'Kd' # Diffuse color
             @materials[@current_material].diffuse  = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
-          when 'Ks' # Specular
+          when 'Ks' # Specular color
             @materials[@current_material].specular = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
           when 'Ke' # Emissive
           when 'Ni' # Unknown (Blender Specific?)
           when 'd'  # Dissolved (Transparency)
           when 'illum' # Illumination model
-          when 'map_Kd'
+          when 'map_Kd' # Diffuse texture
             @materials[@current_material].set_texture(array[1])
           end
         end

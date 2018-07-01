@@ -93,7 +93,7 @@ Faces: #{@number_of_faces}
 Last Frame: #{delta_time}ms (#{Gosu.fps} fps)
 
 Draw Skydome: #{@draw_skydome}
-Debug mode: <c=992200>#{$debug}</b>
+Debug mode: <c=992200>#{$debug}</c>
 eos
       @text.text = string
 
