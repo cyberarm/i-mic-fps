@@ -10,7 +10,7 @@ class IMICFPS
 
       include Parser
 
-      attr_accessor :objects, :materials, :vertexes, :texures, :normals, :faces
+      attr_accessor :objects, :materials, :vertices, :texures, :normals, :faces
       attr_accessor :x, :y, :z, :scale
       attr_reader :bounding_box
 

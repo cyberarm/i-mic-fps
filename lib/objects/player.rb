@@ -5,18 +5,23 @@ class IMICFPS
 
     attr_accessor :speed
     attr_reader :name, :bound_model, :first_person_view
+    def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, terrain: nil)
+      @terrain = terrain
+      super(x: x, y: y, z: z, bound_model: model, scale: scale, backface_culling: backface_culling, auto_manage: auto_manage)
+    end
     def setup
       bind_model(ModelLoader.new(type: :obj, file_path: "objects/biped.obj", game_object: self))
-
-      @speed = 0.05
+      @speed = 2.5 # meter's per second
+      @running_speed = 6.8
       @old_speed = @speed
+      @mass = 72 # kg
+      @y_velocity = 0
+      @floor = 0
       @first_person_view = true
 
       @devisor = 500.0
       @name_image = Gosu::Image.from_text("#{Etc.getlogin}", 100, font: "Consolas", align: :center)
       # @name_image.save("temp.png")
-      p @name_image.width/@devisor
-      p @name_image.height/@devisor
       @name_tex = @name_image.gl_tex_info
       array_of_pixels = @name_image.to_blob
 
@@ -87,11 +92,13 @@ class IMICFPS
     def update
       super
 
+      @floor = @terrain.height_at(self)
+
       relative_speed = @speed
       if button_down?(Gosu::KbLeftControl)
-        relative_speed = (@speed*10.0)*(delta_time/60.0)
+        relative_speed = (@running_speed)*(delta_time)
       else
-        relative_speed = @speed*(delta_time/60.0)
+        relative_speed = @speed*(delta_time)
       end
 
       relative_y_rotation = @y_rotation*-1
@@ -120,10 +127,30 @@ class IMICFPS
         @y_rotation-=relative_speed*100
       end
 
-      @y-=relative_speed if button_down?(Gosu::KbC) || button_down?(Gosu::KbLeftShift) unless @y <= 0
-      @y+=relative_speed if button_down?(Gosu::KbSpace)
+      if @_time_in_air
+        air_time = ((Gosu.milliseconds-@_time_in_air)/1000.0)
+        @y_velocity-=(IMICFPS::GRAVITY*air_time)*delta_time
+      end
 
-      @y = 0 if @y < 0
+      if button_down?(Gosu::KbSpace) && !@jumping
+        @jumping = true
+        @_time_in_air = Gosu.milliseconds
+      else
+        if @jumping
+          if @y <= @floor
+            @falling = false; @jumping = false; @y_velocity = 0
+          end
+        end
+      end
+      if @jumping && !@falling
+        if button_down?(Gosu::KbSpace)
+          @y_velocity+=(2*5)*delta_time
+          @falling = true if @y_velocity >= 2
+        end
+      end
+      @y+=@y_velocity*delta_time
+
+      @y = @floor if @y < @floor
       # distance = 2.0
       # x_offset = distance * Math.cos(@bound_model.y_rotation)
       # z_offset = distance * Math.sin(@bound_model.y_rotation)

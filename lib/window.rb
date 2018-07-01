@@ -1,4 +1,5 @@
 class IMICFPS
+  GRAVITY = 9.8 # m/s
   class Window < Gosu::Window
     include OpenGL
     include GLU
@@ -29,9 +30,9 @@ class IMICFPS
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
-      @terrain = Terrain.new(size: 170, height: 0)
+      @terrain = Terrain.new#(size: 170, height: 0)
 
-      @player = Player.new(x: 1, y: 0, z: -1)
+      @player = Player.new(x: 1, y: 0, z: -1, terrain: @terrain)
       @camera = Camera.new(x: 0, y: -2, z: 1)
       @camera.attach_to(@player)
 
@@ -63,7 +64,6 @@ class IMICFPS
         @skydome.draw if @skydome.renderable
         glEnable(GL_DEPTH_TEST)
 
-        @terrain.draw if @terrain
         ObjectManager.objects.each do |object|
           object.draw if object.visible && object.renderable
         end
@@ -97,17 +97,16 @@ Debug mode: <c=992200>#{$debug}</c>
 eos
       @text.text = string
 
-      ObjectManager.objects.each do |object|
-        ObjectManager.objects.each do |b|
-          next if b == object
-          if object.intersect(object, b)
-            puts "#{object} is intersecting #{b}"
-            puts "#{object.x}, #{object.y} | #{b.x}, #{b.y}"
-          end
-        end
-        object.update
-      end
-      # ObjectManager.objects.each(&:update)
+      # ObjectManager.objects.each do |object|
+      #   ObjectManager.objects.each do |b|
+      #     next if b == object
+      #     if object.intersect(object, b)
+      #       # puts "#{object} is intersecting #{b}"
+      #     end
+      #   end
+      #   object.update
+      # end
+      ObjectManager.objects.each(&:update)
 
       @skydome.update if @skydome.renderable
 
@@ -143,7 +142,7 @@ eos
     end
 
     def delta_time
-      Gosu.milliseconds-@delta_time
+      (Gosu.milliseconds-@delta_time)/1000.0
     end
   end
 end
