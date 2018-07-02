@@ -118,10 +118,10 @@ class IMICFPS
       end
 
       if button_down?(Gosu::KbLeft)
-        @y_rotation+=relative_speed*100
+        @y_rotation+=(relative_speed*1000)*delta_time
       end
       if button_down?(Gosu::KbRight)
-        @y_rotation-=relative_speed*100
+        @y_rotation-=(relative_speed*1000)*delta_time
       end
 
       if @_time_in_air
