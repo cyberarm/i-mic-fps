@@ -39,7 +39,7 @@ class IMICFPS
       smaller_list.each do |vert|
         next if vert.nil?
         if nearest
-          if Gosu.distance(vertex.x, vertex.z, vert.x, vert.z) < Gosu.distance(nearest.x, nearest.z, vert.x, vert.z)
+          if distance(vert, vertex) < distance(vert, nearest)
             nearest = vert
           end
         end
@@ -48,6 +48,10 @@ class IMICFPS
       end
 
       return nearest
+    end
+
+    def distance(vertex, other)
+      return Math.sqrt((vertex.x-other.x)**2 + (vertex.y-other.y)**2 + (vertex.z-other.z)**2)
     end
   end
 end
