@@ -9,7 +9,7 @@ class IMICFPS
     def setup
       bind_model(ModelLoader.new(type: :obj, file_path: "objects/biped.obj", game_object: self))
       @speed = 2.5 # meter's per second
-      @running_speed = 6.8
+      @running_speed = 6.8 # meter's per second
       @old_speed = @speed
       @mass = 72 # kg
       @y_velocity = 0

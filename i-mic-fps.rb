@@ -63,4 +63,18 @@ require_relative "lib/window"
 
 MODEL_METER_SCALE = 0.001 # Objects exported from blender using the millimeter object scale will be close to 1 GL unit
 
-IMICFPS::Window.new.show
+
+if ARGV.join.include?("--profile")
+  begin
+    require "ruby-prof"
+    RubyProf.start
+      IMICFPS::Window.new.show
+    result  = RubyProf.stop
+    printer = RubyProf::MultiPrinter.new(result)
+    printer.print(path: ".", profile: "profile", min_percent: 2)
+  rescue LoadError
+    puts "ruby-prof not installed!"
+  end
+else
+  IMICFPS::Window.new.show
+end

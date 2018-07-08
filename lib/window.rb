@@ -26,7 +26,6 @@ class IMICFPS
       @skydome = Skydome.new(scale: 0.08, backface_culling: false, auto_manage: false)
 
       25.times do
-        p @terrain.width
         Tree.new(x: rand(@terrain.width)-(@terrain.width/2.0), z: rand(@terrain.depth)-(@terrain.depth/2.0), terrain: @terrain)
       end
       # Tree.new(x: 1, z: -5, terrain: @terrain)
