@@ -74,9 +74,16 @@ class IMICFPS
       glRotatef(@render_pitch,1,0,0)
       glRotatef(@yaw,0,1,0)
       glTranslatef(-@x, -@y, -@z)
-
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
       glLoadIdentity
+
+      if $debug && @game_object
+        glBegin(GL_LINES)
+          glColor3f(1,0,0)
+          glVertex3f(@x, @y, @z)
+          glVertex3f(@game_object.x, @game_object.y, @game_object.z)
+        glEnd
+      end
     end
 
     def update

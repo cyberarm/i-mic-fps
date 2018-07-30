@@ -22,15 +22,15 @@ class IMICFPS
       p model.faces.first
     end
 
-    def height_at(vertex)
-      if vert = find_nearest_vertex(vertex)
+    def height_at(vertex, max_distance = Float::INFINITY)
+      if vert = find_nearest_vertex(vertex, max_distance)
         return vert.y
       else
         -1
       end
     end
 
-    def find_nearest_vertex(vertex)
+    def find_nearest_vertex(vertex, max_distance)
       nearest = nil
       smaller_list = []
       smaller_list << @nearest_vertex_lookup.dig(vertex.x.round-1, vertex.y.round-1)
@@ -41,12 +41,12 @@ class IMICFPS
       smaller_list.each do |vert|
         next if vert.nil?
         if nearest
-          if distance(vert, vertex) < distance(vert, nearest)
+          if distance(vert, vertex) < distance(vert, nearest) && distance(vert, vertex) <= max_distance
             nearest = vert
           end
         end
 
-        nearest = vert unless nearest
+        nearest = vert unless nearest && distance(vert, vertex) > max_distance
       end
 
       return nearest

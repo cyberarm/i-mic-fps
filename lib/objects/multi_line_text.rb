@@ -45,7 +45,6 @@ class MultiLineText
 
   def y=(int)
     @y = int
-    puts "Hi, #{int}"
     @texts.each_with_index {|t, i| t.y=int+(i*t.size)}
   end
 

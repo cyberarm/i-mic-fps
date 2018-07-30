@@ -48,7 +48,7 @@ class IMICFPS
       glEnable(GL_BLEND)
       glBindTexture(GL_TEXTURE_2D, @name_texture_id)
       glBegin(GL_TRIANGLES)
-        # glColor3f(0.0,0.0,0.0)
+        glColor3f(1.0,1.0,1.0)
         # TOP LEFT
         glTexCoord2f(0, 0)
         glVertex3f(_x-_width,_y+_height,@z)
@@ -81,15 +81,15 @@ class IMICFPS
 
     def draw
       if !@first_person_view
-        draw_nameplate
         super
+        draw_nameplate
       end
     end
 
     def update
       super
 
-      @floor = @terrain.height_at(self)
+      @floor = @terrain.height_at(self, 4.5)
 
       relative_speed = @speed
       if button_down?(Gosu::KbLeftControl)
@@ -141,7 +141,7 @@ class IMICFPS
       end
       if @jumping && !@falling
         if button_down?(Gosu::KbSpace)
-          @y_velocity+=(2*5)*delta_time
+          @y_velocity+=(2*15)*delta_time
           @falling = true if @y_velocity >= 2
         end
       end

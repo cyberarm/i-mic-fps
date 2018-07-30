@@ -31,7 +31,7 @@ class IMICFPS
       # Tree.new(x: 1, z: -5, terrain: @terrain)
       # Tree.new(x: 5, z: 5,  terrain: @terrain)
       # TestObject.new(scale: 1)
-      p ObjectManager.objects.map {|o| o.name}
+      # p ObjectManager.objects.map {|o| o.name}
       # Model.new(type: :obj, file_path: "objects/tree.obj", z: -5)
       # Model.new(type: :obj, file_path: "objects/tree.obj", x: -2, z: -6)
       # Model.new(type: :obj, file_path: "objects/sponza.obj", scale: 1, y: -0.2)
@@ -51,16 +51,23 @@ class IMICFPS
       Light.new(x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1))
     end
 
-    def draw
+    def glError?
       e = glGetError()
       if e != GL_NO_ERROR
         $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
         exit
       end
+    end
+
+    def draw
+      glError?
 
       gl do
+        glError?
         glClearColor(0,0.2,0.5,1) # skyish blue
+        glError?
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
+        glError?
 
         LightManager.lights.each(&:draw)
 
@@ -82,6 +89,7 @@ class IMICFPS
 
     def update
       @last_frame_time = Gosu.milliseconds
+      begin
       string = <<-eos
 OpenGL Vendor: #{glGetString(GL_VENDOR)}
 OpenGL Renderer: #{glGetString(GL_RENDERER)}
@@ -99,6 +107,22 @@ Last Frame: #{delta_time*1000.0}ms (#{Gosu.fps} fps)
 Draw Skydome: #{@draw_skydome}
 Debug mode: <c=992200>#{$debug}</c>
 eos
+      rescue ArgumentError
+        string = <<-eos
+Unable to call glGetString!
+
+Camera pitch: #{@camera.pitch.round(2)} Yaw: #{@camera.yaw.round(2)} Roll #{@camera.roll.round(2)}
+Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)}
+#{if @camera.game_object then "Actor X:#{@camera.game_object.x.round(2)} Y:#{@camera.game_object.y.round(2)} Z:#{@camera.game_object.z.round(2)}";end}
+Field Of View: #{@camera.field_of_view}
+Mouse Sesitivity: #{@camera.mouse_sensitivity}
+Faces: #{@number_of_faces}
+Last Frame: #{delta_time*1000.0}ms (#{Gosu.fps} fps)
+
+Draw Skydome: #{@draw_skydome}
+Debug mode: <c=992200>#{$debug}</c>
+eos
+      end
       @text.text = string
 
       # ObjectManager.objects.each do |object|

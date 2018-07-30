@@ -4,6 +4,7 @@ class IMICFPS
   # A game object is any renderable thing
   class GameObject
     include OpenGL
+    include GLU
     include CommonMethods
     attr_accessor :x, :y, :z, :scale
     attr_accessor :visible, :renderable, :backface_culling
@@ -110,73 +111,159 @@ class IMICFPS
     end
 
     def render_bounding_box(box, color = @debug_color)
-     # TODO: Minimize number of calls in here
       box = normalize_bounding_box(box)
 
+      glEnableClientState(GL_VERTEX_ARRAY)
+      glEnableClientState(GL_COLOR_ARRAY)
+      glEnableClientState(GL_NORMAL_ARRAY)
+
+      _normals = [
+        0,1,0,
+        0,1,0,
+        0,1,0,
+        0,1,0,
+        0,1,0,
+        0,1,0,
+
+        0,-1,0,
+        0,-1,0,
+        0,-1,0,
+        0,-1,0,
+        0,-1,0,
+        0,-1,0,
+
+        0,0,1,
+        0,0,1,
+        0,0,1,
+        0,0,1,
+        0,0,1,
+        0,0,1,
+
+        1,0,0,
+        1,0,0,
+        1,0,0,
+        1,0,0,
+        1,0,0,
+        1,0,0,
+
+        -1,0,0,
+        -1,0,0,
+        -1,0,0,
+        -1,0,0,
+        -1,0,0,
+        -1,0,0,
+
+        -1,0,0,
+        -1,0,0,
+        -1,0,0,
+
+        -1,0,0,
+        -1,0,0,
+        -1,0,0
+      ].pack("f*")
+      _colors  = [
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue,
+        color.red, color.green, color.blue
+      ].pack("f*")
+      _vertices = [
+        box.min_x, box.max_y, box.max_z,
+        box.min_x, box.max_y, box.min_z,
+        box.max_x, box.max_y, box.min_z,
+
+        box.min_x, box.max_y, box.max_z,
+        box.max_x, box.max_y, box.max_z,
+        box.max_x, box.max_y, box.min_z,
+
+        box.max_x, box.min_y, box.min_z,
+        box.max_x, box.min_y, box.max_z,
+        box.min_x, box.min_y, box.max_z,
+
+        box.max_x, box.min_y, box.min_z,
+        box.min_x, box.min_y, box.min_z,
+        box.min_x, box.min_y, box.max_z,
+
+        box.min_x, box.max_y, box.max_z,
+        box.min_x, box.max_y, box.min_z,
+        box.min_x, box.min_y, box.min_z,
+
+        box.min_x, box.min_y, box.max_z,
+        box.min_x, box.min_y, box.min_z,
+        box.min_x, box.max_y, box.max_z,
+
+        box.max_x, box.max_y, box.max_z,
+        box.max_x, box.max_y, box.min_z,
+        box.max_x, box.min_y, box.min_z,
+
+        box.max_x, box.min_y, box.max_z,
+        box.max_x, box.min_y, box.min_z,
+        box.max_x, box.max_y, box.max_z,
+
+        box.min_x, box.max_y, box.max_z,
+        box.max_x, box.max_y, box.max_z,
+        box.max_x, box.min_y, box.max_z,
+
+        box.min_x, box.max_y, box.max_z,
+        box.max_x, box.min_y, box.max_z,
+        box.min_x, box.min_y, box.max_z,
+
+        box.max_x, box.min_y, box.min_z,
+        box.min_x, box.min_y, box.min_z,
+        box.min_x, box.max_y, box.min_z,
+
+        box.max_x, box.min_y, box.min_z,
+        box.min_x, box.max_y, box.min_z,
+        box.max_x, box.max_y, box.min_z
+      ]
+      _vertices_size = _vertices.size
+      _vertices = _vertices.pack("f*")
+
+      glVertexPointer(3, GL_FLOAT, 0, _vertices)
+      glColorPointer(3, GL_FLOAT, 0, _colors)
+      glNormalPointer(GL_FLOAT, 0, _normals)
+
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-      glBegin(GL_TRIANGLES)
-        # TOP
-        glNormal3f(0,1,0)
-        glColor3f(color.red, color.green, color.blue)
-        glVertex3f(box.min_x, box.max_y, box.max_z)
-        glVertex3f(box.min_x, box.max_y, box.min_z)
-        glVertex3f(box.max_x, box.max_y, box.min_z)
-
-        glVertex3f(box.min_x, box.max_y, box.max_z)
-        glVertex3f(box.max_x, box.max_y, box.max_z)
-        glVertex3f(box.max_x, box.max_y, box.min_z)
-
-        # BOTTOM
-        glNormal3f(0,-1,0)
-        glVertex3f(box.max_x, box.min_y, box.min_z)
-        glVertex3f(box.max_x, box.min_y, box.max_z)
-        glVertex3f(box.min_x, box.min_y, box.max_z)
-
-        glVertex3f(box.max_x, box.min_y, box.min_z)
-        glVertex3f(box.min_x, box.min_y, box.min_z)
-        glVertex3f(box.min_x, box.min_y, box.max_z)
-
-        # RIGHT SIDE
-        glNormal3f(0,0,1)
-        glVertex3f(box.min_x, box.max_y, box.max_z)
-        glVertex3f(box.min_x, box.max_y, box.min_z)
-        glVertex3f(box.min_x, box.min_y, box.min_z)
-
-        glVertex3f(box.min_x, box.min_y, box.max_z)
-        glVertex3f(box.min_x, box.min_y, box.min_z)
-        glVertex3f(box.min_x, box.max_y, box.max_z)
-
-        # LEFT SIDE
-        glNormal3f(1,0,0)
-        glVertex3f(box.max_x, box.max_y, box.max_z)
-        glVertex3f(box.max_x, box.max_y, box.min_z)
-        glVertex3f(box.max_x, box.min_y, box.min_z)
-
-        glVertex3f(box.max_x, box.min_y, box.max_z)
-        glVertex3f(box.max_x, box.min_y, box.min_z)
-        glVertex3f(box.max_x, box.max_y, box.max_z)
-
-        # FRONT
-        glNormal3f(-1,0,0)
-        glVertex3f(box.min_x, box.max_y, box.max_z)
-        glVertex3f(box.max_x, box.max_y, box.max_z)
-        glVertex3f(box.max_x, box.min_y, box.max_z)
-
-        glVertex3f(box.min_x, box.max_y, box.max_z)
-        glVertex3f(box.max_x, box.min_y, box.max_z)
-        glVertex3f(box.min_x, box.min_y, box.max_z)
-
-        # BACK
-        glNormal3f(-1,0,0)
-        glVertex3f(box.max_x, box.min_y, box.min_z)
-        glVertex3f(box.min_x, box.min_y, box.min_z)
-        glVertex3f(box.min_x, box.max_y, box.min_z)
-
-        glVertex3f(box.max_x, box.min_y, box.min_z)
-        glVertex3f(box.min_x, box.max_y, box.min_z)
-        glVertex3f(box.max_x, box.max_y, box.min_z)
-      glEnd
+      glDisable(GL_LIGHTING)
+      glDrawArrays(GL_TRIANGLES, 0, _vertices_size/3)
+      glEnable(GL_LIGHTING)
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+
+      glDisableClientState(GL_VERTEX_ARRAY)
+      glDisableClientState(GL_COLOR_ARRAY)
+      glDisableClientState(GL_NORMAL_ARRAY)
     end
 
     def handleGlError
