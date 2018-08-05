@@ -34,15 +34,20 @@ class Window < Gosu::Window
     end
 
     @background.draw(0, 0, 0)
+
+    # Box
     draw_rect(
       Gosu.screen_width/4, 0,
       Gosu.screen_width/2, Gosu.screen_height,
       Gosu::Color.rgba(100, 100, 100, 150)
       # Gosu::Color.rgba(@base_color.red+@color_step, @base_color.green+@color_step, @base_color.blue+@color_step, 200)
     )
+
+    # Texts
     @title.draw
     @singleplayer.draw
 
+    # Cursor
     fill_quad(
       mouse_x, mouse_y,
       mouse_x+16, mouse_y+16,
