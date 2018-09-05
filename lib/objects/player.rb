@@ -132,6 +132,8 @@ class IMICFPS
       if button_down?(Gosu::KbSpace) && !@jumping
         @jumping = true
         @_time_in_air = Gosu.milliseconds
+      elsif !@jumping && @y > @floor
+        @falling = true
       else
         if @jumping
           if @y <= @floor
