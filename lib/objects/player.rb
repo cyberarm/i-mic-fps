@@ -132,6 +132,7 @@ class IMICFPS
         @_time_in_air = Gosu.milliseconds
       elsif !@jumping && @y > @floor
         @falling = true
+        @_time_in_air ||= Gosu.milliseconds # FIXME
       else
         if @jumping
           if @y <= @floor
