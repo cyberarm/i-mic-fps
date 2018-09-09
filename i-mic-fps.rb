@@ -45,6 +45,11 @@ require_relative "lib/common_methods"
 require_relative "lib/managers/object_manager"
 require_relative "lib/managers/light_manager"
 
+require_relative "lib/states/game_state"
+require_relative "lib/states/game_states/game"
+require_relative "lib/states/menu"
+require_relative "lib/states/menus/main_menu"
+
 require_relative "lib/objects/text"
 require_relative "lib/objects/multi_line_text"
 require_relative "lib/objects/game_object"

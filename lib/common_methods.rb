@@ -1,12 +1,27 @@
 class IMICFPS
   module CommonMethods
 
-    def delta_time; $window.delta_time; end
+    def delta_time
+      (Gosu.milliseconds-@delta_time)/1000.0
+    end
     def button_down?(id); $window.button_down?(id); end
 
     def mouse_x; $window.mouse_x; end
     def mouse_y; $window.mouse_y; end
     def mouse_x=int; $window.mouse_x=int; end
     def mouse_y=int; $window.mouse_y=int; end
+
+    def gl(&block)
+      $window.gl do
+        block.call
+      end
+    end
+
+    def draw_rect(*args)
+      $window.draw_rect(*args)
+    end
+    def draw_quad(*args)
+      $window.draw_quad(*args)
+    end
   end
 end

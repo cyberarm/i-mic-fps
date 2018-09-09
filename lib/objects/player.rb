@@ -87,8 +87,6 @@ class IMICFPS
     end
 
     def update
-      super
-
       @floor = @terrain.height_at(self, 4.5)
 
       relative_speed = @speed
@@ -153,6 +151,8 @@ class IMICFPS
       # distance = 2.0
       # x_offset = distance * Math.cos(@bound_model.y_rotation)
       # z_offset = distance * Math.sin(@bound_model.y_rotation)
+
+      super
     end
 
     def button_up(id)

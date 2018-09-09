@@ -20,6 +20,7 @@ class IMICFPS
       @debug_color = Color.new(0.0, 1.0, 0.0)
       @terrain = terrain
       @width, @height, @depth = 0,0,0
+      @delta_time = Gosu.milliseconds
 
       ObjectManager.add_object(self) if auto_manage
       setup
@@ -78,6 +79,7 @@ class IMICFPS
 
     def update
       model.update
+      @delta_time = Gosu.milliseconds
     end
 
     # Do two Axis Aligned Bounding Boxes intersect?
