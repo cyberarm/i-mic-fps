@@ -22,6 +22,20 @@ class IMICFPS
         #   material = index[3]
       end
 
+      def parent=(game_object)
+        @parent = game_object
+      end
+
+      def reflatten
+        @vertices_list = nil
+        @textures_list = nil
+        @normals_list = nil
+
+        flattened_vertices
+        flattened_textures
+        flattened_normals
+      end
+
       def at_same_position?
         if @x == @parent.x
           if @x == @parent.x

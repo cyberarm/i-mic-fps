@@ -15,19 +15,29 @@ class IMICFPS
       @needs_cursor = false
       @number_of_faces = 0
 
-      @active_state = Game.new
+      @active_state = nil
+
+      push_game_state(MainMenu)
+    end
+
+    def push_game_state(klass_or_instance)
+      if klass_or_instance.respond_to?(:draw)
+        @active_state = klass_or_instance
+      else
+        @active_state = klass_or_instance.new
+      end
     end
 
     def draw
-      @active_state.draw
+      @active_state.draw if @active_state
     end
 
     def update
-      @active_state.update
+      @active_state.update if @active_state
     end
 
     def button_up(id)
-      @active_state.button_up(id)
+      @active_state.button_up(id) if @active_state
     end
   end
 end

@@ -1,10 +1,15 @@
 class IMICFPS
   class GameState
     include CommonMethods
-
-    def initialize
+    attr_reader :options
+    def initialize(options = {})
+      @options = options
       @delta_time = Gosu.milliseconds
       setup
+    end
+
+    def push_game_state(klass_or_instance)
+      $window.push_game_state(klass_or_instance)
     end
 
     def setup

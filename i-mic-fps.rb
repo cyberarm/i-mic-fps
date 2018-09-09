@@ -46,6 +46,7 @@ require_relative "lib/managers/object_manager"
 require_relative "lib/managers/light_manager"
 
 require_relative "lib/states/game_state"
+require_relative "lib/states/game_states/loading_state"
 require_relative "lib/states/game_states/game"
 require_relative "lib/states/menu"
 require_relative "lib/states/menus/main_menu"

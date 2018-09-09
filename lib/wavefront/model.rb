@@ -11,12 +11,12 @@ class IMICFPS
       include Parser
 
       attr_accessor :objects, :materials, :vertices, :texures, :normals, :faces
-      attr_accessor :x, :y, :z, :scale
+      attr_accessor :x, :y, :z, :scale, :game_object
       attr_reader :bounding_box
 
-      def initialize(file_path:, game_object:)
+      def initialize(file_path:, game_object: nil)
         @game_object = game_object
-        update
+        update if @game_object
         @file_path = file_path
         @file = File.open(file_path, 'r')
         @material_file  = nil
@@ -103,6 +103,10 @@ class IMICFPS
       def update
         @x, @y, @z = @game_object.x, @game_object.y, @game_object.z
         @scale = @game_object.scale
+        # if @scale != @game_object.scale
+        #   puts "oops for #{self}: #{@scale} != #{@game_object.scale}"
+        #   self.objects.each(&:reflatten) if self.objects && self.objects.count > 0
+        # end
       end
     end
   end

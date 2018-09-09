@@ -23,5 +23,8 @@ class IMICFPS
     def draw_quad(*args)
       $window.draw_quad(*args)
     end
+    def fill(color = Gosu::Color::WHITE)
+      draw_rect(0, 0, $window.width, $window.height, color)
+    end
   end
 end
