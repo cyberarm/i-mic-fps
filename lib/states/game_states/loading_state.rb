@@ -3,8 +3,8 @@ class IMICFPS
     def setup
       @header = Text.new("I-MIC FPS", y: 10, size: 100, alignment: :center)
       @subheading = Text.new("Loading Assets", y: 100, size: 50, alignment: :center)
-      @state = Text.new("Preparing...", y: $window.height/2-30, size: 30, alignment: :center)
-      @percentage = Text.new("0%", y: $window.height-50-15, size: 30, alignment: :center)
+      @state = Text.new("Preparing...", y: $window.height/2-40, size: 40, alignment: :center)
+      @percentage = Text.new("0%", y: $window.height-50-25, size: 50, alignment: :center)
 
       @dummy_game_object = nil
       @assets = []
@@ -16,6 +16,9 @@ class IMICFPS
 
       @act = false
       @cycled = false
+
+      @completed_for_ms = 0
+      @lock = false
     end
 
     def draw
@@ -28,10 +31,11 @@ class IMICFPS
     end
 
     def update
+      puts (@asset_index.to_f/@assets.count)
       @percentage.text = "#{((@asset_index.to_f/@assets.count)*100.0).round}%"
       @act = true if @cycled
 
-      if @act
+      if @act && (@asset_index+1 <= @assets.count)
         @act = false
         @cycled = false
 
@@ -42,9 +46,16 @@ class IMICFPS
       end
 
       unless @asset_index < @assets.count
-        push_game_state(@options[:forward])
+        if @act && Gosu.milliseconds-@completed_for_ms > 250
+          push_game_state(@options[:forward])
+        else
+          @act = true
+          @completed_for_ms = Gosu.milliseconds unless @lock
+          @lock = true
+        end
       else
         @state.text = "Loading #{@assets[@asset_index][:path].split('/').last}..."
+        @state.x = ($window.width/2)-(@state.width/2)
         @cycled = true
       end
     end

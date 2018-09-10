@@ -139,7 +139,7 @@ eos
 
     def needs_cursor?
       @needs_cursor
-     end
+    end
 
     def lose_focus
       puts 'Bye'

@@ -104,14 +104,16 @@ class IMICFPS
       def initialize(text, host, block)
         @text, @host, @block = text, host, block
         @color = @text.color
-        @hover_color = Gosu::Color.rgb(255, 127, 0)
+        @hover_color = Gosu::Color.rgb(64, 127, 255)
       end
 
       def update
         if @host.mouse_over?(self)
           @text.color = @hover_color
+          @text.shadow_size = 2
         else
           @text.color = @color
+          @text.shadow_size = 1
         end
       end
 
