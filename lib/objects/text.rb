@@ -54,7 +54,7 @@ class Text
     end
 
     unless available
-      font = Gosu::Font.new(@size, name: @font)
+      font = Gosu::Font.new(@size, name: @font, bold: true)
       CACHE[@size] = {} unless CACHE[@size].is_a?(Hash)
       CACHE[@size][@font] = font
     end

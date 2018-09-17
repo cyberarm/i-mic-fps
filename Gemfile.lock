@@ -3,9 +3,9 @@ GEM
   specs:
     glu (8.2.2)
     glu (8.2.2-x86-mingw32)
-    gosu (0.13.3)
-    gosu (0.13.3-x86-mingw32)
-    opengl-bindings (1.6.6)
+    gosu (0.14.0)
+    gosu (0.14.0-x86-mingw32)
+    opengl-bindings (1.6.7)
 
 PLATFORMS
   ruby
@@ -17,4 +17,4 @@ DEPENDENCIES
   opengl-bindings
 
 BUNDLED WITH
-   1.16.2
+   1.16.4
