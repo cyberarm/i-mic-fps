@@ -38,8 +38,7 @@ class IMICFPS
     def draw_nameplate
       _height = (@name_image.height/@devisor)
       _width = (@name_image.width/@devisor)/2
-      _x = @x
-      _y = normalize_bounding_box(model.bounding_box).max_y+0.05
+      _y = 2#normalize_bounding_box(model.bounding_box).max_y+0.05
       glPushMatrix
       glDisable(GL_LIGHTING)
       glEnable(GL_COLOR_MATERIAL)
@@ -51,27 +50,27 @@ class IMICFPS
         glColor3f(1.0,1.0,1.0)
         # TOP LEFT
         glTexCoord2f(0, 0)
-        glVertex3f(_x-_width,_y+_height,@z)
+        glVertex3f(0-_width,_y+_height,0)
 
         # TOP RIGHT
         glTexCoord2f(1, 0)
-        glVertex3f(_x+_width, _y+_height,@z)
+        glVertex3f(0+_width, _y+_height,0)
 
         # BOTTOM LEFT
         glTexCoord2f(0, 1)
-        glVertex3f(_x-_width,_y,@z)
+        glVertex3f(0-_width,_y,0)
 
         # BOTTOM LEFT
         glTexCoord2f(0, 1)
-        glVertex3f(_x-_width,_y,@z)
+        glVertex3f(0-_width,_y,0)
 
         # BOTTOM RIGHT
         glTexCoord2f(1, 1)
-        glVertex3f(_x+_width, _y,@z)
+        glVertex3f(0+_width, _y,0)
 
         # TOP RIGHT
         glTexCoord2f(1, 0)
-        glVertex3f(_x+_width,_y+_height,@z)
+        glVertex3f(0+_width,_y+_height,0)
       glEnd
       # glDisable(GL_BLEND)
       glDisable(GL_TEXTURE_2D)

@@ -80,7 +80,7 @@ class IMICFPS
     end
 
     def button_up(id)
-      close if id == Gosu::KbEscape
+      $window.close if id == Gosu::KbEscape
       if Gosu::MsLeft
         @elements.each do |e|
           next unless e.is_a?(Link)

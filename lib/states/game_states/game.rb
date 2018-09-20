@@ -4,6 +4,7 @@ class IMICFPS
     include GLU
 
     def setup
+      @renderer = Renderer.new
       @terrain = Terrain.new#(size: 170, height: 0)
       @draw_skydome = true
       @skydome = Skydome.new(scale: 0.08, backface_culling: false, auto_manage: false)
@@ -48,12 +49,10 @@ class IMICFPS
         LightManager.lights.each(&:draw)
 
         @camera.draw
-        @skydome.draw if @skydome.renderable
+        @renderer.draw_object(@skydome) if @skydome.renderable
         glEnable(GL_DEPTH_TEST)
 
-        ObjectManager.objects.each do |object|
-          object.draw if object.visible && object.renderable
-        end
+        @renderer.draw
       end
 
       # Draw crosshair
