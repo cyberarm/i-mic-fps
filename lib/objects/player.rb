@@ -40,6 +40,7 @@ class IMICFPS
       _width = (@name_image.width/@devisor)/2
       _y = 2#normalize_bounding_box(model.bounding_box).max_y+0.05
       glPushMatrix
+      glRotatef(180, 0, 1, 0)
       glDisable(GL_LIGHTING)
       glEnable(GL_COLOR_MATERIAL)
       glEnable(GL_TEXTURE_2D)

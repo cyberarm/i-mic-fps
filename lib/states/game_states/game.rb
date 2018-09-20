@@ -49,7 +49,7 @@ class IMICFPS
         LightManager.lights.each(&:draw)
 
         @camera.draw
-        @renderer.draw_object(@skydome) if @skydome.renderable
+        @renderer.opengl_renderer.draw_object(@skydome) if @skydome.renderable
         glEnable(GL_DEPTH_TEST)
 
         @renderer.draw
