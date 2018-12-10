@@ -3,8 +3,8 @@ GEM
   specs:
     glu (8.2.2)
     glu (8.2.2-x86-mingw32)
-    gosu (0.14.0)
-    gosu (0.14.0-x86-mingw32)
+    gosu (0.14.4)
+    gosu (0.14.4-x86-mingw32)
     opengl-bindings (1.6.7)
 
 PLATFORMS
@@ -17,4 +17,4 @@ DEPENDENCIES
   opengl-bindings
 
 BUNDLED WITH
-   1.16.4
+   1.16.6

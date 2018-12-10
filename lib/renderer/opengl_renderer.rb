@@ -19,9 +19,6 @@ class IMICFPS
 
       glEnable(GL_NORMALIZE)
       glPushMatrix
-      # Render bounding boxes before transformation is applied
-      create_bounding_box(object, object.model.bounding_box) if $debug
-      object.model.objects.each {|o| create_bounding_box(object, o.bounding_box, o.debug_color)} if $debug
 
       glTranslatef(object.x, object.y, object.z)
       glRotatef(object.x_rotation,1.0, 0, 0)
@@ -59,9 +56,7 @@ class IMICFPS
         glColorPointer(3, GL_FLOAT, 0, o.flattened_materials)
         glNormalPointer(GL_FLOAT, 0, o.flattened_normals)
 
-        glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
-
-        if $debug
+        if $debug # This is kinda expensive
           glDisable(GL_LIGHTING)
           glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
           glPolygonOffset(2, 0.5)
@@ -71,6 +66,9 @@ class IMICFPS
           glPolygonOffset(0, 0)
           glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
           glEnable(GL_LIGHTING)
+          glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+        else
+          glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
         end
 
         glDisableClientState(GL_VERTEX_ARRAY)

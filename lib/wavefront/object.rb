@@ -38,7 +38,7 @@ class IMICFPS
 
       def at_same_position?
         if @x == @parent.x
-          if @x == @parent.x
+          if @y == @parent.y
             if @z == @parent.z
               true
             end

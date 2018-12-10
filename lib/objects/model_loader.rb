@@ -36,7 +36,7 @@ class IMICFPS
       found = false
       if CACHE[@type].is_a?(Hash)
         if CACHE[@type][@file_path]
-          @model = CACHE[@type][@file_path].dup # Don't know why, but adding .dup improves performance with Sponza (1 fps -> 20 fps)
+          @model = CACHE[@type][@file_path]#.dup # Don't know why, but adding .dup improves performance with Sponza (1 fps -> 20 fps)
           puts "Used cached model for: #{@file_path.split('/').last}"
           found = true
         end

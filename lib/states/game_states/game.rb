@@ -100,15 +100,25 @@ eos
       end
       @text.text = string
 
-      # ObjectManager.objects.each do |object|
-      #   ObjectManager.objects.each do |b|
-      #     next if b == object
-      #     if object.intersect(object, b)
-      #       # puts "#{object} is intersecting #{b}"
-      #     end
-      #   end
-      #   object.update
-      # end
+      ObjectManager.objects.each do |object|
+        ObjectManager.objects.each do |b|
+          next if b == object
+          next if object.is_a?(Terrain)
+          next if b.is_a?(Terrain)
+
+          if object.intersect(object, b)
+            object.debug_color = Color.new(1.0,0.0,0.0)
+            b.debug_color = Color.new(1.0,0.0,0.0)
+
+            # ObjectManager.objects.delete(object)
+            # puts "#{object} is intersecting #{b}" if object.is_a?(Player)
+          else
+            object.debug_color = Color.new(0,1,0)
+            b.debug_color = Color.new(0,1,0)
+          end
+        end
+      end
+
       ObjectManager.objects.each(&:update)
 
       @skydome.update if @skydome.renderable

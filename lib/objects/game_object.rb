@@ -64,21 +64,25 @@ class IMICFPS
     def draw
     end
 
+
     def update
       model.update
       @delta_time = Gosu.milliseconds
     end
 
+    def debug_color=(color)
+      @debug_color = color
+    end
+
     # Do two Axis Aligned Bounding Boxes intersect?
     def intersect(a, b)
-      a = a.normalize_bounding_box(a.model.bounding_box)
-      b = b.normalize_bounding_box(b.model.bounding_box)
+      a = a.normalize_bounding_box_with_offset(a.model.bounding_box)
+      b = b.normalize_bounding_box_with_offset(b.model.bounding_box)
 
-      puts "bounding boxes match!" if a == b
-      if (((a.min_x <= b.min_x && b.max_x <= a.max_x) || (b.min_x <= a.min_x && a.min_x <= b.max_x)) &&
-          ((a.min_y <= b.min_y && b.max_y <= a.max_y) || (b.min_y <= a.min_y && a.min_y <= b.max_y)) &&
-          ((a.min_z <= b.min_z && b.max_z <= a.max_z) || (b.min_z <= a.min_z && a.min_z <= b.max_z)))
-      # if (a.max_x >= b.max_x && a.min_x <= b.max_x) && (a.max_y >= b.min_y && a.min_y <= b.max_y)  && (a.max_z >= b.min_z && a.min_z <= b.max_z)
+      # puts "bounding boxes match!" if a == b
+      if  (a.min_x <= b.max_x && a.max_x >= b.min_x) &&
+          (a.min_y <= b.max_y && a.max_y >= b.min_y) &&
+          (a.min_z <= b.max_z && a.max_z >= b.min_z)
         return true
       else
         return false
@@ -86,6 +90,19 @@ class IMICFPS
     end
 
     def normalize_bounding_box(box)
+      temp = BoundingBox.new
+      temp.min_x = box.min_x.to_f*scale
+      temp.min_y = box.min_y.to_f*scale
+      temp.min_z = box.min_z.to_f*scale
+
+      temp.max_x = box.max_x.to_f*scale
+      temp.max_y = box.max_y.to_f*scale
+      temp.max_z = box.max_z.to_f*scale
+
+      return temp
+    end
+
+    def normalize_bounding_box_with_offset(box)
       temp = BoundingBox.new
       temp.min_x = box.min_x.to_f*scale+x
       temp.min_y = box.min_y.to_f*scale+y
@@ -95,7 +112,6 @@ class IMICFPS
       temp.max_y = box.max_y.to_f*scale+y
       temp.max_z = box.max_z.to_f*scale+z
 
-      # puts "b: #{box}, Temp: #{temp}"
       return temp
     end
 
