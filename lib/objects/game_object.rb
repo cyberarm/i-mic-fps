@@ -9,7 +9,7 @@ class IMICFPS
     attr_accessor :x, :y, :z, :scale
     attr_accessor :visible, :renderable, :backface_culling
     attr_accessor :x_rotation, :y_rotation, :z_rotation
-    attr_reader :model, :name, :debug_color, :terrain, :width, :height, :depth
+    attr_reader :model, :name, :debug_color, :terrain, :width, :height, :depth, :last_x, :last_y, :last_z, :normalized_bounding_box
     def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, terrain: nil)
       @x,@y,@z,@scale = x,y,z,scale
       @bound_model = bound_model
@@ -19,8 +19,10 @@ class IMICFPS
       @x_rotation,@y_rotation,@z_rotation = 0,0,0
       @debug_color = Color.new(0.0, 1.0, 0.0)
       @terrain = terrain
+
       @width, @height, @depth = 0,0,0
       @delta_time = Gosu.milliseconds
+      @last_x, @last_y, @last_z = @x, @y, @z
 
       ObjectManager.add_object(self) if auto_manage
       setup
@@ -28,6 +30,7 @@ class IMICFPS
       if @bound_model
         @bound_model.model.game_object = self
         @bound_model.model.objects.each {|o| o.scale = self.scale}
+        @normalized_bounding_box = normalize_bounding_box_with_offset(model.bounding_box)
 
         box = normalize_bounding_box(@bound_model.model.bounding_box)
         @width  = box.max_x-box.min_x
@@ -43,6 +46,8 @@ class IMICFPS
       @bound_model = model
       @bound_model.model.game_object = self
       @bound_model.model.objects.each {|o| o.scale = self.scale}
+      @normalized_bounding_box = normalize_bounding_box_with_offset(@bound_model.model.bounding_box)
+
       box = normalize_bounding_box(@bound_model.model.bounding_box)
       @width  = box.max_x-box.min_x
       @height = box.max_y-box.min_y
@@ -68,16 +73,28 @@ class IMICFPS
     def update
       model.update
       @delta_time = Gosu.milliseconds
+
+      unless at_same_position?
+        @normalized_bounding_box = normalize_bounding_box_with_offset(@bound_model.model.bounding_box) if model
+      end
+
+      @last_x, @last_y, @last_z = @x, @y, @z
     end
 
     def debug_color=(color)
       @debug_color = color
     end
 
+    def at_same_position?
+      @x == @last_x &&
+      @y == @last_y &&
+      @z == @last_z
+    end
+
     # Do two Axis Aligned Bounding Boxes intersect?
     def intersect(a, b)
-      a = a.normalize_bounding_box_with_offset(a.model.bounding_box)
-      b = b.normalize_bounding_box_with_offset(b.model.bounding_box)
+      a = a.normalized_bounding_box
+      b = b.normalized_bounding_box
 
       # puts "bounding boxes match!" if a == b
       if  (a.min_x <= b.max_x && a.max_x >= b.min_x) &&
