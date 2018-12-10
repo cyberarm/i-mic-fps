@@ -100,6 +100,7 @@ eos
       end
       @text.text = string
 
+      # Expensive AABB collision detection
       ObjectManager.objects.each do |object|
         ObjectManager.objects.each do |b|
           next if b == object

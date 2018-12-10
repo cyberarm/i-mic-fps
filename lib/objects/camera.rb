@@ -20,8 +20,8 @@ class IMICFPS
 
       self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
       @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
-      @true_mouse_checked = 0
       @mouse_sensitivity = 20.0
+      @mouse_captured = true
     end
 
     def attach_to(game_object)
@@ -87,9 +87,9 @@ class IMICFPS
     end
 
     def update
-      position_camera if @game_object
+      if @mouse_captured
+        position_camera if @game_object
 
-      if @true_mouse_checked > 2
         @yaw-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
         @game_object.y_rotation+=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 if @game_object
 
@@ -97,19 +97,19 @@ class IMICFPS
         @yaw %= 360.0
         @render_pitch = @render_pitch.clamp(-90.0, 90.0)
         @pitch = @pitch.clamp(-90.0, 90.0)
-      else
-        @true_mouse_checked+=1
-        @true_mouse.x = self.mouse_x
-        @true_mouse.y = self.mouse_y
-      end
 
-      self.mouse_x, self.mouse_y = Gosu.screen_width/2.0, Gosu.screen_height/2.0
-      @true_mouse_checked = 0 if (button_down?(Gosu::KbLeftAlt) && (button_down?(Gosu::KbEnter) || button_down?(Gosu::KbReturn)))
-      @true_mouse_checked = 0 if (button_down?(Gosu::KbRightAlt) && (button_down?(Gosu::KbEnter) || button_down?(Gosu::KbReturn)))
+        self.mouse_x, self.mouse_y = Gosu.screen_width/2.0, Gosu.screen_height/2.0
+      end
     end
 
     def button_up(id)
       case id
+      when Gosu::KbLeftAlt
+        @mouse_captured = false
+        $window.needs_cursor = true
+      when Gosu::MsLeft
+        @mouse_captured = true
+        $window.needs_cursor = false
       when Gosu::KB_NUMPAD_PLUS
         @mouse_sensitivity+=1
         @mouse_sensitivity = @mouse_sensitivity.clamp(1.0, 100.0)

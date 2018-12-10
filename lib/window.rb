@@ -28,6 +28,10 @@ class IMICFPS
       end
     end
 
+    def needs_cursor?
+      @needs_cursor
+    end
+
     def draw
       @active_state.draw if @active_state
     end
