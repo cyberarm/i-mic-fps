@@ -15,7 +15,6 @@ class IMICFPS
         if object.visible && object.renderable
           # Render bounding boxes before transformation is applied
           @bounding_box_renderer.create_bounding_box(object, object.model.bounding_box, object.debug_color, object.object_id) if $debug
-          object.model.objects.each {|o| @bounding_box_renderer.create_bounding_box(object, o.bounding_box, o.debug_color, o.object_id)} if $debug
 
           @opengl_renderer.draw_object(object)
         end
