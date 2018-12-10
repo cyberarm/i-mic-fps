@@ -189,7 +189,10 @@ class IMICFPS
         glPopMatrix
 
         found = ObjectManager.objects.detect { |o| o == bounding_box[:object] }
-        @bounding_boxes.delete(key) unless found
+        unless found
+          @vertex_count -= @bounding_boxes[key][:vertices_size]
+          @bounding_boxes.delete(key)
+        end
       end
     end
 
