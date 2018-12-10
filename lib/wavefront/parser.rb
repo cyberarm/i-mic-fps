@@ -84,7 +84,7 @@ class IMICFPS
       end
 
       def change_object(name)
-        @objects << Object.new(self, name)
+        @objects << Object.new(name)
         @current_object = @objects.last
       end
 

@@ -27,7 +27,7 @@ class IMICFPS
 
       if @bound_model
         @bound_model.model.game_object = self
-        @bound_model.model.objects.each {|o| o.parent = self}
+        @bound_model.model.objects.each {|o| o.scale = self.scale}
 
         box = normalize_bounding_box(@bound_model.model.bounding_box)
         @width  = box.max_x-box.min_x
@@ -42,7 +42,7 @@ class IMICFPS
       raise "model isn't a model!" unless model.is_a?(ModelLoader)
       @bound_model = model
       @bound_model.model.game_object = self
-      @bound_model.model.objects.each {|o| o.parent = self}
+      @bound_model.model.objects.each {|o| o.scale = self.scale}
       box = normalize_bounding_box(@bound_model.model.bounding_box)
       @width  = box.max_x-box.min_x
       @height = box.max_y-box.min_y

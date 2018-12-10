@@ -1,11 +1,10 @@
 class IMICFPS
   class Wavefront
     class Object
-      attr_reader :parent, :name, :vertices, :textures, :normals, :bounding_box, :debug_color
-      attr_accessor :faces
+      attr_reader :name, :vertices, :textures, :normals, :bounding_box, :debug_color
+      attr_accessor :faces, :scale
 
-      def initialize(parent, name)
-        @parent = parent
+      def initialize(name)
         @name = name
         @vertices = []
         @textures = []
@@ -13,17 +12,14 @@ class IMICFPS
         @faces    = []
         @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
         @debug_color = Color.new(1.0,1.0,1.0)
-        @x,@y,@z = 0,0,0
+
+        @scale = 1.0
 
         # Faces array packs everything:
         #   vertex   = index[0]
         #   uv       = index[1]
         #   normal   = index[2]
         #   material = index[3]
-      end
-
-      def parent=(game_object)
-        @parent = game_object
       end
 
       def reflatten
@@ -36,28 +32,17 @@ class IMICFPS
         flattened_normals
       end
 
-      def at_same_position?
-        if @x == @parent.x
-          if @y == @parent.y
-            if @z == @parent.z
-              true
-            end
-          end
-        end
-      end
-
       def flattened_vertices
-        unless @vertices_list && at_same_position?
+        unless @vertices_list
           @debug_color = @faces.first[3].diffuse
-          @x,@y,@z = @parent.x,@parent.y,@parent.z
 
           list = []
           @faces.each do |face|
             [face[0]].each do |v|
               next unless v
-              list << v.x*@parent.scale#+@parent.x
-              list << v.y*@parent.scale#+@parent.y
-              list << v.z*@parent.scale#+@parent.z
+              list << v.x*@scale
+              list << v.y*@scale
+              list << v.z*@scale
               list << v.weight
             end
           end
