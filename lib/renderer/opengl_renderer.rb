@@ -29,6 +29,8 @@ class IMICFPS
 
       if ShaderManager.shader("lighting")
         ShaderManager.shader("lighting").use do |shader|
+          glUniform3f(shader.variable("SunLight"), 1.0, 1.0, 1.0)
+
           handleGlError
           draw_mesh(object.model)
           object.draw

@@ -50,7 +50,7 @@ class IMICFPS
           end
         end
 
-        puts "Total Lines: #{lines}"
+        puts "Total Lines: #{lines}" if $debug
         calculate_bounding_box(@vertices, @bounding_box)
         @objects.each do |o|
           calculate_bounding_box(o.vertices, o.bounding_box)

@@ -53,14 +53,14 @@ class IMICFPS
 
         parse
 
-        puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse"
+        puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if $debug
 
         # populate_buffers
 
         face_count = 0
         @objects.each {|o| face_count+=o.faces.size}
         @objects.each_with_index do |o, i|
-          puts "    Model::Object Name: #{o.name}, Faces: #{o.faces.size}"
+          puts "    Model::Object Name: #{o.name}, Faces: #{o.faces.size}" if $debug
         end
         $window.number_of_faces+=face_count
         @model_has_texture = false

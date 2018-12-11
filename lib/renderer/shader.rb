@@ -10,10 +10,12 @@ class IMICFPS
       @compiled = false
 
       @error_buffer_size = 1024
+      @variable_missing = {}
 
       create_shaders
       compile_shaders
 
+      # Only add shader to ShaderManager if it successfully compiles
       if @compiled
         ShaderManager.add_shader(@name, self)
       else
@@ -51,9 +53,12 @@ class IMICFPS
       if compiled == 0
         log = ' ' * @error_buffer_size
         glGetShaderInfoLog(@vertex, @error_buffer_size, nil, log)
-        puts "Vertex Shader InfoLog:\n#{log.strip}\n"
-        puts "Shader Compiled status: #{compiled}"
+        puts "Shader Error: Program \"#{@name}\""
+        puts "  Vertex Shader InfoLog:", "  #{log.strip.split("\n").join("\n  ")}\n\n"
+        puts "  Shader Compiled status: #{compiled}"
+        puts "    NOTE: assignment of uniforms in shaders is illegal!"
         puts
+        return
       end
 
       glCompileShader(@fragment)
@@ -64,9 +69,12 @@ class IMICFPS
       if compiled == 0
         log = ' ' * @error_buffer_size
         glGetShaderInfoLog(@fragment, @error_buffer_size, nil, log)
-        puts "Fragment Shader InfoLog:\n#{log.strip}\n"
-        puts "Shader Compiled status: #{compiled}"
+        puts "Shader Error: Program \"#{@name}\""
+        puts "  Fragment Shader InfoLog:", "  #{log.strip.split("\n").join("\n  ")}\n\n"
+        puts "  Shader Compiled status: #{compiled}"
+        puts "    NOTE: assignment of uniforms in shader is illegal!"
         puts
+        return
       end
 
       @program = glCreateProgram
@@ -81,7 +89,8 @@ class IMICFPS
       if linked == 0
         log = ' ' * @error_buffer_size
         glGetProgramInfoLog(@program, @error_buffer_size, nil, log)
-        puts "Program InfoLog:\n#{log.strip}\n"
+        puts "Shader Error: Program \"#{@name}\""
+        puts "  Program InfoLog:", "  #{log.strip.split("\n").join("\n  ")}\n\n"
       end
 
       @compiled = linked == 0 ? false : true
@@ -91,7 +100,8 @@ class IMICFPS
     def variable(variable)
       loc = glGetUniformLocation(@program, variable)
       if (loc == -1)
-        puts "Shader:\"#{@name}\" No such uniform named #{variable}"
+        puts "Shader Error: Program \"#{@name}\" has no such uniform named \"#{variable}\"", "  Is it used in the shader? GLSL may have optimized it out.", "  Is it miss spelled?" unless @variable_missing[variable]
+        @variable_missing[variable] = true
       end
       return loc
     end
@@ -100,8 +110,13 @@ class IMICFPS
       return unless compiled?
       glUseProgram(@program)
 
-      block.call(self) if block
+      if block
+        block.call(self)
+        stop
+      end
+    end
 
+    def stop
       glUseProgram(0)
     end
 
