@@ -73,6 +73,7 @@ OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}
 
 Camera pitch: #{@camera.pitch.round(2)} Yaw: #{@camera.yaw.round(2)} Roll #{@camera.roll.round(2)}
 Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)}
+Compensating faulty mouse centering? #{@camera.broken_mouse_centering}
 #{if @camera.game_object then "Actor X:#{@camera.game_object.x.round(2)} Y:#{@camera.game_object.y.round(2)} Z:#{@camera.game_object.z.round(2)}";end}
 Field Of View: #{@camera.field_of_view}
 Mouse Sesitivity: #{@camera.mouse_sensitivity}

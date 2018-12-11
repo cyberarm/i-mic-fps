@@ -5,7 +5,7 @@ class IMICFPS
     include GLU
 
     attr_accessor :x,:y,:z, :field_of_view, :pitch, :yaw, :roll, :mouse_sensitivity
-    attr_reader :game_object
+    attr_reader :game_object, :broken_mouse_centering
     def initialize(x: 0, y: 0, z: 0, fov: 70.0, distance: 100.0)
       @x,@y,@z = x,y,z
       @render_pitch = 20.0
@@ -22,6 +22,9 @@ class IMICFPS
       @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
       @mouse_sensitivity = 20.0
       @mouse_captured = true
+      @mouse_checked = 0
+
+      @broken_mouse_centering = ARGV.join.include?("--disable-mousefix") ? false : true
     end
 
     def attach_to(game_object)
@@ -90,6 +93,14 @@ class IMICFPS
       if @mouse_captured
         position_camera if @game_object
 
+        if @broken_mouse_centering
+          if @mouse_checked < 3
+            @mouse_checked+=1
+            @true_mouse.x, @true_mouse.y = self.mouse_x, self.mouse_y
+          end
+          return unless @mouse_checked > 2
+        end
+
         @yaw-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
         @game_object.y_rotation+=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 if @game_object
 
@@ -98,7 +109,41 @@ class IMICFPS
         @render_pitch = @render_pitch.clamp(-90.0, 90.0)
         @pitch = @pitch.clamp(-90.0, 90.0)
 
+        free_move unless @game_object
+
         self.mouse_x, self.mouse_y = Gosu.screen_width/2.0, Gosu.screen_height/2.0
+      end
+    end
+
+    def free_move
+      relative_y_rotation = (@yaw + 180)
+      relative_speed = 0.5
+
+      if button_down?(Gosu::KbUp) || button_down?(Gosu::KbW)
+        @z+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+        @x-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+      end
+
+      if button_down?(Gosu::KbDown) || button_down?(Gosu::KbS)
+        @z-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+        @x+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+      end
+
+      if button_down?(Gosu::KbA)
+        @z+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+        @x+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+      end
+
+      if button_down?(Gosu::KbD)
+        @z-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+        @x-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+      end
+
+      if button_down?(Gosu::KbSpace)
+        @y+=relative_speed
+      end
+      if button_down?(Gosu::KbLeftShift) || button_down?(Gosu::KbRightShift)
+        @y-=relative_speed
       end
     end
 

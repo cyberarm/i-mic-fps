@@ -142,10 +142,11 @@ class IMICFPS
       end
       if @jumping && !@falling
         if button_down?(Gosu::KbSpace)
-          @y_velocity+=(2*15)*delta_time
-          @falling = true if @y_velocity >= 2
+          @y_velocity = 1.5
+          @falling = true
         end
       end
+
       @y+=@y_velocity*delta_time
 
       @y = @floor if @y < @floor
