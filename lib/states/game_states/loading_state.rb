@@ -15,7 +15,7 @@ class IMICFPS
       add_asset(:obj, "objects/biped.obj")
 
       # Currently broken
-      Shader.new(name: "lighting", vertex_file: "shaders/vertex/lighting.glsl", fragment_file: "shaders/fragment/lighting.glsl")
+      # Shader.new(name: "lighting", vertex_file: "shaders/vertex/lighting.glsl", fragment_file: "shaders/fragment/lighting.glsl")
 
       @act = false
       @cycled = false

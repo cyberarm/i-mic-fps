@@ -57,12 +57,11 @@ class IMICFPS
 
         # populate_buffers
 
-        face_count = 0
-        @objects.each {|o| face_count+=o.faces.size}
+        @objects.each {|o| @vertex_count+=o.vertices.size}
         @objects.each_with_index do |o, i|
-          puts "    Model::Object Name: #{o.name}, Faces: #{o.faces.size}" if $debug
+          puts "    Model::Object Name: #{o.name}, Vertices: #{o.vertices.size}" if $debug
         end
-        $window.number_of_faces+=face_count
+        $window.number_of_vertices+=@vertex_count
         @model_has_texture = false
         @materials.each do |key, material|
           if material.texture_id

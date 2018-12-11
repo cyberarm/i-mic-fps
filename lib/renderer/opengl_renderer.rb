@@ -76,6 +76,7 @@ class IMICFPS
           glLineWidth(3)
 
           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+          $window.number_of_vertices+=model.vertices.size
 
           glLineWidth(1)
           glPolygonOffset(0, 0)
@@ -83,8 +84,10 @@ class IMICFPS
           glEnable(GL_LIGHTING)
 
           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+          $window.number_of_vertices+=model.vertices.size
         else
           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+          $window.number_of_vertices+=model.vertices.size
         end
 
         # glBindBuffer(GL_ARRAY_BUFFER, 0)
@@ -100,8 +103,6 @@ class IMICFPS
         glDisable(GL_CULL_FACE) if model.game_object.backface_culling
         glDisable(GL_COLOR_MATERIAL)
       end
-
-      $window.number_of_faces+=model.faces.size
     end
   end
 end

@@ -21,8 +21,7 @@ class IMICFPS
       end
 
       @bounding_box_renderer.draw_bounding_boxes if $debug
-      $window.number_of_faces+=$window.number_of_faces if $debug
-      $window.number_of_faces+=@bounding_box_renderer.vertex_count/3 if $debug
+      $window.number_of_vertices+=@bounding_box_renderer.vertex_count if $debug
       # @bounding_box_renderer.bounding_boxes.clear
     end
 

@@ -17,6 +17,14 @@ class IMICFPS
       end
     end
 
+    def formatted_number(number)
+      string = number.to_s.reverse.scan(/\d{1,3}/).join(",").reverse
+
+      string.insert(0, "-") if number < 0
+
+      return string
+    end
+
     def draw_rect(*args)
       $window.draw_rect(*args)
     end

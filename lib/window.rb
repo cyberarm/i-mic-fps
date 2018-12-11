@@ -1,7 +1,7 @@
 class IMICFPS
   GRAVITY = 9.8 # m/s
   class Window < Gosu::Window
-    attr_accessor :number_of_faces, :needs_cursor
+    attr_accessor :number_of_vertices, :needs_cursor
     attr_reader :camera
 
     def initialize(window_width = 1280, window_height = 800, fullscreen = false)
@@ -13,7 +13,7 @@ class IMICFPS
       end
       $window = self
       @needs_cursor = false
-      @number_of_faces = 0
+      @number_of_vertices = 0
 
       @active_state = nil
 

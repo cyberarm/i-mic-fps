@@ -77,8 +77,10 @@ Compensating faulty mouse centering? #{@camera.broken_mouse_centering}
 #{if @camera.game_object then "Actor X:#{@camera.game_object.x.round(2)} Y:#{@camera.game_object.y.round(2)} Z:#{@camera.game_object.z.round(2)}";end}
 Field Of View: #{@camera.field_of_view}
 Mouse Sesitivity: #{@camera.mouse_sensitivity}
-Faces: #{$window.number_of_faces}
 Last Frame: #{delta_time*1000.0}ms (#{Gosu.fps} fps)
+
+Vertices: #{formatted_number($window.number_of_vertices)}
+Faces: #{formatted_number($window.number_of_vertices/3)}
 
 Draw Skydome: #{@draw_skydome}
 Debug mode: <c=992200>#{$debug}</c>
@@ -92,8 +94,10 @@ Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)}
 #{if @camera.game_object then "Actor X:#{@camera.game_object.x.round(2)} Y:#{@camera.game_object.y.round(2)} Z:#{@camera.game_object.z.round(2)}";end}
 Field Of View: #{@camera.field_of_view}
 Mouse Sesitivity: #{@camera.mouse_sensitivity}
-Faces: #{@number_of_faces}
 Last Frame: #{delta_time*1000.0}ms (#{Gosu.fps} fps)
+
+Vertices: #{formatted_number($window.number_of_vertices)}
+Faces: #{formatted_number($window.number_of_vertices/3)}
 
 Draw Skydome: #{@draw_skydome}
 Debug mode: <c=992200>#{$debug}</c>
@@ -128,7 +132,7 @@ eos
       @camera.update
 
       $window.close if $window.button_down?(Gosu::KbEscape)
-      $window.number_of_faces = 0
+      $window.number_of_vertices = 0
       @delta_time = Gosu.milliseconds
     end
 
