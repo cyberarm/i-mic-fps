@@ -42,10 +42,13 @@ end
 $debug = ARGV.join.include?("--debug") ? true : false
 
 require_relative "lib/common_methods"
+require_relative "lib/managers/shader_manager"
 require_relative "lib/managers/object_manager"
 require_relative "lib/managers/light_manager"
+require_relative "lib/managers/network_manager"
 
 require_relative "lib/renderer/renderer"
+require_relative "lib/renderer/shader"
 require_relative "lib/renderer/opengl_renderer"
 require_relative "lib/renderer/bounding_box_renderer"
 

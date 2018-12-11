@@ -14,6 +14,9 @@ class IMICFPS
       add_asset(:obj, "objects/tree.obj")
       add_asset(:obj, "objects/biped.obj")
 
+      # Currently broken
+      # Shader.new(name: "lighting", vertex_file: "shaders/vertex/lighting.glsl", fragment_file: "shaders/fragment/lighting.glsl")
+
       @act = false
       @cycled = false
 
@@ -31,7 +34,7 @@ class IMICFPS
     end
 
     def update
-      puts (@asset_index.to_f/@assets.count)
+      # puts (@asset_index.to_f/@assets.count)
       @percentage.text = "#{((@asset_index.to_f/@assets.count)*100.0).round}%"
       @act = true if @cycled
 

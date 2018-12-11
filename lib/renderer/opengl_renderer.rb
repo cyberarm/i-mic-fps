@@ -27,9 +27,17 @@ class IMICFPS
 
       handleGlError
 
-      draw_mesh(object.model)
-      object.draw
-
+      if ShaderManager.shader("lighting")
+        ShaderManager.shader("lighting").use do |shader|
+          handleGlError
+          draw_mesh(object.model)
+          object.draw
+        end
+      else
+        handleGlError
+        draw_mesh(object.model)
+        object.draw
+      end
       handleGlError
 
       glPopMatrix
@@ -56,20 +64,28 @@ class IMICFPS
         glColorPointer(3, GL_FLOAT, 0, o.flattened_materials)
         glNormalPointer(GL_FLOAT, 0, o.flattened_normals)
 
+        # glBindBuffer(GL_ARRAY_BUFFER, model.vertices_buffer)
+        # glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0)
+
         if $debug # This is kinda expensive
           glDisable(GL_LIGHTING)
           glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
           glPolygonOffset(2, 0.5)
           glLineWidth(3)
+
           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
+
           glLineWidth(1)
           glPolygonOffset(0, 0)
           glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
           glEnable(GL_LIGHTING)
+
           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
         else
           glDrawArrays(GL_TRIANGLES, 0, o.flattened_vertices_size/4)
         end
+
+        # glBindBuffer(GL_ARRAY_BUFFER, 0)
 
         glDisableClientState(GL_VERTEX_ARRAY)
         glDisableClientState(GL_COLOR_ARRAY)

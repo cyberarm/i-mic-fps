@@ -77,13 +77,13 @@ class IMICFPS
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
       glLoadIdentity
 
-      if $debug && @game_object
-        glBegin(GL_LINES)
-          glColor3f(1,0,0)
-          glVertex3f(@x, @y, @z)
-          glVertex3f(@game_object.x, @game_object.y, @game_object.z)
-        glEnd
-      end
+      # if $debug && @game_object
+      #   glBegin(GL_LINES)
+      #     glColor3f(1,0,0)
+      #     glVertex3f(@x, @y, @z)
+      #     glVertex3f(@game_object.x, @game_object.y, @game_object.z)
+      #   glEnd
+      # end
     end
 
     def update

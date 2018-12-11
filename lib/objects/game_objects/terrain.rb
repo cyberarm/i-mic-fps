@@ -19,8 +19,6 @@ class IMICFPS
         @nearest_vertex_lookup[x_slot][y_slot] = [] unless @nearest_vertex_lookup[x_slot][y_slot]
         @nearest_vertex_lookup[x_slot][y_slot] << vert
       end
-
-      p model.faces.first
     end
 
     def height_at(vertex, max_distance = Float::INFINITY)

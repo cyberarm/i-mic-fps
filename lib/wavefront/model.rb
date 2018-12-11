@@ -13,7 +13,9 @@ class IMICFPS
       attr_accessor :objects, :materials, :vertices, :texures, :normals, :faces
       attr_accessor :x, :y, :z, :scale, :game_object
       attr_reader :bounding_box, :model_has_texture, :textured_material
-      attr_reader :normals_buffer, :colors_buffer, :vertices_buffer
+
+      attr_reader :normals_buffer, :uvs_buffer, :vertices_buffer
+      attr_reader :vertices_buffer_data, :uvs_buffer_data, :normals_buffer_data
 
       def initialize(file_path:, game_object: nil)
         @game_object = game_object
@@ -40,7 +42,7 @@ class IMICFPS
 
         buffer = " " * 4
         glGenBuffers(1, buffer)
-        @colors_buffer = buffer.unpack('L2').first
+        @uvs_buffer = buffer.unpack('L2').first
 
         buffer = " " * 4
         glGenBuffers(1, buffer)
@@ -48,7 +50,9 @@ class IMICFPS
 
         @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
         start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
+
         parse
+
         puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse"
 
         # populate_buffers
@@ -69,12 +73,21 @@ class IMICFPS
       end
 
       def populate_buffers
-        glBindBuffer(GL_ARRAY_BUFFER, @normals_buffer)
-        glBufferData(GL_ARRAY_BUFFER, @vertices.size, @vertices.flatten.pack("f*"), GL_STATIC_DRAW)
+        @vertices_buffer_data = @vertices.map {|vert| [vert.x, vert.y, vert.z]}.flatten.pack("f*")
+        @uvs_buffer_data      = @uvs.map {|uv| [uv.x, uv.y, uv.z]}.flatten.pack("f*")
+        @normals_buffer_data  = @normals.map {|norm| [norm.x, norm.y, norm.z, norm.weight]}.flatten.pack("f*")
 
-        glBindBuffer(GL_ARRAY_BUFFER, @colors_buffer)
         glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer)
+        glBufferData(GL_ARRAY_BUFFER, @vertices.size, @vertices_buffer_data, GL_STATIC_DRAW)
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
 
+        glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer)
+        glBufferData(GL_ARRAY_BUFFER, @uvs.size, @uvs_buffer_data, GL_STATIC_DRAW)
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
+
+        glBindBuffer(GL_ARRAY_BUFFER, @normals_buffer)
+        glBufferData(GL_ARRAY_BUFFER, @normals.size, @normals_buffer_data, GL_STATIC_DRAW)
+        glBindBuffer(GL_ARRAY_BUFFER, 0)
       end
 
       def update
