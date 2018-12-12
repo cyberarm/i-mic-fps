@@ -1,3 +1,5 @@
+require "fiddle"
+
 require "opengl"
 require "glu"
 require "gosu"

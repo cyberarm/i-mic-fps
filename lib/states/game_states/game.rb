@@ -108,15 +108,14 @@ eos
       # Expensive AABB collision detection
       ObjectManager.objects.each do |object|
         ObjectManager.objects.each do |b|
-          next if b == object
-          next if object.is_a?(Terrain)
-          next if b.is_a?(Terrain)
+          next if object == b
+          next if object.is_a?(Terrain) || b.is_a?(Terrain)
 
           if object.intersect(object, b)
             object.debug_color = Color.new(1.0,0.0,0.0)
             b.debug_color = Color.new(1.0,0.0,0.0)
 
-            # ObjectManager.objects.delete(object)
+            # ObjectManager.objects.delete(object) unless object.is_a?(Player)
             # puts "#{object} is intersecting #{b}" if object.is_a?(Player)
           else
             object.debug_color = Color.new(0,1,0)

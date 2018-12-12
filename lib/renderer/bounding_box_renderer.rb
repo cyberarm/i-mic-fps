@@ -219,7 +219,7 @@ class IMICFPS
 
         unless found
           @vertex_count -= @bounding_boxes[key][:vertices_size]
-          @bounding_boxes[key][:objects].each {|o| @vertex_count -= [:vertex_count]}
+          @bounding_boxes[key][:objects].each {|o| @vertex_count -= o[:vertices_size]}
           @bounding_boxes.delete(key)
         end
       end
