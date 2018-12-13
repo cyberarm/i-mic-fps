@@ -14,8 +14,13 @@ when :OPENGL_PLATFORM_MACOSX
   OpenGL.load_lib("libGL.dylib", "/System/Library/Frameworks/OpenGL.framework/Libraries")
   GLU.load_lib("libGLU.dylib", "/System/Library/Frameworks/OpenGL.framework/Libraries")
 when :OPENGL_PLATFORM_LINUX
-  OpenGL.load_lib("libGL.so", "/usr/lib/x86_64-linux-gnu")
-  GLU.load_lib("libGLU.so", "/usr/lib/x86_64-linux-gnu")
+  begin # Ubuntu (Debian)
+    OpenGL.load_lib("libGL.so", "/usr/lib/x86_64-linux-gnu")
+    GLU.load_lib("libGLU.so", "/usr/lib/x86_64-linux-gnu")
+  rescue # Manjaro (ARCH)
+    OpenGL.load_lib("libGL.so", "/usr/lib")
+    GLU.load_lib("libGLU.so", "/usr/lib")
+  end
 else
   raise RuntimeError, "Unsupported platform."
 end
