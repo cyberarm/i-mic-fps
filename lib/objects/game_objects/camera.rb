@@ -18,13 +18,11 @@ class IMICFPS
       @game_object = nil
       @distance = 5
 
-      self.mouse_x, self.mouse_y = Gosu.screen_width/2, Gosu.screen_height/2
-      @true_mouse = Point.new(Gosu.screen_width/2, Gosu.screen_height/2)
+      self.mouse_x, self.mouse_y = $window.width/2, $window.height/2
+      @true_mouse = Point.new($window.width/2, $window.height/2)
       @mouse_sensitivity = 20.0
       @mouse_captured = true
       @mouse_checked = 0
-
-      @broken_mouse_centering = ARGV.join.include?("--disable-mousefix") ? false : true
     end
 
     def attach_to(game_object)
@@ -93,14 +91,6 @@ class IMICFPS
       if @mouse_captured
         position_camera if @game_object
 
-        if @broken_mouse_centering
-          if @mouse_checked < 3
-            @mouse_checked+=1
-            @true_mouse.x, @true_mouse.y = self.mouse_x, self.mouse_y
-          end
-          return unless @mouse_checked > 2
-        end
-
         @yaw-=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 unless @game_object
         @game_object.y_rotation+=Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70 if @game_object
 
@@ -111,7 +101,9 @@ class IMICFPS
 
         free_move unless @game_object
 
-        self.mouse_x, self.mouse_y = Gosu.screen_width/2.0, Gosu.screen_height/2.0
+        self.mouse_x = $window.width/2 if self.mouse_x <= 1 || $window.mouse_x >= $window.width-1
+        self.mouse_y = $window.height/2 if self.mouse_y <= 1 || $window.mouse_y >= $window.height-1
+        @true_mouse.x, @true_mouse.y = self.mouse_x, self.mouse_y
       end
     end
 
@@ -149,7 +141,7 @@ class IMICFPS
 
     def button_up(id)
       case id
-      when Gosu::KbLeftAlt
+      when Gosu::KbLeftAlt, Gosu::KbRightAlt
         @mouse_captured = false
         $window.needs_cursor = true
       when Gosu::MsLeft
