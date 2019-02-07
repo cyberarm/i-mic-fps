@@ -5,6 +5,9 @@ class IMICFPS
       link "Single Player" do
         push_game_state(LoadingState.new(forward: Game))
       end
+      link "Settings" do
+        # push_game_state(SettingsMenu)
+      end
       link "Exit" do
         window.close
       end

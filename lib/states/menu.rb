@@ -1,12 +1,12 @@
 class IMICFPS
   class Menu < GameState
-    def initialize
+    def initialize(*args)
       @elements = []
       @size = 50
       @slope = 250
       @color_step = 10
       @base_color = Gosu::Color.rgb(255, 127, 0)
-      super
+      super(*args)
     end
 
     def title(text, color = @base_color)
@@ -44,7 +44,7 @@ class IMICFPS
       draw_rect(
         $window.width/4, 0,
         $window.width/2, $window.height,
-        Gosu::Color.rgba(100, 100, 100, 150)
+        Gosu::Color.rgba(0, 0, 0, 150)
         # Gosu::Color.rgba(@base_color.red+@color_step, @base_color.green+@color_step, @base_color.blue+@color_step, 200)
       )
 
@@ -56,10 +56,10 @@ class IMICFPS
       # Cursor
       fill_quad(
         mouse_x, mouse_y,
-        mouse_x+16, mouse_y+16,
+        mouse_x+16, mouse_y,
         mouse_x, mouse_y+16,
         mouse_x, mouse_y+16,
-        Gosu::Color::RED, Float::INFINITY
+        Gosu::Color::WHITE, Float::INFINITY
       )
     end
 

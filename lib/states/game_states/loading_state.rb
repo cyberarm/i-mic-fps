@@ -1,10 +1,11 @@
 class IMICFPS
-  class LoadingState < GameState
+  class LoadingState < Menu
     def setup
-      @header = Text.new("I-MIC FPS", y: 10, size: 100, alignment: :center)
+      title "I-MIC FPS"
+      #@header = Text.new("I-MIC FPS", y: 10, size: 100, alignment: :center)
       @subheading = Text.new("Loading Assets", y: 100, size: 50, alignment: :center)
       @state = Text.new("Preparing...", y: window.height/2-40, size: 40, alignment: :center)
-      @percentage = Text.new("0%", y: window.height-50-25, size: 50, alignment: :center)
+      @percentage = Text.new("0%", y: window.height - 100 + 25, size: 50, alignment: :center)
 
       @dummy_game_object = nil
       @assets = []
@@ -22,22 +23,16 @@ class IMICFPS
 
       @completed_for_ms = 0
       @lock = false
+
+      @base_color = Gosu::Color.rgb(0, 180, 180)
     end
 
     def draw
-      @header.draw
+      super
       @subheading.draw
       @state.draw
 
-      # fill()
-      color     = Gosu::Color.rgb(255, 127, 0)
-      color_two = Gosu::Color.rgb(200, 100, 0)
-      Gosu.draw_quad(
-        0, 0, color,
-        window.width, 0, color_two,
-        0, window.height, color,
-        window.width, window.height, color_two
-      )
+
       progressbar
     end
 
@@ -75,10 +70,25 @@ class IMICFPS
       @assets << {type: type, path: path}
     end
 
-    def progressbar
+    def progressbar(x = window.width/4, y = window.height - 104)
       @percentage.draw
-      progress = (@asset_index.to_f/@assets.count)*window.width
-      draw_rect(0, window.height-100, progress, 100, Gosu::Color.rgb(255,127,0))
+      progress = (@asset_index.to_f/@assets.count)*window.width/2
+      height = 100
+
+      dark_color= Gosu::Color.rgb(@base_color.red - 100, @base_color.green - 100, @base_color.blue - 100)#Gosu::Color.rgb(64, 127, 255)
+      color     = Gosu::Color.rgb(@base_color.red - 50, @base_color.green - 50, @base_color.blue - 50)#Gosu::Color.rgb(0,127,127)
+      color_two = Gosu::Color.rgb(@base_color.red + 50, @base_color.green + 50, @base_color.blue + 50)#Gosu::Color.rgb(64, 127, 255)
+
+      draw_rect(x, y-2, x + window.width/4, height+4, dark_color)
+
+      Gosu.clip_to(x, y, progress, height) do
+        Gosu.draw_quad(
+          x, y, color,
+          x + x + window.width/4, y, color_two,
+          x, y + height, color,
+          x + x + window.width/4, y + height, color_two
+        )
+      end
     end
   end
 end
