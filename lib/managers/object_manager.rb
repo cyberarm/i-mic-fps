@@ -4,17 +4,19 @@ class IMICFPS
   Point = Struct.new(:x, :y)
   Color = Struct.new(:red, :green, :blue, :alpha)
 
-  class ObjectManager
-    OBJECTS = []
-    def self.add_object(model)
-      OBJECTS << model
+  module ObjectManager # Get included into GameState context
+    def add_object(model)
+      @game_objects << model
     end
 
-    def self.find_object()
+    def find_object()
     end
 
-    def self.objects
-      OBJECTS
+    def remove_object()
+    end
+
+    def game_objects
+      @game_objects
     end
   end
 end

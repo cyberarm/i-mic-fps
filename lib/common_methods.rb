@@ -1,6 +1,8 @@
 class IMICFPS
   module CommonMethods
 
+    def window; $window; end
+
     def delta_time
       (Gosu.milliseconds-@delta_time)/1000.0
     end

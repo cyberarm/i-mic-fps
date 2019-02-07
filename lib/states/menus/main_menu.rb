@@ -6,7 +6,7 @@ class IMICFPS
         push_game_state(LoadingState.new(forward: Game))
       end
       link "Exit" do
-        $window.close
+        window.close
       end
     end
   end

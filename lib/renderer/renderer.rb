@@ -5,13 +5,15 @@ class IMICFPS
 
     attr_reader :opengl_renderer, :bounding_box_renderer
 
-    def initialize
-      @bounding_box_renderer = BoundingBoxRenderer.new
+    def initialize(game_state:)
+      @game_state = game_state
+
+      @bounding_box_renderer = BoundingBoxRenderer.new(game_state: game_state)
       @opengl_renderer = OpenGLRenderer.new
     end
 
     def draw
-      ObjectManager.objects.each do |object|
+      @game_state.game_objects.each do |object|
         if object.visible && object.renderable
           # Render bounding boxes before transformation is applied
           @bounding_box_renderer.create_bounding_box(object, object.model.bounding_box, object.debug_color, object.object_id) if $debug

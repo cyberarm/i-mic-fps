@@ -10,7 +10,7 @@ class IMICFPS
     attr_accessor :visible, :renderable, :backface_culling
     attr_accessor :x_rotation, :y_rotation, :z_rotation
     attr_reader :model, :name, :debug_color, :terrain, :width, :height, :depth, :last_x, :last_y, :last_z, :normalized_bounding_box
-    def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, terrain: nil)
+    def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, terrain: nil, game_state: nil)
       @x,@y,@z,@scale = x,y,z,scale
       @bound_model = bound_model
       @backface_culling = backface_culling
@@ -20,11 +20,13 @@ class IMICFPS
       @debug_color = Color.new(0.0, 1.0, 0.0)
       @terrain = terrain
 
+      @game_state = game_state
+
       @width, @height, @depth = 0,0,0
       @delta_time = Gosu.milliseconds
       @last_x, @last_y, @last_z = @x, @y, @z
 
-      ObjectManager.add_object(self) if auto_manage
+      game_state.add_object(self) if auto_manage && game_state
       setup
 
       if @bound_model

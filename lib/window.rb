@@ -7,9 +7,9 @@ class IMICFPS
     def initialize(window_width = 1280, window_height = 800, fullscreen = false)
       fps_target = (ARGV.first.to_i != 0) ? ARGV.first.to_i : 60
       if ARGV.join.include?("--native")
-        super(Gosu.screen_width, Gosu.screen_height, fullscreen: true, resizable: false, update_interval: 1000.0/fps_target)
+        super(Gosu.screen_width, Gosu.screen_height, fullscreen: true, resizable: true, update_interval: 1000.0/fps_target)
       else
-        super(window_width, window_height, fullscreen: fullscreen, resizable: false, update_interval: 1000.0/fps_target)
+        super(window_width, window_height, fullscreen: fullscreen, resizable: true, update_interval: 1000.0/fps_target)
       end
       $window = self
       @needs_cursor = false

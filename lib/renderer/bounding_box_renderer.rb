@@ -4,7 +4,9 @@ class IMICFPS
     include GLU
 
     attr_reader :bounding_boxes, :vertex_count
-    def initialize
+    def initialize(game_state:)
+      @game_state = game_state
+
       @bounding_boxes = {}
       @vertex_count = 0
     end
@@ -215,7 +217,7 @@ class IMICFPS
 
         glPopMatrix
 
-        found = ObjectManager.objects.detect { |o| o == bounding_box[:object] }
+        found = @game_state.game_objects.detect { |o| o == bounding_box[:object] }
 
         unless found
           @vertex_count -= @bounding_boxes[key][:vertices_size]

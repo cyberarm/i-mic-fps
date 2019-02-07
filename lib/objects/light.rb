@@ -3,10 +3,12 @@ class IMICFPS
     include OpenGL
     attr_reader :ambient, :diffuse, :specular, :position, :light_id
     attr_accessor :x, :y, :z, :intensity
-    def initialize(x:,y:,z:, ambient: Vertex.new(0.5, 0.5, 0.5, 1),
+    def initialize(x:,y:,z:, game_state:,
+                   ambient: Vertex.new(0.5, 0.5, 0.5, 1),
                    diffuse: Vertex.new(1, 0.5, 0, 1), specular: Vertex.new(0.2, 0.2, 0.2, 1),
                    position: Vertex.new(x, y, z, 0), intensity: 1)
       @x,@y,@z = x,y,z
+      @game_state = game_state
       @intensity = intensity
 
       self.ambient   = ambient
@@ -15,13 +17,13 @@ class IMICFPS
       self.position  = position
       @light_id = available_light
 
-      LightManager.add_light(self)
+      @game_state.add_light(self)
     end
 
     def available_light
-      raise "Using to many lights, #{LightManager.light_count}/#{LightManager::MAX_LIGHTS}" if LightManager.light_count > LightManager::MAX_LIGHTS
-      puts "OpenGL::GL_LIGHT#{LightManager.light_count}" if $debug
-      @light_id = Object.const_get "OpenGL::GL_LIGHT#{LightManager.light_count}"
+      raise "Using to many lights, #{@game_state.light_count}/#{LightManager::MAX_LIGHTS}" if @game_state.light_count > LightManager::MAX_LIGHTS
+      puts "OpenGL::GL_LIGHT#{@game_state.light_count}" if $debug
+      @light_id = Object.const_get "OpenGL::GL_LIGHT#{@game_state.light_count}"
     end
 
     def ambient=(color)

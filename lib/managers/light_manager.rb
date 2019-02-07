@@ -1,25 +1,24 @@
 class IMICFPS
-  class LightManager
+  module LightManager
     MAX_LIGHTS = OpenGL::GL_MAX_LIGHTS
-    LIGHTS = []
 
-    def self.add_light(model)
-      LIGHTS << model
+    def add_light(model)
+      @lights << model
     end
 
-    def self.find_light()
+    def find_light()
     end
 
-    def self.lights
-      LIGHTS
+    def lights
+      @lights
     end
 
-    def self.light_count
-      LIGHTS.count+1
+    def light_count
+      @lights.count+1
     end
 
-    def self.clear_lights
-      LIGHTS.clear
+    def clear_lights
+      @lights.clear
     end
   end
 end

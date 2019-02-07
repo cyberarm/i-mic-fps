@@ -4,16 +4,16 @@ class IMICFPS
     include GLU
 
     def setup
-      @renderer = Renderer.new
-      @terrain = Terrain.new#(size: 170, height: 0)
+      @renderer = Renderer.new(game_state: self)
+      @terrain = Terrain.new(game_state: self)#(size: 170, height: 0)
       @draw_skydome = true
       @skydome = Skydome.new(scale: 0.08, backface_culling: false, auto_manage: false)
 
       25.times do
-        Tree.new(x: rand(@terrain.width)-(@terrain.width/2.0), z: rand(@terrain.depth)-(@terrain.depth/2.0), terrain: @terrain)
+        Tree.new(x: rand(@terrain.width)-(@terrain.width/2.0), z: rand(@terrain.depth)-(@terrain.depth/2.0), terrain: @terrain, game_state: self)
       end
 
-      @player = Player.new(x: 1, y: 0, z: -1, terrain: @terrain)
+      @player = Player.new(x: 1, y: 0, z: -1, terrain: @terrain, game_state: self)
       @camera = Camera.new(x: 0, y: -2, z: 1)
       @camera.attach_to(@player)
 
@@ -24,8 +24,8 @@ class IMICFPS
       # @font = Gosu::Font.new(18, name: "DejaVu Sans")
       @text = MultiLineText.new("Pending...", x: 10, y: 10, z: 1, size: 18, font: "DejaVu Sans")
 
-      Light.new(x: 3, y: -6, z: 6)
-      Light.new(x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1))
+      Light.new(x: 3, y: -6, z: 6, game_state: self)
+      Light.new(x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1), game_state: self)
     end
 
     def glError?
@@ -46,7 +46,7 @@ class IMICFPS
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
         glError?
 
-        LightManager.lights.each(&:draw)
+        @lights.each(&:draw)
 
         @camera.draw
         @renderer.opengl_renderer.draw_object(@skydome) if @skydome.renderable
@@ -106,8 +106,8 @@ eos
       @text.text = string
 
       # Expensive AABB collision detection
-      ObjectManager.objects.each do |object|
-        ObjectManager.objects.each do |b|
+      @game_objects.each do |object|
+        @game_objects.each do |b|
           next if object == b
           next if object.is_a?(Terrain) || b.is_a?(Terrain)
 
@@ -124,7 +124,7 @@ eos
         end
       end
 
-      ObjectManager.objects.each(&:update)
+      @game_objects.each(&:update)
 
       @skydome.update if @skydome.renderable
 
@@ -136,7 +136,7 @@ eos
     end
 
     def button_up(id)
-      ObjectManager.objects.each do |object|
+      @game_objects.each do |object|
         object.button_up(id) if defined?(object.button_up)
       end
 
