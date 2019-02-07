@@ -4,6 +4,7 @@ class IMICFPS
     include GLU
 
     def setup
+      @collision_manager = CollisionManager.new(game_state: self)
       @renderer = Renderer.new(game_state: self)
       @terrain = Terrain.new(game_state: self)#(size: 170, height: 0)
       @draw_skydome = true
@@ -105,25 +106,7 @@ eos
       end
       @text.text = string
 
-      # Expensive AABB collision detection
-      @game_objects.each do |object|
-        @game_objects.each do |b|
-          next if object == b
-          next if object.is_a?(Terrain) || b.is_a?(Terrain)
-
-          if object.intersect(object, b)
-            object.debug_color = Color.new(1.0,0.0,0.0)
-            b.debug_color = Color.new(1.0,0.0,0.0)
-
-            # ObjectManager.objects.delete(object) unless object.is_a?(Player)
-            # puts "#{object} is intersecting #{b}" if object.is_a?(Player)
-          else
-            object.debug_color = Color.new(0,1,0)
-            b.debug_color = Color.new(0,1,0)
-          end
-        end
-      end
-
+      @collision_manager.update
       @game_objects.each(&:update)
 
       @skydome.update if @skydome.renderable
