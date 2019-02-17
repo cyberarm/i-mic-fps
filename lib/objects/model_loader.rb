@@ -10,7 +10,7 @@ class IMICFPS
 
     def initialize(manifest_file:, game_object: nil)
       @manifest = YAML.load(File.read(manifest_file))
-      pp @manifest
+      # pp @manifest
       @file_path = File.expand_path("./../model/", manifest_file) + "/#{@manifest["model"]}"
       @name = @manifest["name"]
 

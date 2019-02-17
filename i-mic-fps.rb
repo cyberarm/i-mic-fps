@@ -61,6 +61,7 @@ end
 $debug = ARGV.join.include?("--debug") ? true : false
 
 require_relative "lib/common_methods"
+require_relative "lib/managers/input_mapper"
 require_relative "lib/managers/shader_manager"
 require_relative "lib/managers/object_manager"
 require_relative "lib/managers/light_manager"
@@ -95,7 +96,7 @@ require_relative "lib/wavefront/model"
 
 require_relative "lib/window"
 
-MODEL_METER_SCALE = 1.0 # Objects exported from blender using the millimeter object scale will be close to 1 GL unit
+MODEL_METER_SCALE = 1.0 # Objects exported from blender using the default or meter object scale will be close to 1 GL unit
 
 
 if ARGV.join.include?("--profile")

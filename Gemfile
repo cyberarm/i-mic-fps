@@ -1,5 +1,3 @@
 source "https://rubygems.org"
 gem "opengl-bindings"
-gem "glu"
-# gem "glut"
 gem "gosu"

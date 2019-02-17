@@ -23,6 +23,16 @@ class IMICFPS
       @mouse_sensitivity = 20.0
       @mouse_captured = true
       @mouse_checked = 0
+
+      InputMapper.set(:camera, :ascend,  Gosu::KbSpace)
+      InputMapper.set(:camera, :descend, [Gosu::KbLeftControl, Gosu::KbRightControl])
+      InputMapper.set(:camera, :release_mouse, [Gosu::KbLeftAlt, Gosu::KbRightAlt])
+      InputMapper.set(:camera, :capture_mouse, Gosu::MsLeft)
+      InputMapper.set(:camera, :increase_mouse_sensitivity, Gosu::KB_NUMPAD_PLUS)
+      InputMapper.set(:camera, :decrease_mouse_sensitivity, Gosu::KB_NUMPAD_MINUS)
+      InputMapper.set(:camera, :reset_mouse_sensitivity, Gosu::KB_NUMPAD_MULTIPLY)
+      InputMapper.set(:camera, :increase_view_distance, Gosu::MsWheelUp)
+      InputMapper.set(:camera, :decrease_view_distance, Gosu::MsWheelDown)
     end
 
     def attach_to(game_object)
@@ -111,56 +121,55 @@ class IMICFPS
       relative_y_rotation = (@yaw + 180)
       relative_speed = 0.5
 
-      if button_down?(Gosu::KbUp) || button_down?(Gosu::KbW)
+      if InputMapper.down?(:character, :forward)
         @z+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
         @x-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
-      if button_down?(Gosu::KbDown) || button_down?(Gosu::KbS)
+      if InputMapper.down?(:character, :backward)
         @z-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
         @x+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
-      if button_down?(Gosu::KbA)
+      if InputMapper.down?(:character, :strife_left)
         @z+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
         @x+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
-      if button_down?(Gosu::KbD)
+      if InputMapper.down?(:character, :strife_right)
         @z-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
         @x-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
-      if button_down?(Gosu::KbSpace)
+      if InputMapper.down?(:camera, :ascend)
         @y+=relative_speed
       end
-      if button_down?(Gosu::KbLeftShift) || button_down?(Gosu::KbRightShift)
+      if InputMapper.down?(:camera, :descend)
         @y-=relative_speed
       end
     end
 
     def button_up(id)
-      case id
-      when Gosu::KbLeftAlt, Gosu::KbRightAlt
+      if InputMapper.is?(:camera, :release_mouse, id)
         @mouse_captured = false
         $window.needs_cursor = true
-      when Gosu::MsLeft
+      elsif InputMapper.is?(:camera, :capture_mouse, id)
         @mouse_captured = true
         $window.needs_cursor = false
-      when Gosu::KB_NUMPAD_PLUS
+      elsif InputMapper.is?(:camera, :increase_mouse_sensitivity, id)
         @mouse_sensitivity+=1
         @mouse_sensitivity = @mouse_sensitivity.clamp(1.0, 100.0)
-      when Gosu::KbMinus, Gosu::KB_NUMPAD_MINUS
+      elsif InputMapper.is?(:camera, :decrease_mouse_sensitivity, id)
         @mouse_sensitivity-=1
         @mouse_sensitivity = @mouse_sensitivity.clamp(1.0, 100.0)
-      when Gosu::KB_NUMPAD_MULTIPLY
+      elsif InputMapper.is?(:camera, :reset_mouse_sensitivity, id)
         @mouse_sensitivity = 20.0
-      when Gosu::MsWheelUp
+      elsif InputMapper.is?(:camera, :increase_view_distance, id)
         # @field_of_view += 1
         # @field_of_view = @field_of_view.clamp(1, 100)
         @view_distance += 1
         @view_distance = @view_distance.clamp(1, 1000)
-      when Gosu::MsWheelDown
+      elsif InputMapper.is?(:camera, :decrease_view_distance, id)
         # @field_of_view -= 1
         # @field_of_view = @field_of_view.clamp(1, 100)
         @view_distance -= 1
