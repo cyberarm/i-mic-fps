@@ -14,6 +14,8 @@ class IMICFPS
         Tree.new(x: rand(@terrain.width)-(@terrain.width/2.0), z: rand(@terrain.depth)-(@terrain.depth/2.0), terrain: @terrain, game_state: self)
       end
 
+      TestObject.new(terrain: @terrain, game_state: self, scale: 1.0)
+
       @player = Player.new(x: 1, y: 0, z: -1, terrain: @terrain, game_state: self)
       @camera = Camera.new(x: 0, y: -2, z: 1)
       @camera.attach_to(@player)

@@ -10,10 +10,10 @@ class IMICFPS
       @dummy_game_object = nil
       @assets = []
       @asset_index = 0
-      add_asset(:obj, "objects/randomish_terrain.obj")
-      add_asset(:obj, "objects/skydome.obj")
-      add_asset(:obj, "objects/tree.obj")
-      add_asset(:obj, "objects/biped.obj")
+      add_asset(:model, "base", "randomish_terrain")
+      add_asset(:model, "base", "skydome")
+      add_asset(:model, "base", "tree")
+      add_asset(:model, "base", "biped")
 
       # Currently broken
       # Shader.new(name: "lighting", vertex_file: "shaders/vertex/lighting.glsl", fragment_file: "shaders/fragment/lighting.glsl")
@@ -46,7 +46,13 @@ class IMICFPS
         @cycled = false
 
         hash = @assets[@asset_index]
-        ModelLoader.new(type: hash[:type], file_path: hash[:path], game_object: @dummy_game_object)
+        case hash[:type]
+        when :model
+          ModelLoader.new(manifest_file: IMICFPS.assets_path + "/#{hash[:package]}/#{hash[:name]}/#{hash[:name]}.yaml", game_object: @dummy_game_object)
+        # when :shader
+        else
+          warn "Unknown asset: #{hash}"
+        end
 
         @asset_index+=1
       end
@@ -60,14 +66,14 @@ class IMICFPS
           @lock = true
         end
       else
-        @state.text = "Loading #{@assets[@asset_index][:path].split('/').last}..."
+        @state.text = "Loading #{@assets[@asset_index][:name].split('/').last}..."
         @state.x = (window.width/2)-(@state.width/2)
         @cycled = true
       end
     end
 
-    def add_asset(type, path)
-      @assets << {type: type, path: path}
+    def add_asset(type, package, name)
+      @assets << {type: type, package: package, name: name}
     end
 
     def progressbar(x = window.width/4, y = window.height - 104)

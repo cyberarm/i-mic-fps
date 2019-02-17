@@ -16,7 +16,7 @@ class IMICFPS
             object.debug_color = Color.new(1.0,0.0,0.0)
             b.debug_color = Color.new(1.0,0.0,0.0)
 
-            @game_state.game_objects.delete(object) unless object.is_a?(Player)
+           # @game_state.game_objects.delete(object) unless object.is_a?(Player)
             puts "#{object} is intersecting #{b}" if object.is_a?(Player)
           else
             object.debug_color = Color.new(0,1,0)

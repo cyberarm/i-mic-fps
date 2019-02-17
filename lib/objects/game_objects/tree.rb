@@ -1,13 +1,15 @@
 class IMICFPS
   class Tree < GameObject
     def setup
-      bind_model(ModelLoader.new(type: :obj, file_path: "objects/tree.obj", game_object: self))
+      bind_model("base", "tree")
       vert = @terrain.find_nearest_vertex(self, 4.5)
       if vert
         self.x = vert.x
         self.y = vert.y
         self.z = vert.z
       end
+
+      # @y_rotation += rand(1..100)
     end
 
     # def update

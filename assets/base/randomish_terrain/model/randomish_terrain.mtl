@@ -10,4 +10,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd /home/cyberarm/Code/i-mic-fps/blends/randomish_terrain.png
+map_Kd assets/base/randomish_terrain/textures/randomish_terrain_ao.png

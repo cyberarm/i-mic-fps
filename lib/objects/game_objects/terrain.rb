@@ -1,7 +1,7 @@
 class IMICFPS
   class Terrain < GameObject
     def setup
-      bind_model(ModelLoader.new(type: :obj, file_path: "objects/randomish_terrain.obj", game_object: self))
+      bind_model("base", "randomish_terrain")
       # bind_model(ModelLoader.new(type: :obj, file_path: "/home/cyberarm/Documents/blends/untitled.obj", game_object: self))
       self.scale = 1
       @nearest_vertex_lookup = {}

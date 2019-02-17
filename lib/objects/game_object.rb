@@ -43,7 +43,9 @@ class IMICFPS
       return self
     end
 
-    def bind_model(model)
+    def bind_model(package, name)
+      model = ModelLoader.new(manifest_file: IMICFPS.assets_path + "/#{package}/#{name}/#{name}.yaml", game_object: @dummy_game_object)
+
       raise "model isn't a model!" unless model.is_a?(ModelLoader)
       @bound_model = model
       @bound_model.model.game_object = self

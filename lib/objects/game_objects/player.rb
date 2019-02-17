@@ -7,7 +7,7 @@ class IMICFPS
     attr_reader :name, :bound_model, :first_person_view
 
     def setup
-      bind_model(ModelLoader.new(type: :obj, file_path: "objects/biped.obj", game_object: self))
+      bind_model("base", "biped")
       @speed = 2.5 # meter's per second
       @running_speed = 6.8 # meter's per second
       @old_speed = @speed

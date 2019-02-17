@@ -1,7 +1,7 @@
 class IMICFPS
   class TestObject < GameObject
     def setup
-      bind_model(ModelLoader.new(type: :obj, file_path: "objects/sponza.obj", game_object: self))
+      bind_model("base", "war_factory")
     end
   end
 end

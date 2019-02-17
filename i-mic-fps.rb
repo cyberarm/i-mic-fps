@@ -1,4 +1,5 @@
 require "fiddle"
+require "yaml"
 
 require "opengl"
 require "glu"
@@ -94,7 +95,7 @@ require_relative "lib/wavefront/model"
 
 require_relative "lib/window"
 
-MODEL_METER_SCALE = 0.001 # Objects exported from blender using the millimeter object scale will be close to 1 GL unit
+MODEL_METER_SCALE = 1.0 # Objects exported from blender using the millimeter object scale will be close to 1 GL unit
 
 
 if ARGV.join.include?("--profile")

@@ -8,10 +8,13 @@ class IMICFPS
 
     attr_reader :model, :name, :debug_color
 
-    def initialize(type:, file_path:, game_object: nil)
-      @type = type
-      @file_path = file_path
-      @name = file_path.split("/").last.split(".").first
+    def initialize(manifest_file:, game_object: nil)
+      @manifest = YAML.load(File.read(manifest_file))
+      pp @manifest
+      @file_path = File.expand_path("./../model/", manifest_file) + "/#{@manifest["model"]}"
+      @name = @manifest["name"]
+
+      @type = File.basename(@file_path).split(".").last.to_sym
       @debug_color = Color.new(0.0, 1.0, 0.0)
 
       @model = nil

@@ -1,4 +1,8 @@
 class IMICFPS
+  def self.assets_path
+    File.expand_path("./../../assets", __FILE__)
+  end
+
   module CommonMethods
 
     def window; $window; end
