@@ -31,7 +31,7 @@ class IMICFPS
       Light.new(x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1), game_state: self)
 
       if ARGV.join.include?("--playdemo")
-        @demo_data = File.read("./demo.dat").lines
+        @demo_data = File.exist?("./demo.dat") ? File.read("./demo.dat").lines : ""
         @demo_index= 0
         @demo_tick = 0
 
