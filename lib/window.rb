@@ -40,6 +40,10 @@ class IMICFPS
       @active_state.update if @active_state
     end
 
+    def button_down(id)
+      @active_state.button_down(id) if @active_state
+    end
+
     def button_up(id)
       @active_state.button_up(id) if @active_state
     end

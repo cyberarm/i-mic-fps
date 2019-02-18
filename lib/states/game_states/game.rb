@@ -14,7 +14,7 @@ class IMICFPS
         Tree.new(x: rand(@terrain.width)-(@terrain.width/2.0), z: rand(@terrain.depth)-(@terrain.depth/2.0), terrain: @terrain, game_state: self)
       end
 
-      TestObject.new(terrain: @terrain, game_state: self, scale: 1.0)
+      TestObject.new(terrain: @terrain, z: 10, game_state: self, scale: 1.0)
 
       @player = Player.new(x: 1, y: 0, z: -1, terrain: @terrain, game_state: self)
       @camera = Camera.new(x: 0, y: -2, z: 1)
@@ -29,6 +29,22 @@ class IMICFPS
 
       Light.new(x: 3, y: -6, z: 6, game_state: self)
       Light.new(x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1), game_state: self)
+
+      if ARGV.join.include?("--playdemo")
+        @demo_data = File.read("./demo.dat").lines
+        @demo_index= 0
+        @demo_tick = 0
+
+      elsif ARGV.join.include?("--savedemo")
+        @demo_file = File.open("./demo.dat", "w")
+        @demo_index= 0
+        @demo_changed = false
+
+        @demo_last_pitch = @camera.pitch
+        @demo_last_yaw   = @camera.yaw
+
+        at_exit { @demo_file.close }
+      end
     end
 
     def glError?
@@ -67,6 +83,65 @@ class IMICFPS
 
     def update
       @last_frame_time = Gosu.milliseconds
+      update_text
+
+      @collision_manager.update
+      @game_objects.each(&:update)
+
+      @skydome.update if @skydome.renderable
+
+      @camera.update
+
+      $window.close if $window.button_down?(Gosu::KbEscape)
+      $window.number_of_vertices = 0
+      @delta_time = Gosu.milliseconds
+
+      if ARGV.join.include?("--playdemo")
+        if @demo_data[@demo_index]&.start_with?("tick")
+          if @demo_tick == @demo_data[@demo_index].split(" ").last.to_i
+            @demo_index+=1
+
+            until(@demo_data[@demo_index]&.start_with?("tick"))
+              break unless @demo_data[@demo_index]
+
+              data = @demo_data[@demo_index].split(" ")
+              if data.first == "up"
+                self.button_up(data.last.to_i)
+              elsif data.first == "down"
+                self.button_down(data.last.to_i)
+              elsif data.first == "mouse"
+                @camera.pitch = data[1].to_f
+                @camera.yaw   = data[2].to_f
+              else
+                # hmm
+              end
+
+              @demo_index += 1
+            end
+          end
+        end
+      end
+
+      if ARGV.join.include?("--savedemo")
+        if @camera.pitch != @demo_last_pitch || @camera.yaw != @demo_last_yaw
+          unless @demo_last_written_index == @demo_index
+            @demo_last_written_index = @demo_index
+            @demo_file.puts("tick #{@demo_index}")
+          end
+
+          @demo_file.puts("mouse #{@camera.pitch} #{@camera.yaw}")
+          @demo_last_pitch = @camera.pitch
+          @demo_last_yaw   = @camera.yaw
+        end
+
+        @demo_changed = false
+        @demo_index  += 1
+      end
+
+      @demo_tick += 1 if @demo_tick
+    end
+
+    def update_text
       begin
       string = <<-eos
 OpenGL Vendor: #{glGetString(GL_VENDOR)}
@@ -110,20 +185,35 @@ eos
       else
         @text.text = "FPS: #{Gosu.fps}"
       end
+    end
 
-      @collision_manager.update
-      @game_objects.each(&:update)
+    def button_down(id)
+      if ARGV.join.include?("--savedemo")
+        unless @demo_last_written_index == @demo_index
+          @demo_last_written_index = @demo_index
+          @demo_file.puts("tick #{@demo_index}")
+        end
+        @demo_file.puts("down #{id}")
+        @demo_changed = true
+      end
+      InputMapper.keydown(id)
 
-      @skydome.update if @skydome.renderable
-
-      @camera.update
-
-      $window.close if $window.button_down?(Gosu::KbEscape)
-      $window.number_of_vertices = 0
-      @delta_time = Gosu.milliseconds
+      @game_objects.each do |object|
+        object.button_down(id) if defined?(object.button_down)
+      end
     end
 
     def button_up(id)
+      if ARGV.join.include?("--savedemo")
+        unless @demo_last_written_index == @demo_index
+          @demo_last_written_index = @demo_index
+          @demo_file.puts("tick #{@demo_index}")
+        end
+        @demo_file.puts("up #{id}")
+        @demo_changed = true
+      end
+      InputMapper.keyup(id)
+
       @game_objects.each do |object|
         object.button_up(id) if defined?(object.button_up)
       end

@@ -1,6 +1,15 @@
 class IMICFPS
   class InputMapper
     @@keymap = {}
+    @@keys   = Hash.new(false)
+
+    def self.keydown(id)
+      @@keys[id] = true
+    end
+
+    def self.keyup(id)
+      @@keys[id] = false
+    end
 
     def self.get(category, action)
       key = @@keymap.dig(category, action)
@@ -23,10 +32,10 @@ class IMICFPS
 
       if keys.is_a?(Array)
         keys.detect do |key|
-          Gosu.button_down?(key)
+          @@keys[key]
         end
       else
-        Gosu.button_down?(keys)
+        @@keys[keys]
       end
     end
 
