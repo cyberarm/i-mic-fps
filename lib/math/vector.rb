@@ -14,6 +14,15 @@ class IMICFPS
     end
 
     def +(other)
+      Vector.new(
+        @x      + other.x,
+        @y      + other.y
+        @z      + other.z
+        @weight + other.weight
+      )
+    end
+
+    def +=(other)
       @x      += other.x
       @y      += other.y
       @z      += other.z
@@ -21,6 +30,15 @@ class IMICFPS
     end
 
     def -(other)
+      Vector.new(
+        @x      - other.x,
+        @y      - other.y
+        @z      - other.z
+        @weight - other.weight
+      )
+    end
+
+    def -=(other)
       @x      -= other.x
       @y      -= other.y
       @z      -= other.z
@@ -28,6 +46,15 @@ class IMICFPS
     end
 
     def *(other)
+      Vector.new(
+        @x      * other.x,
+        @y      * other.y
+        @z      * other.z
+        @weight * other.weight
+      )
+    end
+
+    def *=(other)
       @x      *= other.x
       @y      *= other.y
       @z      *= other.z
@@ -35,6 +62,15 @@ class IMICFPS
     end
 
     def /(other)
+      Vector.new(
+        @x      / other.x,
+        @y      / other.y
+        @z      / other.z
+        @weight / other.weight
+      )
+    end
+
+    def /=(other)
       @x      /= other.x
       @y      /= other.y
       @z      /= other.z
