@@ -211,7 +211,7 @@ class IMICFPS
       @bounding_boxes.each do |key, bounding_box|
         glPushMatrix
 
-        glTranslatef(bounding_box[:object].x, bounding_box[:object].y, bounding_box[:object].z)
+        glTranslatef(bounding_box[:object].position.x, bounding_box[:object].position.y, bounding_box[:object].position.z)
         draw_bounding_box(bounding_box)
         @bounding_boxes[key][:objects].each {|o| draw_bounding_box(o)}
 

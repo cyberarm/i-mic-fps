@@ -94,8 +94,8 @@ class IMICFPS
       # if $debug && @entity
       #   glBegin(GL_LINES)
       #     glColor3f(1,0,0)
-      #     glVector3f(@x, @y, @z)
-      #     glVector3f(@entity.x, @entity.y, @entity.z)
+      #     glVertex3f(@x, @y, @z)
+      #     glVertex3f(@entity.x, @entity.y, @entity.z)
       #   glEnd
       # end
     end

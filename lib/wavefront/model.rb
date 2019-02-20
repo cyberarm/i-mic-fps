@@ -64,7 +64,7 @@ class IMICFPS
         # Allocate arrays for future use
         @vertex_array_id = nil
         buffer = " " * 4
-        glGenVectorArrays(1, buffer)
+        glGenVertexArrays(1, buffer)
         @vertex_array_id = buffer.unpack('L2').first
 
         # Allocate buffers for future use
@@ -101,9 +101,9 @@ class IMICFPS
       end
 
       def populate_arrays
-        glBindVectorArray(@vertex_array_id)
+        glBindVertexArray(@vertex_array_id)
         glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer)
-        glBindVectorArray(0)
+        glBindVertexArray(0)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
       end
 

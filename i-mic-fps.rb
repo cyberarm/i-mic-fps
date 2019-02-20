@@ -62,7 +62,7 @@ $debug = ARGV.join.include?("--debug") ? true : false
 
 require_relative "lib/common_methods"
 
-require_relative "lib/math/vertex"
+require_relative "lib/math/vector"
 require_relative "lib/trees/aabb_tree"
 
 require_relative "lib/managers/input_mapper"
