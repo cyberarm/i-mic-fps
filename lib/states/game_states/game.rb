@@ -6,17 +6,19 @@ class IMICFPS
     def setup
       @collision_manager = CollisionManager.new(game_state: self)
       @renderer = Renderer.new(game_state: self)
-      @terrain = Terrain.new(game_state: self)#(size: 170, height: 0)
+      add_entity(Terrain.new)
       @draw_skydome = true
-      @skydome = Skydome.new(scale: 0.08, backface_culling: false, auto_manage: false)
+      @skydome = Skydome.new(scale: 0.08, backface_culling: false)
+      add_entity(@skydome)
 
       25.times do
-        Tree.new(x: rand(@terrain.width)-(@terrain.width/2.0), z: rand(@terrain.depth)-(@terrain.depth/2.0), terrain: @terrain, game_state: self)
+        add_entity(Tree.new)
       end
 
-      TestObject.new(terrain: @terrain, z: 10, game_state: self, scale: 1.0)
+      add_entity(TestObject.new(z: 10))
 
-      @player = Player.new(x: 1, y: 0, z: -1, terrain: @terrain, game_state: self)
+      @player = Player.new(x: 1, y: 0, z: -1)
+      add_entity(@player)
       @camera = Camera.new(x: 0, y: -2, z: 1)
       @camera.attach_to(@player)
 
@@ -86,7 +88,7 @@ class IMICFPS
       update_text
 
       @collision_manager.update
-      @game_objects.each(&:update)
+      @entities.each(&:update)
 
       @skydome.update if @skydome.renderable
 
@@ -150,8 +152,8 @@ OpenGL Version: #{glGetString(GL_VERSION)}
 OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}
 
 Camera pitch: #{@camera.pitch.round(2)} Yaw: #{@camera.yaw.round(2)} Roll #{@camera.roll.round(2)}
-Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)}
-#{if @camera.game_object then "Actor X:#{@camera.game_object.x.round(2)} Y:#{@camera.game_object.y.round(2)} Z:#{@camera.game_object.z.round(2)}";end}
+Camera X:#{@camera.position.x.round(2)} Y:#{@camera.position.y.round(2)} Z:#{@camera.position.z.round(2)}
+#{if @camera.entity then "Actor X:#{@camera.entity.position.x.round(2)} Y:#{@camera.entity.position.y.round(2)} Z:#{@camera.entity.position.z.round(2)}";end}
 Field Of View: #{@camera.field_of_view}
 Mouse Sesitivity: #{@camera.mouse_sensitivity}
 Last Frame: #{delta_time*1000.0}ms (#{Gosu.fps} fps)
@@ -168,7 +170,7 @@ Unable to call glGetString!
 
 Camera pitch: #{@camera.pitch.round(2)} Yaw: #{@camera.yaw.round(2)} Roll #{@camera.roll.round(2)}
 Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)}
-#{if @camera.game_object then "Actor X:#{@camera.game_object.x.round(2)} Y:#{@camera.game_object.y.round(2)} Z:#{@camera.game_object.z.round(2)}";end}
+#{if @camera.entity then "Actor X:#{@camera.entity.x.round(2)} Y:#{@camera.entity.y.round(2)} Z:#{@camera.entity.z.round(2)}";end}
 Field Of View: #{@camera.field_of_view}
 Mouse Sesitivity: #{@camera.mouse_sensitivity}
 Last Frame: #{delta_time*1000.0}ms (#{Gosu.fps} fps)
@@ -198,8 +200,8 @@ eos
       end
       InputMapper.keydown(id)
 
-      @game_objects.each do |object|
-        object.button_down(id) if defined?(object.button_down)
+      @entities.each do |entity|
+        entity.button_down(id) if defined?(entity.button_down)
       end
     end
 
@@ -214,8 +216,8 @@ eos
       end
       InputMapper.keyup(id)
 
-      @game_objects.each do |object|
-        object.button_up(id) if defined?(object.button_up)
+      @entities.each do |entity|
+        entity.button_up(id) if defined?(entity.button_up)
       end
 
       @camera.button_up(id)

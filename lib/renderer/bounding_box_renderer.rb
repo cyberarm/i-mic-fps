@@ -35,7 +35,7 @@ class IMICFPS
       @bounding_boxes[mesh_object_id] = {}
       @bounding_boxes[mesh_object_id] = {object: object, box: box, color: color, objects: []}
 
-      box = object.normalize_bounding_box(box)
+      box = object.normalize_bounding_box
 
       normals  = mesh_normals
       colors   = mesh_colors(color)
@@ -50,7 +50,7 @@ class IMICFPS
 
       object.model.objects.each do |mesh|
         data = {}
-        box = object.normalize_bounding_box(mesh.bounding_box)
+        box = object.normalize_bounding_box
 
         normals  = mesh_normals
         colors   = mesh_colors(mesh.debug_color)
@@ -217,7 +217,7 @@ class IMICFPS
 
         glPopMatrix
 
-        found = @game_state.game_objects.detect { |o| o == bounding_box[:object] }
+        found = @game_state.entities.detect { |o| o == bounding_box[:object] }
 
         unless found
           @vertex_count -= @bounding_boxes[key][:vertices_size]

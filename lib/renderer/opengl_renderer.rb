@@ -20,10 +20,10 @@ class IMICFPS
       glEnable(GL_NORMALIZE)
       glPushMatrix
 
-      glTranslatef(object.x, object.y, object.z)
-      glRotatef(object.x_rotation,1.0, 0, 0)
-      glRotatef(object.y_rotation,0, 1.0, 0)
-      glRotatef(object.z_rotation,0, 0, 1.0)
+      glTranslatef(object.position.x, object.position.y, object.position.z)
+      glRotatef(object.rotation.x, 1.0, 0, 0)
+      glRotatef(object.rotation.y, 0, 1.0, 0)
+      glRotatef(object.rotation.z, 0, 0, 1.0)
 
       handleGlError
 
@@ -48,7 +48,7 @@ class IMICFPS
 
     def draw_mesh(model)
       model.objects.each_with_index do |o, i|
-        glEnable(GL_CULL_FACE) if model.game_object.backface_culling
+        glEnable(GL_CULL_FACE) if model.entity.backface_culling
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
         glShadeModel(GL_FLAT) unless o.faces.first[4]
@@ -100,7 +100,7 @@ class IMICFPS
           # glBindTexture(GL_TEXTURE_2D, 0)
           glDisable(GL_TEXTURE_2D)
         end
-        glDisable(GL_CULL_FACE) if model.game_object.backface_culling
+        glDisable(GL_CULL_FACE) if model.entity.backface_culling
         glDisable(GL_COLOR_MATERIAL)
       end
     end

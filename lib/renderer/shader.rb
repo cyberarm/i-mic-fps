@@ -54,7 +54,7 @@ class IMICFPS
         log = ' ' * @error_buffer_size
         glGetShaderInfoLog(@vertex, @error_buffer_size, nil, log)
         puts "Shader Error: Program \"#{@name}\""
-        puts "  Vertex Shader InfoLog:", "  #{log.strip.split("\n").join("\n  ")}\n\n"
+        puts "  Vector Shader InfoLog:", "  #{log.strip.split("\n").join("\n  ")}\n\n"
         puts "  Shader Compiled status: #{compiled}"
         puts "    NOTE: assignment of uniforms in shaders is illegal!"
         puts

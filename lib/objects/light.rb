@@ -4,9 +4,9 @@ class IMICFPS
     attr_reader :ambient, :diffuse, :specular, :position, :light_id
     attr_accessor :x, :y, :z, :intensity
     def initialize(x:,y:,z:, game_state:,
-                   ambient: Vertex.new(0.5, 0.5, 0.5, 1),
-                   diffuse: Vertex.new(1, 0.5, 0, 1), specular: Vertex.new(0.2, 0.2, 0.2, 1),
-                   position: Vertex.new(x, y, z, 0), intensity: 1)
+                   ambient: Vector.new(0.5, 0.5, 0.5, 1),
+                   diffuse: Vector.new(1, 0.5, 0, 1), specular: Vector.new(0.2, 0.2, 0.2, 1),
+                   position: Vector.new(x, y, z, 0), intensity: 1)
       @x,@y,@z = x,y,z
       @game_state = game_state
       @intensity = intensity

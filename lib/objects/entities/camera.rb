@@ -4,10 +4,10 @@ class IMICFPS
     include OpenGL
     include GLU
 
-    attr_accessor :x,:y,:z, :field_of_view, :pitch, :yaw, :roll, :mouse_sensitivity
-    attr_reader :game_object, :broken_mouse_centering
+    attr_accessor :field_of_view, :pitch, :yaw, :roll, :mouse_sensitivity
+    attr_reader :entity, :position
     def initialize(x: 0, y: 0, z: 0, fov: 70.0, view_distance: 100.0)
-      @x,@y,@z = x,y,z
+      @position = Vector.new(x,y,z)
       @pitch = 0.0
       @yaw   = 0.0
       @roll  = 0.0
@@ -15,7 +15,7 @@ class IMICFPS
       @view_distance = view_distance
       @constant_pitch = 20.0
 
-      @game_object = nil
+      @entity = nil
       @distance = 4
       @origin_distance = @distance
 
@@ -29,6 +29,7 @@ class IMICFPS
       InputMapper.set(:camera, :descend, [Gosu::KbLeftControl, Gosu::KbRightControl])
       InputMapper.set(:camera, :release_mouse, [Gosu::KbLeftAlt, Gosu::KbRightAlt])
       InputMapper.set(:camera, :capture_mouse, Gosu::MsLeft)
+      InputMapper.set(:camera, :turn_180, Gosu::KbX)
       InputMapper.set(:camera, :increase_mouse_sensitivity, Gosu::KB_NUMPAD_PLUS)
       InputMapper.set(:camera, :decrease_mouse_sensitivity, Gosu::KB_NUMPAD_MINUS)
       InputMapper.set(:camera, :reset_mouse_sensitivity, Gosu::KB_NUMPAD_MULTIPLY)
@@ -36,13 +37,13 @@ class IMICFPS
       InputMapper.set(:camera, :decrease_view_distance, Gosu::MsWheelDown)
     end
 
-    def attach_to(game_object)
-      raise "Not a game object!" unless game_object.is_a?(GameObject)
-      @game_object = game_object
+    def attach_to(entity)
+      raise "Not a game object!" unless entity.is_a?(Entity)
+      @entity = entity
     end
 
     def detach
-      @game_object = nil
+      @entity = nil
     end
 
     def distance_from_object
@@ -58,23 +59,23 @@ class IMICFPS
     end
 
     def position_camera
-      if defined?(@game_object.first_person_view)
-        if @game_object.first_person_view
+      if defined?(@entity.first_person_view)
+        if @entity.first_person_view
           @distance = 0
         else
           @distance = @origin_distance
         end
       end
 
-      x_offset = horizontal_distance_from_object * Math.sin(@game_object.y_rotation.degrees_to_radians)
-      z_offset = horizontal_distance_from_object * Math.cos(@game_object.y_rotation.degrees_to_radians)
-      # p @game_object.x, @game_object.z;exit
-      @x = @game_object.x - x_offset
-      @y = @game_object.y + 2
-      @z = @game_object.z - z_offset
+      x_offset = horizontal_distance_from_object * Math.sin(@entity.rotation.y.degrees_to_radians)
+      z_offset = horizontal_distance_from_object * Math.cos(@entity.rotation.y.degrees_to_radians)
+      # p @entity.x, @entity.z;exit
+      @position.x = @entity.position.x - x_offset
+      @position.y = @entity.position.y + 2
+      @position.z = @entity.position.z - z_offset
 
-      # @yaw = 180 - @game_object.y_rotation
-      @game_object.y_rotation = -@yaw + 180
+      # @yaw = 180 - @entity.y_rotation
+      @entity.rotation.y = -@yaw + 180
     end
 
     def draw
@@ -86,22 +87,22 @@ class IMICFPS
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
       glRotatef(@pitch,1,0,0)
       glRotatef(@yaw,0,1,0)
-      glTranslatef(-@x, -@y, -@z)
+      glTranslatef(-@position.x, -@position.y, -@position.z)
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
       glLoadIdentity
 
-      # if $debug && @game_object
+      # if $debug && @entity
       #   glBegin(GL_LINES)
       #     glColor3f(1,0,0)
-      #     glVertex3f(@x, @y, @z)
-      #     glVertex3f(@game_object.x, @game_object.y, @game_object.z)
+      #     glVector3f(@x, @y, @z)
+      #     glVector3f(@entity.x, @entity.y, @entity.z)
       #   glEnd
       # end
     end
 
     def update
       if @mouse_captured
-        position_camera if @game_object
+        position_camera if @entity
 
         delta = Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70
         @yaw -= delta
@@ -110,8 +111,8 @@ class IMICFPS
         @pitch -= Float(@true_mouse.y-self.mouse_y)/(@mouse_sensitivity*@field_of_view)*70
         @pitch = @pitch.clamp(-90.0, 90.0)
 
-        @game_object.y_rotation += delta if @game_object
-        free_move unless @game_object
+        @entity.rotation.y += delta if @entity
+        free_move unless @entity
 
         self.mouse_x = $window.width/2 if self.mouse_x <= 1 || $window.mouse_x >= $window.width-1
         self.mouse_y = $window.height/2 if self.mouse_y <= 1 || $window.mouse_y >= $window.height-1
@@ -176,6 +177,9 @@ class IMICFPS
         # @field_of_view = @field_of_view.clamp(1, 100)
         @view_distance -= 1
         @view_distance = @view_distance.clamp(1, 1000)
+      elsif InputMapper.is?(:camera, :turn_180, id)
+        @rotation.y = @rotation.y+180
+        @rotation.y %= 360
       end
     end
   end

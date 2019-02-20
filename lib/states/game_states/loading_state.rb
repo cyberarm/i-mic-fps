@@ -7,7 +7,7 @@ class IMICFPS
       @state = Text.new("Preparing...", y: window.height/2-40, size: 40, alignment: :center)
       @percentage = Text.new("0%", y: window.height - 100 + 25, size: 50, alignment: :center)
 
-      @dummy_game_object = nil
+      @dummy_entity = nil
       @assets = []
       @asset_index = 0
       add_asset(:model, "base", "randomish_terrain")
@@ -48,7 +48,7 @@ class IMICFPS
         hash = @assets[@asset_index]
         case hash[:type]
         when :model
-          ModelLoader.new(manifest_file: IMICFPS.assets_path + "/#{hash[:package]}/#{hash[:name]}/#{hash[:name]}.yaml", game_object: @dummy_game_object)
+          ModelLoader.new(manifest_file: IMICFPS.assets_path + "/#{hash[:package]}/#{hash[:name]}/#{hash[:name]}.yaml", entity: @dummy_entity)
         # when :shader
         else
           warn "Unknown asset: #{hash}"

@@ -13,7 +13,7 @@ class IMICFPS
     end
 
     def draw
-      @game_state.game_objects.each do |object|
+      @game_state.entities.each do |object|
         if object.visible && object.renderable
           # Render bounding boxes before transformation is applied
           @bounding_box_renderer.create_bounding_box(object, object.model.bounding_box, object.debug_color, object.object_id) if $debug

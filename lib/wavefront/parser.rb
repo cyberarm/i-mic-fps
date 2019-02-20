@@ -114,9 +114,9 @@ class IMICFPS
         @vertex_count+=1
         vert = nil
         if array.size == 5
-          vert = Vertex.new(Float(array[1]), Float(array[2]), Float(array[3]), Float(array[4]))
+          vert = Vector.new(Float(array[1]), Float(array[2]), Float(array[3]), Float(array[4]))
         elsif array.size == 4
-          vert = Vertex.new(Float(array[1]), Float(array[2]), Float(array[3]), 1.0)
+          vert = Vector.new(Float(array[1]), Float(array[2]), Float(array[3]), 1.0)
         else
           raise
         end
@@ -127,9 +127,9 @@ class IMICFPS
       def add_normal(array)
         vert = nil
         if array.size == 5
-          vert = Vertex.new(Float(array[1]), Float(array[2]), Float(array[3]), Float(array[4]))
+          vert = Vector.new(Float(array[1]), Float(array[2]), Float(array[3]), Float(array[4]))
         elsif array.size == 4
-          vert = Vertex.new(Float(array[1]), Float(array[2]), Float(array[3]), 1.0)
+          vert = Vector.new(Float(array[1]), Float(array[2]), Float(array[3]), 1.0)
         else
           raise
         end
@@ -140,9 +140,9 @@ class IMICFPS
       def add_texture_coordinate(array)
         texture = nil
         if array.size == 4
-          texture = Vertex.new(Float(array[1]), 1-Float(array[2]), Float(array[3]))
+          texture = Vector.new(Float(array[1]), 1-Float(array[2]), Float(array[3]))
         elsif array.size == 3
-          texture = Vertex.new(Float(array[1]), 1-Float(array[2]), 1.0)
+          texture = Vector.new(Float(array[1]), 1-Float(array[2]), 1.0)
         else
           raise
         end

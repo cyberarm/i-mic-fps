@@ -11,16 +11,16 @@ class IMICFPS
       include Parser
 
       attr_accessor :objects, :materials, :vertices, :texures, :normals, :faces
-      attr_accessor :x, :y, :z, :scale, :game_object
-      attr_reader :bounding_box, :model_has_texture, :textured_material
+      attr_accessor :scale, :entity
+      attr_reader :position, :bounding_box, :model_has_texture, :textured_material
 
       attr_reader :normals_buffer, :uvs_buffer, :vertices_buffer
       attr_reader :vertices_buffer_data, :uvs_buffer_data, :normals_buffer_data
       attr_reader :vertex_array_id
 
-      def initialize(file_path:, game_object: nil)
-        @game_object = game_object
-        update if @game_object
+      def initialize(file_path:, entity: nil)
+        @entity = entity
+        update if @entity
         @file_path = file_path
         @file = File.open(file_path, 'r')
         @material_file  = nil
@@ -64,7 +64,7 @@ class IMICFPS
         # Allocate arrays for future use
         @vertex_array_id = nil
         buffer = " " * 4
-        glGenVertexArrays(1, buffer)
+        glGenVectorArrays(1, buffer)
         @vertex_array_id = buffer.unpack('L2').first
 
         # Allocate buffers for future use
@@ -101,17 +101,17 @@ class IMICFPS
       end
 
       def populate_arrays
-        glBindVertexArray(@vertex_array_id)
+        glBindVectorArray(@vertex_array_id)
         glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer)
-        glBindVertexArray(0)
+        glBindVectorArray(0)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
       end
 
       def update
-        @x, @y, @z = @game_object.x, @game_object.y, @game_object.z
-        @scale = @game_object.scale
-        # if @scale != @game_object.scale
-        #   puts "oops for #{self}: #{@scale} != #{@game_object.scale}"
+        @position = @entity.position
+        @scale = @entity.scale
+        # if @scale != @entity.scale
+        #   puts "oops for #{self}: #{@scale} != #{@entity.scale}"
         #   self.objects.each(&:reflatten) if self.objects && self.objects.count > 0
         # end
       end

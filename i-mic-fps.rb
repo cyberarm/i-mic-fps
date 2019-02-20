@@ -61,9 +61,13 @@ end
 $debug = ARGV.join.include?("--debug") ? true : false
 
 require_relative "lib/common_methods"
+
+require_relative "lib/math/vertex"
+require_relative "lib/trees/aabb_tree"
+
 require_relative "lib/managers/input_mapper"
 require_relative "lib/managers/shader_manager"
-require_relative "lib/managers/object_manager"
+require_relative "lib/managers/entity_manager"
 require_relative "lib/managers/light_manager"
 require_relative "lib/managers/network_manager"
 require_relative "lib/managers/collision_manager"
@@ -81,16 +85,16 @@ require_relative "lib/states/menus/main_menu"
 
 require_relative "lib/objects/text"
 require_relative "lib/objects/multi_line_text"
-require_relative "lib/objects/game_object"
+require_relative "lib/objects/entity"
 require_relative "lib/objects/model_loader"
 require_relative "lib/objects/light"
 
-require_relative "lib/objects/game_objects/camera"
-require_relative "lib/objects/game_objects/player"
-require_relative "lib/objects/game_objects/tree"
-require_relative "lib/objects/game_objects/skydome"
-require_relative "lib/objects/game_objects/test_object"
-require_relative "lib/objects/game_objects/terrain"
+require_relative "lib/objects/entities/camera"
+require_relative "lib/objects/entities/player"
+require_relative "lib/objects/entities/tree"
+require_relative "lib/objects/entities/skydome"
+require_relative "lib/objects/entities/test_object"
+require_relative "lib/objects/entities/terrain"
 
 require_relative "lib/wavefront/model"
 

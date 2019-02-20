@@ -1,7 +1,7 @@
 require "etc"
 
 class IMICFPS
-  class Player < GameObject
+  class Player < Entity
 
     attr_accessor :speed
     attr_reader :name, :bound_model, :first_person_view
@@ -17,14 +17,12 @@ class IMICFPS
       InputMapper.set(:character, :jump,         Gosu::KbSpace)
       InputMapper.set(:character, :sprint,       [Gosu::KbLeftControl])
 
-      InputMapper.set(:character, :turn_180,                 Gosu::KbX)
       InputMapper.set(:character, :toggle_first_person_view, Gosu::KbF)
 
       @speed = 2.5 # meter's per second
       @running_speed = 6.8 # meter's per second
       @old_speed = @speed
       @mass = 72 # kg
-      @y_velocity = 0
       @floor = 0
       @first_person_view = true
 
@@ -99,8 +97,6 @@ class IMICFPS
     end
 
     def update
-      @floor = @terrain.height_at(self, 4.5)
-
       relative_speed = @speed
       if InputMapper.down?(:character, :sprint)
         relative_speed = (@running_speed)*(delta_time)
@@ -108,73 +104,64 @@ class IMICFPS
         relative_speed = @speed*(delta_time)
       end
 
-      relative_y_rotation = @y_rotation*-1
+      relative_y_rotation = @rotation.y*-1
 
       if InputMapper.down?(:character, :forward)
-        @z+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
-        @x-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.z+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.x-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
       end
       if InputMapper.down?(:character, :backward)
-        @z-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
-        @x+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.z-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.x+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
       end
       if InputMapper.down?(:character, :strife_left)
-        @z+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
-        @x+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.z+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.x+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
       end
       if InputMapper.down?(:character, :strife_right)
-        @z-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
-        @x-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.z-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.x-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
       if InputMapper.down?(:character, :turn_left)
-        @y_rotation+=(relative_speed*1000)*delta_time
+        @rotation.y+=(relative_speed*1000)*delta_time
       end
       if InputMapper.down?(:character, :turn_right)
-        @y_rotation-=(relative_speed*1000)*delta_time
+        @rotation.y-=(relative_speed*1000)*delta_time
       end
 
       if @_time_in_air
         air_time = ((Gosu.milliseconds-@_time_in_air)/1000.0)
-        @y_velocity-=(IMICFPS::GRAVITY*air_time)*delta_time
+        @velocity.y-=(IMICFPS::GRAVITY*air_time)*delta_time
       end
 
       if InputMapper.down?(:character, :jump) && !@jumping
         @jumping = true
         @_time_in_air = Gosu.milliseconds
-      elsif !@jumping && @y > @floor
+      elsif !@jumping && @position.y > @floor
         @falling = true
         @_time_in_air ||= Gosu.milliseconds # FIXME
       else
         if @jumping
-          if @y <= @floor
-            @falling = false; @jumping = false; @y_velocity = 0
+          if @position.y <= @floor
+            @falling = false; @jumping = false; @velocity.y = 0; @position.y = @floor
           end
         end
       end
       if @jumping && !@falling
         if InputMapper.down?(:character, :jump)
-          @y_velocity = 1.5
+          @velocity.y = 1.5
           @falling = true
         end
       end
 
-      @y+=@y_velocity*delta_time
-
-      @y = @floor if @y < @floor
-      # distance = 2.0
-      # x_offset = distance * Math.cos(@bound_model.y_rotation)
-      # z_offset = distance * Math.sin(@bound_model.y_rotation)
+      @position.y+=@velocity.y*delta_time if @position.y >= @floor # TEMP fix to prevent falling forever, collision/physics managers should fix this in time.
 
       super
     end
 
     def button_up(id)
-      if InputMapper.is?(:character, :turn_180, id)
-        @y_rotation = @y_rotation+180
-        @y_rotation %= 360
-
-      elsif InputMapper.is?(:character, :toggle_first_person_view, id)
+      if InputMapper.is?(:character, :toggle_first_person_view, id)
         @first_person_view = !@first_person_view
         puts "First Person? #{@first_person_view}"
       end

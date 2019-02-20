@@ -1,15 +1,15 @@
 class IMICFPS
   class GameState
     include CommonMethods
-    include ObjectManager
+    include EntityManager
     include LightManager
 
     attr_reader :options
     def initialize(options = {})
       @options = options
       @delta_time = Gosu.milliseconds
-      @game_objects = []
-      @lights       = []
+      @entities   = []
+      @lights     = []
 
       setup
     end

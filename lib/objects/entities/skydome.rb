@@ -1,5 +1,5 @@
 class IMICFPS
-  class Skydome < GameObject
+  class Skydome < Entity
     def setup
       bind_model("base", "skydome")
     end
@@ -11,8 +11,8 @@ class IMICFPS
     end
 
     def update
-      @y_rotation+=0.01
-      @y_rotation%=360
+      @rotation.y += 0.01
+      @rotation.y %= 360
       super
     end
   end

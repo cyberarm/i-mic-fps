@@ -8,7 +8,7 @@ class IMICFPS
 
     attr_reader :model, :name, :debug_color
 
-    def initialize(manifest_file:, game_object: nil)
+    def initialize(manifest_file:, entity: nil)
       @manifest = YAML.load(File.read(manifest_file))
       # pp @manifest
       @file_path = File.expand_path("./../model/", manifest_file) + "/#{@manifest["model"]}"
@@ -23,7 +23,7 @@ class IMICFPS
       unless load_model_from_cache
         case @type
         when :obj
-          @model = Wavefront::Model.new(file_path: @file_path, game_object: game_object)
+          @model = Wavefront::Model.new(file_path: @file_path, entity: entity)
         else
           raise "Unsupported model type, supported models are: #{@supported_models.join(', ')}"
         end
