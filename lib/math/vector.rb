@@ -65,6 +65,17 @@ class IMICFPS
       )
     end
 
+    # returns magnitude of Vector, ignoring #weight
+    def magnitude
+      Math.sqrt((@x * @x) + (@y * @y) + (@z * @z))
+    end
+
+    def normalized
+      mag = magnitude
+      p mag
+      self / Vector.new(mag, mag, mag)
+    end
+
     def to_a
       [@x, @y, @z, @weight]
     end
