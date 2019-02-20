@@ -1,10 +1,25 @@
 class IMICFPS
   class Vector
 
-    attr_accessor :x, :y, :z, :weight
     def initialize(x = 0, y = 0, z = 0, weight = 0)
       @x, @y, @z, @weight = x, y, z, weight
     end
+
+    def x; @x; end
+    def x=(n); @x = n; end
+
+    def y; @y; end
+    def y=(n); @y = n; end
+
+    def z; @z; end
+    def z=(n); @z = n; end
+
+    def weight; @weight; end
+    def weight=(n); @weight = n; end
+
+    # def xy=(nx, ny); @x = nx; @y = ny; end
+    # def xyz=(nx, ny, nz); @x = nx; @y = ny; @z = nz; end
+    # def xyzw=(nx, ny, nz, nw); @x = nx; @y = ny; @z = nz; @weight = nw; end
 
     def ==(other)
       @x      == other.x &&
@@ -16,65 +31,38 @@ class IMICFPS
     def +(other)
       Vector.new(
         @x      + other.x,
-        @y      + other.y
-        @z      + other.z
+        @y      + other.y,
+        @z      + other.z,
         @weight + other.weight
       )
-    end
-
-    def +=(other)
-      @x      += other.x
-      @y      += other.y
-      @z      += other.z
-      @weight += other.weight
     end
 
     def -(other)
       Vector.new(
         @x      - other.x,
-        @y      - other.y
-        @z      - other.z
+        @y      - other.y,
+        @z      - other.z,
         @weight - other.weight
       )
-    end
-
-    def -=(other)
-      @x      -= other.x
-      @y      -= other.y
-      @z      -= other.z
-      @weight -= other.weight
     end
 
     def *(other)
       Vector.new(
         @x      * other.x,
-        @y      * other.y
-        @z      * other.z
+        @y      * other.y,
+        @z      * other.z,
         @weight * other.weight
-      )
-    end
-
-    def *=(other)
-      @x      *= other.x
-      @y      *= other.y
-      @z      *= other.z
-      @weight *= other.weight
-    end
+        )
+      end
 
     def /(other)
+      # Endeavors to prevent division by zero
       Vector.new(
-        @x      / other.x,
-        @y      / other.y
-        @z      / other.z
-        @weight / other.weight
+        @x      == 0 || other.x      == 0 ? 0 : @x      / other.x,
+        @y      == 0 || other.y      == 0 ? 0 : @y      / other.y,
+        @z      == 0 || other.z      == 0 ? 0 : @z      / other.z,
+        @weight == 0 || other.weight == 0 ? 0 : @weight / other.weight
       )
-    end
-
-    def /=(other)
-      @x      /= other.x
-      @y      /= other.y
-      @z      /= other.z
-      @weight /= other.weight
     end
 
     def to_a
