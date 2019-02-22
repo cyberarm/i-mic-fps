@@ -24,15 +24,15 @@ class IMICFPS
           fill_quad(
             0, i*@size,
             0, @slope+(i*@size),
-            $window.width/2, (-@slope)+(i*@size),
-            $window.width/2, i*@size,
+            window.width/2, (-@slope)+(i*@size),
+            window.width/2, i*@size,
             Gosu::Color.rgba(@base_color.red-i*@color_step, @base_color.green-i*@color_step, @base_color.blue-i*@color_step, 200)
           )
           fill_quad(
-            $window.width, i*@size,
-            $window.width, @slope+(i*@size),
-            $window.width/2, (-@slope)+(i*@size),
-            $window.width/2, i*@size,
+            window.width, i*@size,
+            window.width, @slope+(i*@size),
+            window.width/2, (-@slope)+(i*@size),
+            window.width/2, i*@size,
             Gosu::Color.rgba(@base_color.red-i*@color_step, @base_color.green-i*@color_step, @base_color.blue-i*@color_step, 200)
           )
         end
@@ -42,8 +42,8 @@ class IMICFPS
 
       # Box
       draw_rect(
-        $window.width/4, 0,
-        $window.width/2, $window.height,
+        window.width/4, 0,
+        window.width/2, window.height,
         Gosu::Color.rgba(0, 0, 0, 150)
         # Gosu::Color.rgba(@base_color.red+@color_step, @base_color.green+@color_step, @base_color.blue+@color_step, 200)
       )
@@ -80,7 +80,7 @@ class IMICFPS
     end
 
     def button_up(id)
-      $window.close if id == Gosu::KbEscape
+      window.close if id == Gosu::KbEscape
       if Gosu::MsLeft
         @elements.each do |e|
           next unless e.is_a?(Link)

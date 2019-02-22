@@ -1,4 +1,5 @@
 class Text
+  include IMICFPS::CommonMethods
   CACHE = {}
 
   attr_accessor :text, :x, :y, :z, :size, :factor_x, :factor_y, :color, :shadow, :shadow_size, :options
@@ -29,9 +30,9 @@ class Text
       when :left
         @x = 0+BUTTON_PADDING
       when :center
-        @x = ($window.width/2)-(@textobject.text_width(@text)/2)
+        @x = (window.width/2)-(@textobject.text_width(@text)/2)
       when :right
-        @x = $window.width-BUTTON_PADDING-@textobject.text_width(@text)
+        @x = window.width-BUTTON_PADDING-@textobject.text_width(@text)
       end
     end
 

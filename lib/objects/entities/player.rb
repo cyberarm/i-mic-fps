@@ -8,16 +8,6 @@ class IMICFPS
 
     def setup
       bind_model("base", "biped")
-      InputMapper.set(:character, :forward,      [Gosu::KbUp, Gosu::KbW])
-      InputMapper.set(:character, :backward,     [Gosu::KbDown, Gosu::KbS])
-      InputMapper.set(:character, :strife_left,  Gosu::KbA)
-      InputMapper.set(:character, :strife_right, Gosu::KbD)
-      InputMapper.set(:character, :turn_left,    Gosu::KbLeft)
-      InputMapper.set(:character, :turn_right,   Gosu::KbRight)
-      InputMapper.set(:character, :jump,         Gosu::KbSpace)
-      InputMapper.set(:character, :sprint,       [Gosu::KbLeftControl])
-
-      InputMapper.set(:character, :toggle_first_person_view, Gosu::KbF)
 
       @speed = 2.5 # meter's per second
       @running_speed = 6.8 # meter's per second
@@ -98,7 +88,7 @@ class IMICFPS
 
     def update
       relative_speed = @speed
-      if InputMapper.down?(:character, :sprint)
+      if InputMapper.down?(:sprint)
         relative_speed = (@running_speed)*(delta_time)
       else
         relative_speed = @speed*(delta_time)
@@ -106,27 +96,27 @@ class IMICFPS
 
       relative_y_rotation = @rotation.y*-1
 
-      if InputMapper.down?(:character, :forward)
+      if InputMapper.down?(:forward)
         @position.z+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
         @position.x-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
       end
-      if InputMapper.down?(:character, :backward)
+      if InputMapper.down?(:backward)
         @position.z-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
         @position.x+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
       end
-      if InputMapper.down?(:character, :strife_left)
+      if InputMapper.down?(:strife_left)
         @position.z+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
         @position.x+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
       end
-      if InputMapper.down?(:character, :strife_right)
+      if InputMapper.down?(:strife_right)
         @position.z-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
         @position.x-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
-      if InputMapper.down?(:character, :turn_left)
+      if InputMapper.down?(:turn_left)
         @rotation.y+=(relative_speed*1000)*delta_time
       end
-      if InputMapper.down?(:character, :turn_right)
+      if InputMapper.down?(:turn_right)
         @rotation.y-=(relative_speed*1000)*delta_time
       end
 
@@ -135,7 +125,7 @@ class IMICFPS
         @velocity.y-=(IMICFPS::GRAVITY*air_time)*delta_time
       end
 
-      if InputMapper.down?(:character, :jump) && !@jumping
+      if InputMapper.down?(:jump) && !@jumping
         @jumping = true
         @_time_in_air = Gosu.milliseconds
       elsif !@jumping && @position.y > @floor
@@ -149,7 +139,7 @@ class IMICFPS
         end
       end
       if @jumping && !@falling
-        if InputMapper.down?(:character, :jump)
+        if InputMapper.down?(:jump)
           @velocity.y = 1.5
           @falling = true
         end
@@ -161,9 +151,13 @@ class IMICFPS
     end
 
     def button_up(id)
-      if InputMapper.is?(:character, :toggle_first_person_view, id)
+      if InputMapper.is?(:toggle_first_person_view, id)
         @first_person_view = !@first_person_view
+        @visible = !@first_person_view
         puts "First Person? #{@first_person_view}"
+      elsif InputMapper.is?(:turn_180, id)
+        @rotation.y = @rotation.y+180
+        @rotation.y %= 360
       end
     end
   end

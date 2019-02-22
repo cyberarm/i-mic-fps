@@ -6,7 +6,7 @@ class IMICFPS
   class Wavefront
     class Model
       include OpenGL
-      # include GLU
+      include CommonMethods
 
       include Parser
 
@@ -50,7 +50,7 @@ class IMICFPS
         @objects.each_with_index do |o, i|
           puts "    Model::Object Name: #{o.name}, Vertices: #{o.vertices.size}" if $debug
         end
-        $window.number_of_vertices+=@vertex_count
+        window.number_of_vertices+=@vertex_count
         @model_has_texture = false
         @materials.each do |key, material|
           if material.texture_id

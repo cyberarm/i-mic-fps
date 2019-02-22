@@ -77,8 +77,8 @@ class IMICFPS
       end
 
       # Draw crosshair
-      draw_rect($window.width/2-@crosshair_size, ($window.height/2-@crosshair_size)-@crosshair_thickness/2, @crosshair_size*2, @crosshair_thickness, @crosshair_color, 0, :default)
-      draw_rect(($window.width/2)-@crosshair_thickness/2, $window.height/2-(@crosshair_size*2), @crosshair_thickness, @crosshair_size*2, @crosshair_color, 0, :default)
+      draw_rect(window.width/2-@crosshair_size, (window.height/2-@crosshair_size)-@crosshair_thickness/2, @crosshair_size*2, @crosshair_thickness, @crosshair_color, 0, :default)
+      draw_rect((window.width/2)-@crosshair_thickness/2, window.height/2-(@crosshair_size*2), @crosshair_thickness, @crosshair_size*2, @crosshair_color, 0, :default)
 
       @text.draw
     end
@@ -94,10 +94,6 @@ class IMICFPS
 
       @camera.update
 
-      $window.close if $window.button_down?(Gosu::KbEscape)
-      $window.number_of_vertices = 0
-      @delta_time = Gosu.milliseconds
-
       if ARGV.join.include?("--playdemo")
         if @demo_data[@demo_index]&.start_with?("tick")
           if @demo_tick == @demo_data[@demo_index].split(" ").last.to_i
@@ -108,12 +104,18 @@ class IMICFPS
 
               data = @demo_data[@demo_index].split(" ")
               if data.first == "up"
-                self.button_up(data.last.to_i)
+                input = InputMapper.get(data.last.to_sym)
+                key = input.is_a?(Array) ? input.first : input
+                self.button_up(key)
+
               elsif data.first == "down"
-                self.button_down(data.last.to_i)
+                input = InputMapper.get(data.last.to_sym)
+                key = input.is_a?(Array) ? input.first : input
+                self.button_down(key)
+
               elsif data.first == "mouse"
                 @camera.pitch = data[1].to_f
-                @camera.yaw   = data[2].to_f
+                @player.rotation.y = (data[2].to_f * -1) - 180
               else
                 # hmm
               end
@@ -141,6 +143,10 @@ class IMICFPS
       end
 
       @demo_tick += 1 if @demo_tick
+
+      window.close if window.button_down?(Gosu::KbEscape)
+      window.number_of_vertices = 0
+      @delta_time = Gosu.milliseconds
     end
 
     def update_text
@@ -158,8 +164,8 @@ Field Of View: #{@camera.field_of_view}
 Mouse Sesitivity: #{@camera.mouse_sensitivity}
 Last Frame: #{delta_time*1000.0}ms (#{Gosu.fps} fps)
 
-Vertices: #{formatted_number($window.number_of_vertices)}
-Faces: #{formatted_number($window.number_of_vertices/3)}
+Vertices: #{formatted_number(window.number_of_vertices)}
+Faces: #{formatted_number(window.number_of_vertices/3)}
 
 Draw Skydome: #{@draw_skydome}
 Debug mode: <c=992200>#{$debug}</c>
@@ -175,8 +181,8 @@ Field Of View: #{@camera.field_of_view}
 Mouse Sesitivity: #{@camera.mouse_sensitivity}
 Last Frame: #{delta_time*1000.0}ms (#{Gosu.fps} fps)
 
-Vertices: #{formatted_number($window.number_of_vertices)}
-Faces: #{formatted_number($window.number_of_vertices/3)}
+Vertices: #{formatted_number(window.number_of_vertices)}
+Faces: #{formatted_number(window.number_of_vertices/3)}
 
 Draw Skydome: #{@draw_skydome}
 Debug mode: <c=992200>#{$debug}</c>
@@ -195,7 +201,7 @@ eos
           @demo_last_written_index = @demo_index
           @demo_file.puts("tick #{@demo_index}")
         end
-        @demo_file.puts("down #{id}")
+        @demo_file.puts("down #{InputMapper.action(id)}")
         @demo_changed = true
       end
       InputMapper.keydown(id)
@@ -211,7 +217,7 @@ eos
           @demo_last_written_index = @demo_index
           @demo_file.puts("tick #{@demo_index}")
         end
-        @demo_file.puts("up #{id}")
+        @demo_file.puts("up #{InputMapper.action(id)}")
         @demo_changed = true
       end
       InputMapper.keyup(id)

@@ -6,7 +6,7 @@ class IMICFPS
 
     attr_accessor :field_of_view, :pitch, :yaw, :roll, :mouse_sensitivity
     attr_reader :entity, :position
-    def initialize(x: 0, y: 0, z: 0, fov: 70.0, view_distance: 100.0)
+    def initialize(x: 0, y: 0, z: 0, fov: 70.0, view_distance: 155.0)
       @position = Vector.new(x,y,z)
       @pitch = 0.0
       @yaw   = 0.0
@@ -19,26 +19,15 @@ class IMICFPS
       @distance = 4
       @origin_distance = @distance
 
-      self.mouse_x, self.mouse_y = $window.width/2, $window.height/2
-      @true_mouse = Point.new($window.width/2, $window.height/2)
+      self.mouse_x, self.mouse_y = window.width/2, window.height/2
+      @true_mouse = Point.new(window.width/2, window.height/2)
       @mouse_sensitivity = 20.0 # Less is faster, more is slower
       @mouse_captured = true
       @mouse_checked = 0
-
-      InputMapper.set(:camera, :ascend,  Gosu::KbSpace)
-      InputMapper.set(:camera, :descend, [Gosu::KbLeftControl, Gosu::KbRightControl])
-      InputMapper.set(:camera, :release_mouse, [Gosu::KbLeftAlt, Gosu::KbRightAlt])
-      InputMapper.set(:camera, :capture_mouse, Gosu::MsLeft)
-      InputMapper.set(:camera, :turn_180, Gosu::KbX)
-      InputMapper.set(:camera, :increase_mouse_sensitivity, Gosu::KB_NUMPAD_PLUS)
-      InputMapper.set(:camera, :decrease_mouse_sensitivity, Gosu::KB_NUMPAD_MINUS)
-      InputMapper.set(:camera, :reset_mouse_sensitivity, Gosu::KB_NUMPAD_MULTIPLY)
-      InputMapper.set(:camera, :increase_view_distance, Gosu::MsWheelUp)
-      InputMapper.set(:camera, :decrease_view_distance, Gosu::MsWheelDown)
     end
 
     def attach_to(entity)
-      raise "Not a game object!" unless entity.is_a?(Entity)
+      raise "Not an Entity!" unless entity.is_a?(Entity)
       @entity = entity
     end
 
@@ -74,8 +63,7 @@ class IMICFPS
       @position.y = @entity.position.y + 2
       @position.z = @entity.position.z - z_offset
 
-      # @yaw = 180 - @entity.y_rotation
-      @entity.rotation.y = -@yaw + 180
+      @yaw = 180 - @entity.rotation.y
     end
 
     def draw
@@ -83,7 +71,7 @@ class IMICFPS
       glMatrixMode(GL_PROJECTION) # The projection matrix is responsible for adding perspective to our scene.
       glLoadIdentity # Resets current modelview matrix
       # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
-      gluPerspective(@field_of_view, $window.width / $window.height, 0.1, @view_distance)
+      gluPerspective(@field_of_view, window.width / window.height, 0.1, @view_distance)
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
       glRotatef(@pitch,1,0,0)
       glRotatef(@yaw,0,1,0)
@@ -102,7 +90,6 @@ class IMICFPS
 
     def update
       if @mouse_captured
-        position_camera if @entity
 
         delta = Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70
         @yaw -= delta
@@ -113,9 +100,10 @@ class IMICFPS
 
         @entity.rotation.y += delta if @entity
         free_move unless @entity
+        position_camera if @entity
 
-        self.mouse_x = $window.width/2 if self.mouse_x <= 1 || $window.mouse_x >= $window.width-1
-        self.mouse_y = $window.height/2 if self.mouse_y <= 1 || $window.mouse_y >= $window.height-1
+        self.mouse_x = window.width/2 if self.mouse_x <= 1 || window.mouse_x >= window.width-1
+        self.mouse_y = window.height/2 if self.mouse_y <= 1 || window.mouse_y >= window.height-1
         @true_mouse.x, @true_mouse.y = self.mouse_x, self.mouse_y
       end
     end
@@ -124,62 +112,59 @@ class IMICFPS
       relative_y_rotation = (@yaw + 180)
       relative_speed = 0.5
 
-      if InputMapper.down?(:character, :forward)
+      if InputMapper.down?( :forward)
         @z+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
         @x-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
-      if InputMapper.down?(:character, :backward)
+      if InputMapper.down?(backward)
         @z-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
         @x+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
-      if InputMapper.down?(:character, :strife_left)
+      if InputMapper.down?(:strife_left)
         @z+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
         @x+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
-      if InputMapper.down?(:character, :strife_right)
+      if InputMapper.down?(:strife_right)
         @z-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
         @x-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
       end
 
-      if InputMapper.down?(:camera, :ascend)
+      if InputMapper.down?(:ascend)
         @y+=relative_speed
       end
-      if InputMapper.down?(:camera, :descend)
+      if InputMapper.down?(:descend)
         @y-=relative_speed
       end
     end
 
     def button_up(id)
-      if InputMapper.is?(:camera, :release_mouse, id)
+      if InputMapper.is?(:release_mouse, id)
         @mouse_captured = false
-        $window.needs_cursor = true
-      elsif InputMapper.is?(:camera, :capture_mouse, id)
+        window.needs_cursor = true
+      elsif InputMapper.is?(:capture_mouse, id)
         @mouse_captured = true
-        $window.needs_cursor = false
-      elsif InputMapper.is?(:camera, :increase_mouse_sensitivity, id)
+        window.needs_cursor = false
+      elsif InputMapper.is?(:increase_mouse_sensitivity, id)
         @mouse_sensitivity+=1
         @mouse_sensitivity = @mouse_sensitivity.clamp(1.0, 100.0)
-      elsif InputMapper.is?(:camera, :decrease_mouse_sensitivity, id)
+      elsif InputMapper.is?(:decrease_mouse_sensitivity, id)
         @mouse_sensitivity-=1
         @mouse_sensitivity = @mouse_sensitivity.clamp(1.0, 100.0)
-      elsif InputMapper.is?(:camera, :reset_mouse_sensitivity, id)
+      elsif InputMapper.is?(:reset_mouse_sensitivity, id)
         @mouse_sensitivity = 20.0
-      elsif InputMapper.is?(:camera, :increase_view_distance, id)
+      elsif InputMapper.is?(:increase_view_distance, id)
         # @field_of_view += 1
         # @field_of_view = @field_of_view.clamp(1, 100)
         @view_distance += 1
         @view_distance = @view_distance.clamp(1, 1000)
-      elsif InputMapper.is?(:camera, :decrease_view_distance, id)
+      elsif InputMapper.is?(:decrease_view_distance, id)
         # @field_of_view -= 1
         # @field_of_view = @field_of_view.clamp(1, 100)
         @view_distance -= 1
         @view_distance = @view_distance.clamp(1, 1000)
-      elsif InputMapper.is?(:camera, :turn_180, id)
-        @rotation.y = @rotation.y+180
-        @rotation.y %= 360
       end
     end
   end

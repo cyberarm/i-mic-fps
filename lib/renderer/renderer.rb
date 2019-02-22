@@ -1,5 +1,6 @@
 class IMICFPS
   class Renderer
+    include CommonMethods
     include OpenGL
     include GLU
 
@@ -23,7 +24,7 @@ class IMICFPS
       end
 
       @bounding_box_renderer.draw_bounding_boxes if $debug
-      $window.number_of_vertices+=@bounding_box_renderer.vertex_count if $debug
+      window.number_of_vertices+=@bounding_box_renderer.vertex_count if $debug
       # @bounding_box_renderer.bounding_boxes.clear
     end
 

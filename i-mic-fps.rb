@@ -89,7 +89,7 @@ require_relative "lib/objects/entity"
 require_relative "lib/objects/model_loader"
 require_relative "lib/objects/light"
 
-require_relative "lib/objects/entities/camera"
+require_relative "lib/objects/camera"
 require_relative "lib/objects/entities/player"
 require_relative "lib/objects/entities/tree"
 require_relative "lib/objects/entities/skydome"

@@ -3,32 +3,57 @@ class IMICFPS
     @@keymap = {}
     @@keys   = Hash.new(false)
 
-    def self.keydown(id)
-      @@keys[id] = true
+    def self.keydown(id_or_action)
+      if id_or_action.is_a?(Integer)
+        @@keys[id_or_action] = true
+      else
+        query = @@keymap.dig(id_or_action)
+
+        if query.is_a?(Integer)
+          id = query
+        elsif query.is_a?(Array)
+          query.each do |key|
+            @@keys[key] = true
+          end
+        else
+          raise "Something unexpected happened."
+        end
+      end
     end
 
-    def self.keyup(id)
-      @@keys[id] = false
+    def self.keyup(id_or_action)
+      if id_or_action.is_a?(Integer)
+        @@keys[id_or_action] = false
+      else
+        query = @@keymap.dig(id_or_action)
+
+        if query.is_a?(Integer)
+          id = query
+        elsif query.is_a?(Array)
+          query.each do |key|
+            @@keys[key] = false
+          end
+        else
+          raise "Something unexpected happened."
+        end
+      end
     end
 
-    def self.get(category, action)
-      key = @@keymap.dig(category, action)
+    def self.get(action)
+      key = @@keymap.dig(action)
     end
 
-    def self.set(category, action, key)
-      raise "category must be a symbol"  unless category.is_a?(Symbol)
+    def self.set(action, key)
       raise "action must be a symbol"    unless action.is_a?(Symbol)
       raise "key must be a whole number or Array of whole numbers, got #{key}" unless key.is_a?(Integer) || key.is_a?(Array)
 
-      @@keymap[category] ||= {}
+      warn "InputMapper.set(:#{action}) is already defined as #{@@keymap[action]}" if @@keymap[action]
 
-      warn "InputMapper.set(:#{category}, :#{action}) is already defined as #{@@keymap[category][action]}" if @@keymap[category][action]
-
-      @@keymap[category][action] = key
+      @@keymap[action] = key
     end
 
-    def self.down?(category, action)
-      keys = get(category, action)
+    def self.down?(action)
+      keys = get(action)
 
       if keys.is_a?(Array)
         keys.detect do |key|
@@ -39,16 +64,60 @@ class IMICFPS
       end
     end
 
-    def self.is?(category, action, query_key)
-      keys = get(category, action)
+    def self.is?(action, query_key)
+      keys = @@keymap.dig(action)
 
       if keys.is_a?(Array)
-        keys.detect do |key|
-          query_key == key
-        end
+        keys.include?(query_key)
       else
         query_key == keys
       end
     end
+
+    def self.action(key)
+      answer = nil
+      @@keymap.each do |action, value|
+        p action, value
+
+        if value.is_a?(Array)
+          if value.include?(key)
+            answer = action
+            break
+          end
+
+        else
+          if value == key
+            answer = action
+            break
+          end
+        end
+      end
+
+      raise "InputMapper.action(#{key}) is nil!" unless answer
+      answer
+    end
   end
 end
+
+IMICFPS::InputMapper.set(:forward,      [Gosu::KbUp, Gosu::KbW])
+IMICFPS::InputMapper.set(:backward,     [Gosu::KbDown, Gosu::KbS])
+IMICFPS::InputMapper.set(:strife_left,  Gosu::KbA)
+IMICFPS::InputMapper.set(:strife_right, Gosu::KbD)
+IMICFPS::InputMapper.set(:turn_left,    Gosu::KbLeft)
+IMICFPS::InputMapper.set(:turn_right,   Gosu::KbRight)
+IMICFPS::InputMapper.set(:jump,         Gosu::KbSpace)
+IMICFPS::InputMapper.set(:sprint,       [Gosu::KbLeftControl])
+IMICFPS::InputMapper.set(:turn_180,     Gosu::KbX)
+
+IMICFPS::InputMapper.set(:ascend,                   Gosu::KbSpace)
+IMICFPS::InputMapper.set(:descend,                  [Gosu::KbLeftControl, Gosu::KbRightControl])
+IMICFPS::InputMapper.set(:toggle_first_person_view, Gosu::KbF)
+
+IMICFPS::InputMapper.set(:release_mouse,              [Gosu::KbLeftAlt, Gosu::KbRightAlt])
+IMICFPS::InputMapper.set(:capture_mouse,              Gosu::MsLeft)
+IMICFPS::InputMapper.set(:increase_mouse_sensitivity, Gosu::KB_NUMPAD_PLUS)
+IMICFPS::InputMapper.set(:decrease_mouse_sensitivity, Gosu::KB_NUMPAD_MINUS)
+IMICFPS::InputMapper.set(:reset_mouse_sensitivity,    Gosu::KB_NUMPAD_MULTIPLY)
+
+IMICFPS::InputMapper.set(:decrease_view_distance,     Gosu::MsWheelDown)
+IMICFPS::InputMapper.set(:increase_view_distance,     Gosu::MsWheelUp)
