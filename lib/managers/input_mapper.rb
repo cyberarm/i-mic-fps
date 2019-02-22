@@ -110,7 +110,7 @@ IMICFPS::InputMapper.set(:sprint,       [Gosu::KbLeftControl])
 IMICFPS::InputMapper.set(:turn_180,     Gosu::KbX)
 
 IMICFPS::InputMapper.set(:ascend,                   Gosu::KbSpace)
-IMICFPS::InputMapper.set(:descend,                  [Gosu::KbLeftControl, Gosu::KbRightControl])
+IMICFPS::InputMapper.set(:descend,                  Gosu::KbC)
 IMICFPS::InputMapper.set(:toggle_first_person_view, Gosu::KbF)
 
 IMICFPS::InputMapper.set(:release_mouse,              [Gosu::KbLeftAlt, Gosu::KbRightAlt])
