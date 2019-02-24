@@ -50,7 +50,7 @@ class IMICFPS
 
       object.model.objects.each do |mesh|
         data = {}
-        box = object.normalize_bounding_box
+        box = mesh.bounding_box.normalize(object)
 
         normals  = mesh_normals
         colors   = mesh_colors(mesh.debug_color)
