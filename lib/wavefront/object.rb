@@ -10,7 +10,7 @@ class IMICFPS
         @textures = []
         @normals  = []
         @faces    = []
-        @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
+        @bounding_box = BoundingBox.new
         @debug_color = Color.new(1.0,1.0,1.0)
 
         @scale = 1.0

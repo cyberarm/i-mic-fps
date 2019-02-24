@@ -1,8 +1,12 @@
 class IMICFPS
   class CollisionManager
+    attr_reader :game_state, :collisions
     def initialize(game_state:)
       @game_state = game_state
-      @aabb_tree  = AABBTree.new
+      @collisions = {}
+
+      @aabb_tree       = AABBTree.new
+      @physics_manager = PhysicsManager.new(collision_manager: self)
     end
 
     def add(entity)
@@ -12,6 +16,7 @@ class IMICFPS
     def update
       lazy_check_collisions
       @aabb_tree.update
+      @physics_manager.update
     end
 
     def remove(entity)

@@ -12,7 +12,7 @@ class IMICFPS
       if @root
         @root.insert_subtree(bounding_box.dup, object)
       else
-        @root = AABBNode.new(parent: nil, object: object, bounding_box: BoundingBox.new(0,0,0, 0,0,0))
+        @root = AABBNode.new(parent: nil, object: object, bounding_box: BoundingBox.new)
       end
     end
 
@@ -46,6 +46,15 @@ class IMICFPS
 
         @a = nil
         @b = nil
+      end
+
+      def make_leaf
+        @a = nil
+        @b = nil
+      end
+
+      def make_branch(node_a, node_b)
+
       end
 
       def insert_subtree(bounding_box, object)

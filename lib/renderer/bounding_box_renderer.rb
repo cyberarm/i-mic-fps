@@ -157,53 +157,53 @@ class IMICFPS
 
     def mesh_vertices(box)
       [
-        box.min_x, box.max_y, box.max_z,
-        box.min_x, box.max_y, box.min_z,
-        box.max_x, box.max_y, box.min_z,
+        box.min.x, box.max.y, box.max.z,
+        box.min.x, box.max.y, box.min.z,
+        box.max.x, box.max.y, box.min.z,
 
-        box.min_x, box.max_y, box.max_z,
-        box.max_x, box.max_y, box.max_z,
-        box.max_x, box.max_y, box.min_z,
+        box.min.x, box.max.y, box.max.z,
+        box.max.x, box.max.y, box.max.z,
+        box.max.x, box.max.y, box.min.z,
 
-        box.max_x, box.min_y, box.min_z,
-        box.max_x, box.min_y, box.max_z,
-        box.min_x, box.min_y, box.max_z,
+        box.max.x, box.min.y, box.min.z,
+        box.max.x, box.min.y, box.max.z,
+        box.min.x, box.min.y, box.max.z,
 
-        box.max_x, box.min_y, box.min_z,
-        box.min_x, box.min_y, box.min_z,
-        box.min_x, box.min_y, box.max_z,
+        box.max.x, box.min.y, box.min.z,
+        box.min.x, box.min.y, box.min.z,
+        box.min.x, box.min.y, box.max.z,
 
-        box.min_x, box.max_y, box.max_z,
-        box.min_x, box.max_y, box.min_z,
-        box.min_x, box.min_y, box.min_z,
+        box.min.x, box.max.y, box.max.z,
+        box.min.x, box.max.y, box.min.z,
+        box.min.x, box.min.y, box.min.z,
 
-        box.min_x, box.min_y, box.max_z,
-        box.min_x, box.min_y, box.min_z,
-        box.min_x, box.max_y, box.max_z,
+        box.min.x, box.min.y, box.max.z,
+        box.min.x, box.min.y, box.min.z,
+        box.min.x, box.max.y, box.max.z,
 
-        box.max_x, box.max_y, box.max_z,
-        box.max_x, box.max_y, box.min_z,
-        box.max_x, box.min_y, box.min_z,
+        box.max.x, box.max.y, box.max.z,
+        box.max.x, box.max.y, box.min.z,
+        box.max.x, box.min.y, box.min.z,
 
-        box.max_x, box.min_y, box.max_z,
-        box.max_x, box.min_y, box.min_z,
-        box.max_x, box.max_y, box.max_z,
+        box.max.x, box.min.y, box.max.z,
+        box.max.x, box.min.y, box.min.z,
+        box.max.x, box.max.y, box.max.z,
 
-        box.min_x, box.max_y, box.max_z,
-        box.max_x, box.max_y, box.max_z,
-        box.max_x, box.min_y, box.max_z,
+        box.min.x, box.max.y, box.max.z,
+        box.max.x, box.max.y, box.max.z,
+        box.max.x, box.min.y, box.max.z,
 
-        box.min_x, box.max_y, box.max_z,
-        box.max_x, box.min_y, box.max_z,
-        box.min_x, box.min_y, box.max_z,
+        box.min.x, box.max.y, box.max.z,
+        box.max.x, box.min.y, box.max.z,
+        box.min.x, box.min.y, box.max.z,
 
-        box.max_x, box.min_y, box.min_z,
-        box.min_x, box.min_y, box.min_z,
-        box.min_x, box.max_y, box.min_z,
+        box.max.x, box.min.y, box.min.z,
+        box.min.x, box.min.y, box.min.z,
+        box.min.x, box.max.y, box.min.z,
 
-        box.max_x, box.min_y, box.min_z,
-        box.min_x, box.max_y, box.min_z,
-        box.max_x, box.max_y, box.min_z
+        box.max.x, box.min.y, box.min.z,
+        box.min.x, box.max.y, box.min.z,
+        box.max.x, box.max.y, box.min.z
       ]
     end
 

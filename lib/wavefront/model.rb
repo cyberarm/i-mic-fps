@@ -35,7 +35,7 @@ class IMICFPS
         @faces    = []
         @smoothing= 0
 
-        @bounding_box = BoundingBox.new(0,0,0, 0,0,0)
+        @bounding_box = BoundingBox.new
         start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
 
         parse

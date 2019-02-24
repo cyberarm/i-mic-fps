@@ -70,6 +70,7 @@ require_relative "lib/managers/entity_manager"
 require_relative "lib/managers/light_manager"
 require_relative "lib/managers/network_manager"
 require_relative "lib/managers/collision_manager"
+require_relative "lib/managers/physics_manager"
 
 require_relative "lib/renderer/renderer"
 require_relative "lib/renderer/shader"
