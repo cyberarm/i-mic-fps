@@ -10,13 +10,20 @@ class IMICFPS
       raise "Object can't be nil!" unless object
 
       if @root
-        @root.insert_subtree(bounding_box, object)
+        @root.insert_subtree(bounding_box.dup, object)
       else
         @root = AABBNode.new(parent: nil, object: object, bounding_box: BoundingBox.new(0,0,0, 0,0,0))
       end
     end
 
-    def update(object)
+    def update
+      @objects.each do |object, node|
+        unless object.bounding_box == node.bounding_box
+          puts "#{object.class} mutated!"
+          remove(node)
+          add(object)
+        end
+      end
     end
 
     # Returns a list of all collided objects inside Bounding Box
@@ -26,17 +33,23 @@ class IMICFPS
     end
 
     def remove(object)
+      @root.remove_subtree(@objects[object])
+      @objects[object] = nil
     end
 
     class AABBNode
+      attr_accessor :bounding_box, :parent, :object, :a, :b
       def initialize(parent:, object:, bounding_box:)
         @parent = parent
         @object = object
         @bounding_box = bounding_box
+
+        @a = nil
+        @b = nil
       end
 
       def insert_subtree(bounding_box, object)
-        p "#{bounding_box} -> #{object.class}"
+        # p "#{bounding_box} -> #{object.class}"
       end
 
       def remove_subtree(node)

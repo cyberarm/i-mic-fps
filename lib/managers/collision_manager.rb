@@ -9,6 +9,11 @@ class IMICFPS
       @aabb_tree.add(entity.normalized_bounding_box, entity)
     end
 
+    def update
+      lazy_check_collisions
+      @aabb_tree.update
+    end
+
     def remove(entity)
       @aabb_tree.remove(entity)
     end
@@ -19,8 +24,10 @@ class IMICFPS
         @game_state.entities.each do |other|
           next if entity == other
           next if entity.is_a?(Terrain) || other.is_a?(Terrain)
+          next unless entity.collidable?
+          next unless other.collidable?
 
-          if entity.intersect(other)
+          if entity.normalized_bounding_box.intersect(other.normalized_bounding_box)
             entity.debug_color = Color.new(1.0,0.0,0.0)
             other.debug_color = Color.new(1.0,0.0,0.0)
 
@@ -32,11 +39,6 @@ class IMICFPS
           end
         end
       end
-    end
-
-    def update
-      lazy_check_collisions
-      # @aabb_tree.rebuild
     end
   end
 end

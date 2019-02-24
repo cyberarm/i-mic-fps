@@ -37,8 +37,6 @@ else
   raise RuntimeError, "Unsupported platform."
 end
 
-BoundingBox = Struct.new(:min_x, :min_y, :min_z, :max_x, :max_y, :max_z)
-
 if RUBY_VERSION < "2.5.0"
   puts "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-"
   puts "|NOTICE| Ruby is #{RUBY_VERSION} not 2.5.0+..............................|Notice|"
@@ -63,6 +61,7 @@ $debug = ARGV.join.include?("--debug") ? true : false
 require_relative "lib/common_methods"
 
 require_relative "lib/math/vector"
+require_relative "lib/math/bounding_box"
 require_relative "lib/trees/aabb_tree"
 
 require_relative "lib/managers/input_mapper"
