@@ -63,6 +63,7 @@ require_relative "lib/common_methods"
 require_relative "lib/math/vector"
 require_relative "lib/math/bounding_box"
 require_relative "lib/trees/aabb_tree"
+require_relative "lib/trees/aabb_node"
 
 require_relative "lib/managers/input_mapper"
 require_relative "lib/managers/shader_manager"

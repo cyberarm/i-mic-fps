@@ -10,12 +10,14 @@ class IMICFPS
     end
 
     def add(entity)
-      @aabb_tree.add(entity.normalized_bounding_box, entity)
+      @aabb_tree.insert(entity, entity.normalized_bounding_box)
     end
 
     def update
-      lazy_check_collisions
       @aabb_tree.update
+
+      check_broadphase
+
       @physics_manager.update
     end
 
@@ -23,25 +25,24 @@ class IMICFPS
       @aabb_tree.remove(entity)
     end
 
-    def lazy_check_collisions
-      # Expensive AABB collision detection
+    def check_broadphase
+      @collisions.clear
+      broadphase = {}
+
       @game_state.entities.each do |entity|
-        @game_state.entities.each do |other|
-          next if entity == other
-          next if entity.is_a?(Terrain) || other.is_a?(Terrain)
-          next unless entity.collidable?
-          next unless other.collidable?
+        search = @aabb_tree.search(entity.normalized_bounding_box)
+        if search.size > 0
+          search.reject! {|ent| ent == entity}
+          broadphase[entity] = search
+        end
+      end
 
-          if entity.normalized_bounding_box.intersect(other.normalized_bounding_box)
-            entity.debug_color = Color.new(1.0,0.0,0.0)
-            other.debug_color = Color.new(1.0,0.0,0.0)
-
-           # @game_state.entities.delete(entity) unless entity.is_a?(Player)
-            # puts "#{entity} is intersecting #{b}" if entity.is_a?(Player)
-          else
-            entity.debug_color = Color.new(0,1,0)
-            other.debug_color = Color.new(0,1,0)
-          end
+      broadphase.each do |entity, _collisions|
+        _collisions.reject! {|ent| !entity.normalized_bounding_box.intersect(ent.normalized_bounding_box)}
+        # TODO: mesh aabb tree vs other mesh aabb tree check
+        # TODO: triangle vs other triangle check
+        _collisions.each do |ent|
+          @collisions[entity] = _collisions
         end
       end
     end

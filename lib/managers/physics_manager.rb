@@ -6,7 +6,7 @@ class IMICFPS
 
     def update
       @collision_manager.collisions.each do |entity, versus|
-        versus.each do |versus|
+        versus.each do |other|
           resolve(entity, other)
         end
       end
