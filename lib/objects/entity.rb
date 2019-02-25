@@ -8,7 +8,7 @@ class IMICFPS
     include CommonMethods
     attr_accessor :scale, :visible, :renderable, :backface_culling
     attr_reader :position, :rotation, :velocity
-    attr_reader :model, :name, :debug_color, :normalized_bounding_box
+    attr_reader :model, :name, :debug_color, :bounding_box
     def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, manifest_file: nil)
       @position = Vector.new(x, y, z)
       @scale = scale
@@ -53,9 +53,9 @@ class IMICFPS
       @bound_model = model
       @bound_model.model.entity = self
       @bound_model.model.objects.each {|o| o.scale = self.scale}
-      @normalized_bounding_box = normalize_bounding_box_with_offset
+      @bounding_box = normalize_bounding_box_with_offset
 
-      box = normalize_bounding_box
+      # box = normalize_bounding_box
     end
 
     def model
@@ -79,7 +79,7 @@ class IMICFPS
       @delta_time = Gosu.milliseconds
 
       unless at_same_position?
-        @normalized_bounding_box = normalize_bounding_box_with_offset if model
+        @bounding_box = normalize_bounding_box_with_offset if model
       end
     end
 

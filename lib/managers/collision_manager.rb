@@ -10,15 +10,25 @@ class IMICFPS
     end
 
     def add(entity)
-      @aabb_tree.insert(entity, entity.normalized_bounding_box)
+      @aabb_tree.insert(entity, entity.bounding_box)
     end
 
     def update
-      @aabb_tree.update
+      @game_state.entities.each do |entity|
+        next unless entity.is_a?(Entity)
+        next unless node = @aabb_tree.objects[entity]
+
+        unless entity.bounding_box == node.bounding_box
+          @aabb_tree.update(entity, entity.bounding_box)
+        end
+      end
 
       check_broadphase
 
       @physics_manager.update
+
+      # binding.irb
+      p @aabb_tree
     end
 
     def remove(entity)
@@ -30,7 +40,7 @@ class IMICFPS
       broadphase = {}
 
       @game_state.entities.each do |entity|
-        search = @aabb_tree.search(entity.normalized_bounding_box)
+        search = @aabb_tree.search(entity.bounding_box)
         if search.size > 0
           search.reject! {|ent| ent == entity}
           broadphase[entity] = search
@@ -38,7 +48,7 @@ class IMICFPS
       end
 
       broadphase.each do |entity, _collisions|
-        _collisions.reject! {|ent| !entity.normalized_bounding_box.intersect(ent.normalized_bounding_box)}
+        _collisions.reject! {|ent| !entity.bounding_box.intersect(ent.bounding_box)}
         # TODO: mesh aabb tree vs other mesh aabb tree check
         # TODO: triangle vs other triangle check
         _collisions.each do |ent|

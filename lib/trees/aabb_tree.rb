@@ -1,8 +1,13 @@
 class IMICFPS
   class AABBTree
+    include IMICFPS::AABBTreeDebug
+
+    attr_reader :root, :objects, :branches, :leaves
     def initialize
       @objects = {}
       @root = nil
+      @branches = 0
+      @leaves   = 0
     end
 
     def insert(object, bounding_box)
@@ -14,26 +19,15 @@ class IMICFPS
       @objects[object] = leaf
 
       if @root
-        @root.insert_subtree(leaf)
+        @root = @root.insert_subtree(leaf)
       else
         @root = leaf
       end
     end
 
-    def update
-      needs_update = []
-
-      @objects.each do |object, node|
-        next unless object.is_a?(Entity)
-        unless object.normalized_bounding_box == node.bounding_box
-          needs_update << object
-        end
-      end
-
-      needs_update.each do |object|
-        remove(object)
-        insert(object, object.normalized_bounding_box)
-      end
+    def update(object, bounding_box)
+      remove(object)
+      insert(object, bounding_box)
     end
 
     # Returns a list of all collided objects inside Bounding Box
@@ -41,15 +35,15 @@ class IMICFPS
       items = []
       if @root
         items = @root.search_subtree(bounding_box)
+        items.map! {|e| e.object}
       end
 
-      items.map! {|e| e.object}
       return items
     end
 
     def remove(object)
-      leaf = @objects.delete(object)
-      @root.remove_subtree(leaf) if leaf
+      leaf  = @objects.delete(object)
+      @root = @root.remove_subtree(leaf) if leaf
     end
   end
 end

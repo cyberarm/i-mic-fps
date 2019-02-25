@@ -76,6 +76,10 @@ class IMICFPS
       self / Vector.new(mag, mag, mag)
     end
 
+    def sum
+      @x + @y + @z + @weight
+    end
+
     def to_a
       [@x, @y, @z, @weight]
     end

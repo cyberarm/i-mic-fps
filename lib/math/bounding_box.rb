@@ -26,19 +26,27 @@ class IMICFPS
       return temp
     end
 
-    # returns boolean
+    # returns whether both bounding boxes intersect
     def intersect(other)
       (@min.x <= other.max.x && @max.x >= other.min.x) &&
       (@min.y <= other.max.y && @max.y >= other.min.y) &&
       (@min.z <= other.max.z && @max.z >= other.min.z)
     end
 
+    # returns the difference between both bounding boxes
     def difference(other)
       temp = BoundingBox.new
       temp.min = @min - other.min
       temp.max = @max - other.max
 
       return temp
+    end
+
+    # returns whether the vector is inside of the bounding box
+    def contains(vector)
+      vector.x.between?(@min.x, @max.x) &&
+      vector.y.between?(@min.y, @max.y) &&
+      vector.z.between?(@min.z, @max.z)
     end
 
     def volume
@@ -81,6 +89,26 @@ class IMICFPS
       temp.max.z = @max.z.to_f * entity.scale + entity.position.z
 
       return temp
+    end
+
+    def +(other)
+      box = BoundingBox.new
+      box.min = self.min + other.min
+      box.min = self.max + other.max
+
+      return box
+    end
+
+    def -(other)
+      box = BoundingBox.new
+      box.min = self.min - other.min
+      box.min = self.max - other.max
+
+      return box
+    end
+
+    def sum
+      @min.sum + @max.sum
     end
   end
 end
