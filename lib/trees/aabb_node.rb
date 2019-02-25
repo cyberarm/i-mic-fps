@@ -1,7 +1,8 @@
 class IMICFPS
   class AABBTree
     class AABBNode
-      attr_accessor :bounding_box, :parent, :object, :a, :b
+      attr_accessor :bounding_box, :parent, :object
+      attr_reader :a, :b
       def initialize(parent:, object:, bounding_box:)
         @parent = parent
         @object = object
@@ -9,6 +10,16 @@ class IMICFPS
 
         @a = nil
         @b = nil
+      end
+
+      def a=(leaf)
+        @a = leaf
+        @a.parent = self
+      end
+
+      def b=(leaf)
+        @b = leaf
+        @b.parent = self
       end
 
       def leaf?

@@ -28,9 +28,9 @@ class IMICFPS
       @physics_manager.update
 
       # binding.irb
-      p @aabb_tree
+      # p @aabb_tree
       collisions.each do |ent, list|
-        puts "#{ent.class} -> [#{list.map{|e| e.class}.join(', ')}]"
+        # puts "#{ent.class} -> [#{list.map{|e| e.class}.join(', ')}]"
       end
     end
 

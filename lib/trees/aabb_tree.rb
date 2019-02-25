@@ -32,7 +32,6 @@ class IMICFPS
     def update(object, bounding_box)
       leaf = remove(object)
       leaf.bounding_box = bounding_box
-      @objects[object]  = leaf
       insert_leaf(leaf)
     end
 
@@ -50,7 +49,6 @@ class IMICFPS
     def remove(object)
       leaf  = @objects.delete(object)
       @root = @root.remove_subtree(leaf) if leaf
-      @root.parent = nil
 
       return leaf
     end

@@ -79,13 +79,6 @@ class IMICFPS
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
       glLoadIdentity
 
-      # if $debug && @entity
-      #   glBegin(GL_LINES)
-      #     glColor3f(1,0,0)
-      #     glVertex3f(@x, @y, @z)
-      #     glVertex3f(@entity.x, @entity.y, @entity.z)
-      #   glEnd
-      # end
     end
 
     def update
