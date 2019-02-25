@@ -58,6 +58,23 @@ class IMICFPS
             @textured_material = key
           end
         end
+
+        @aabb_tree = AABBTree.new
+        @faces.each do |face|
+          box = BoundingBox.new
+          box.min = face.vertices.first.dup
+          box.max = face.vertices.first.dup
+
+          face.vertices.each do |vertex|
+            if vertex.sum < box.min.sum
+              box.min = vertex.dup
+            elsif vertex.sum > box.max.sum
+              box.max = vertex.dup
+            end
+          end
+
+          @aabb_tree.insert(face, box)
+        end
       end
 
       def allocate_gl_objects

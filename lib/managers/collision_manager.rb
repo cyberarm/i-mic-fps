@@ -54,7 +54,7 @@ class IMICFPS
       end
 
       broadphase.each do |entity, _collisions|
-        _collisions.reject! {|ent| !entity.bounding_box.intersect(ent.bounding_box)}
+        _collisions.reject! {|ent| !entity.bounding_box.intersect?(ent.bounding_box)}
         # TODO: mesh aabb tree vs other mesh aabb tree check
         # TODO: triangle vs other triangle check
         _collisions.each do |ent|

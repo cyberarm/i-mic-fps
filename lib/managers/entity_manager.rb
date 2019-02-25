@@ -2,6 +2,7 @@ class IMICFPS
   TextureCoordinate = Struct.new(:u, :v, :weight)
   Point = Struct.new(:x, :y)
   Color = Struct.new(:red, :green, :blue, :alpha)
+  Face  = Struct.new(:vertices, :uvs, :normals, :material, :smoothing)
 
   module EntityManager # Get included into GameState context
     def add_entity(entity)

@@ -38,15 +38,27 @@ class IMICFPS
               norms << f.split("/")[2]
             end
 
+            face = Face.new
+            face.vertices = []
+            face.uvs      = []
+            face.normals  = []
+            face.material = material
+            face.smoothing= @smoothing
+
             verts.each_with_index do |v, index|
               if uvs.first != ""
-                face = [@vertices[Integer(v)-1], @uvs[Integer(uvs[index])-1], @normals[Integer(norms[index])-1], material, @smoothing]
+                face.vertices << @vertices[Integer(v)-1]
+                face.uvs      << @uvs[Integer(uvs[index])-1]
+                face.normals  << @normals[Integer(norms[index])-1]
               else
-                face = [@vertices[Integer(v)-1], nil, @normals[Integer(norms[index])-1], material, @smoothing]
+                face.vertices << @vertices[Integer(v)-1]
+                face.uvs      << nil
+                face.normals  << @normals[Integer(norms[index])-1]
               end
-              @current_object.faces << face
-              @faces << face
             end
+
+            @current_object.faces << face
+            @faces << face
           end
         end
 

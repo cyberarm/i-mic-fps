@@ -26,13 +26,6 @@ class IMICFPS
       return temp
     end
 
-    # returns whether both bounding boxes intersect
-    def intersect(other)
-      (@min.x <= other.max.x && @max.x >= other.min.x) &&
-      (@min.y <= other.max.y && @max.y >= other.min.y) &&
-      (@min.z <= other.max.z && @max.z >= other.min.z)
-    end
-
     # returns the difference between both bounding boxes
     def difference(other)
       temp = BoundingBox.new
@@ -40,6 +33,13 @@ class IMICFPS
       temp.max = @max - other.max
 
       return temp
+    end
+
+    # returns whether both bounding boxes intersect
+    def intersect?(other)
+      (@min.x <= other.max.x && @max.x >= other.min.x) &&
+      (@min.y <= other.max.y && @max.y >= other.min.y) &&
+      (@min.z <= other.max.z && @max.z >= other.min.z)
     end
 
     # does this bounding box envelop other bounding box? (inclusive of border)

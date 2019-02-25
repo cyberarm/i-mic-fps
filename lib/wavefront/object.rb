@@ -34,11 +34,11 @@ class IMICFPS
 
       def flattened_vertices
         unless @vertices_list
-          @debug_color = @faces.first[3].diffuse
+          @debug_color = @faces.first.material.diffuse
 
           list = []
           @faces.each do |face|
-            [face[0]].each do |v|
+            face.vertices.each do |v|
               next unless v
               list << v.x*@scale
               list << v.y*@scale
@@ -61,8 +61,8 @@ class IMICFPS
       def flattened_textures
         unless @textures_list
           list = []
-          @faces.each_with_index do |face, i|
-            [face[1]].each do |v|
+          @faces.each do |face|
+            face.uvs.each do |v|
               next unless v
               list << v.x
               list << v.y
@@ -81,12 +81,11 @@ class IMICFPS
         unless @normals_list
           list = []
           @faces.each do |face|
-            [face[2]].each do |v|
-              next unless v
-              list << v.x
-              list << v.y
-              list << v.z
-              # list << v.weight
+            face.normals.each do |n|
+              next unless n
+              list << n.x
+              list << n.y
+              list << n.z
             end
           end
 
@@ -101,15 +100,14 @@ class IMICFPS
         unless @materials_list
           list = []
           @faces.each do |face|
-            # p face
-            [face[3]].each do |v|
-              next unless v
-              # p v
-              # exit
-              list << v.diffuse.red
-              list << v.diffuse.green
-              list << v.diffuse.blue
-              # list << v.alpha
+            material = face.material
+            next unless material
+            face.vertices.each do # Add material to each vertex
+
+              list << material.diffuse.red
+              list << material.diffuse.green
+              list << material.diffuse.blue
+              # list << material.alpha
             end
           end
 
