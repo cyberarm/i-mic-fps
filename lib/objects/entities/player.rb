@@ -8,6 +8,7 @@ class IMICFPS
 
     def setup
       bind_model("base", "biped")
+      @collision = :dynamic
 
       @speed = 2.5 # meter's per second
       @running_speed = 6.8 # meter's per second

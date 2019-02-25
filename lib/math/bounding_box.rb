@@ -42,8 +42,14 @@ class IMICFPS
       return temp
     end
 
+    # does this bounding box envelop other bounding box? (inclusive of border)
+    def contains?(other)
+      other.min.x >= min.x && other.min.y >= min.y && other.min.z >= min.z &&
+      other.max.x <= max.x && other.max.y <= max.y && other.max.z <= max.z
+    end
+
     # returns whether the vector is inside of the bounding box
-    def contains(vector)
+    def point?(vector)
       vector.x.between?(@min.x, @max.x) &&
       vector.y.between?(@min.y, @max.y) &&
       vector.z.between?(@min.z, @max.z)

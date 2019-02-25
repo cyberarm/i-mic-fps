@@ -2,6 +2,7 @@ class IMICFPS
   class Skydome < Entity
     def setup
       bind_model("base", "skydome")
+      @collision = :none
     end
 
     def draw

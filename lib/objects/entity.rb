@@ -7,7 +7,7 @@ class IMICFPS
     include GLU
     include CommonMethods
     attr_accessor :scale, :visible, :renderable, :backface_culling
-    attr_reader :position, :rotation, :velocity
+    attr_reader :position, :rotation, :velocity, :collision
     attr_reader :model, :name, :debug_color, :bounding_box
     def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, manifest_file: nil)
       @position = Vector.new(x, y, z)
@@ -22,8 +22,8 @@ class IMICFPS
       @debug_color = Color.new(0.0, 1.0, 0.0)
 
       @collidable = [:static, :dynamic]
-      @collision  = :static # :dynamic, moves in response, :static, does not move ever, :none, entities can pass through
-      @physics    = false
+      @collision  = :static # :dynamic => moves in response, :static => does not move ever, :none => no collision check, entities can pass through
+      @physics    = false # Entity affected by gravity and what not
       @mass       = 100 # kg
 
       @delta_time = Gosu.milliseconds

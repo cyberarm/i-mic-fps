@@ -18,6 +18,10 @@ class IMICFPS
       leaf = AABBNode.new(parent: nil, object: object, bounding_box: bounding_box.dup)
       @objects[object] = leaf
 
+      insert_leaf(leaf)
+    end
+
+    def insert_leaf(leaf)
       if @root
         @root = @root.insert_subtree(leaf)
       else
@@ -26,8 +30,10 @@ class IMICFPS
     end
 
     def update(object, bounding_box)
-      remove(object)
-      insert(object, bounding_box)
+      leaf = remove(object)
+      leaf.bounding_box = bounding_box
+      @objects[object]  = leaf
+      insert_leaf(leaf)
     end
 
     # Returns a list of all collided objects inside Bounding Box
@@ -44,6 +50,9 @@ class IMICFPS
     def remove(object)
       leaf  = @objects.delete(object)
       @root = @root.remove_subtree(leaf) if leaf
+      @root.parent = nil
+
+      return leaf
     end
   end
 end

@@ -29,6 +29,9 @@ class IMICFPS
 
       # binding.irb
       p @aabb_tree
+      collisions.each do |ent, list|
+        puts "#{ent.class} -> [#{list.map{|e| e.class}.join(', ')}]"
+      end
     end
 
     def remove(entity)
@@ -40,9 +43,12 @@ class IMICFPS
       broadphase = {}
 
       @game_state.entities.each do |entity|
+        next unless entity.collidable?
+        next if entity.collision == :static # Only dynamic entities can be resolved
+
         search = @aabb_tree.search(entity.bounding_box)
         if search.size > 0
-          search.reject! {|ent| ent == entity}
+          search.reject! {|ent| ent == entity || !ent.collidable?}
           broadphase[entity] = search
         end
       end

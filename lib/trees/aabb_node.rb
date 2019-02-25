@@ -66,7 +66,7 @@ class IMICFPS
             other_child.parent = @parent
             return other_child
           else
-            leaf.disown_child(leaf)
+            leaf.parent.disown_child(leaf)
             return self
           end
         end
