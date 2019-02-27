@@ -12,11 +12,12 @@ class IMICFPS
 
       attr_accessor :objects, :materials, :vertices, :texures, :normals, :faces
       attr_accessor :scale, :entity
-      attr_reader :position, :bounding_box, :model_has_texture, :textured_material
+      attr_reader :position, :bounding_box, :textured_material
 
       attr_reader :normals_buffer, :uvs_buffer, :vertices_buffer
       attr_reader :vertices_buffer_data, :uvs_buffer_data, :normals_buffer_data
       attr_reader :vertex_array_id
+      attr_reader :aabb_tree
 
       def initialize(file_path:, entity: nil)
         @entity = entity
@@ -42,39 +43,24 @@ class IMICFPS
 
         puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if $debug
 
-        allocate_gl_objects
-        populate_buffers
-        populate_arrays
+        # allocate_gl_objects
+        # populate_buffers
+        # populate_arrays
 
         @objects.each {|o| @vertex_count+=o.vertices.size}
         @objects.each_with_index do |o, i|
           puts "    Model::Object Name: #{o.name}, Vertices: #{o.vertices.size}" if $debug
         end
         window.number_of_vertices+=@vertex_count
-        @model_has_texture = false
+        @has_texture = false
         @materials.each do |key, material|
           if material.texture_id
-            @model_has_texture = true
+            @has_texture = true
             @textured_material = key
           end
         end
 
-        @aabb_tree = AABBTree.new
-        @faces.each do |face|
-          box = BoundingBox.new
-          box.min = face.vertices.first.dup
-          box.max = face.vertices.first.dup
-
-          face.vertices.each do |vertex|
-            if vertex.sum < box.min.sum
-              box.min = vertex.dup
-            elsif vertex.sum > box.max.sum
-              box.max = vertex.dup
-            end
-          end
-
-          @aabb_tree.insert(face, box)
-        end
+        build_collision_tree
       end
 
       def allocate_gl_objects
@@ -124,13 +110,36 @@ class IMICFPS
         glBindBuffer(GL_ARRAY_BUFFER, 0)
       end
 
+      def build_collision_tree
+        @aabb_tree = AABBTree.new
+        @faces.each do |face|
+          box = BoundingBox.new
+          box.min = face.vertices.first.dup
+          box.max = face.vertices.first.dup
+
+          face.vertices.each do |vertex|
+            if vertex.sum < box.min.sum
+              box.min = vertex.dup
+            elsif vertex.sum > box.max.sum
+              box.max = vertex.dup
+            end
+          end
+
+          # FIXME: Handle negatives
+          box.min -= Vector.new(-0.1, -0.1, -0.1)
+          box.max += Vector.new( 0.1,  0.1,  0.1)
+          @aabb_tree.insert(face, box)
+        end
+        puts @aabb_tree.inspect if $debug
+      end
+
       def update
         @position = @entity.position
         @scale = @entity.scale
-        # if @scale != @entity.scale
-        #   puts "oops for #{self}: #{@scale} != #{@entity.scale}"
-        #   self.objects.each(&:reflatten) if self.objects && self.objects.count > 0
-        # end
+      end
+
+      def has_texture?
+        @has_texture
       end
     end
   end

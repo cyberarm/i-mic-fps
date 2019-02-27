@@ -57,7 +57,7 @@ class IMICFPS
         glEnableClientState(GL_VERTEX_ARRAY)
         glEnableClientState(GL_COLOR_ARRAY)
         glEnableClientState(GL_NORMAL_ARRAY)
-        if model.model_has_texture
+        if model.has_texture?
           glEnable(GL_TEXTURE_2D)
           glBindTexture(GL_TEXTURE_2D, model.materials[model.textured_material].texture_id)
           glEnableClientState(GL_TEXTURE_COORD_ARRAY)
@@ -96,7 +96,7 @@ class IMICFPS
         glDisableClientState(GL_VERTEX_ARRAY)
         glDisableClientState(GL_COLOR_ARRAY)
         glDisableClientState(GL_NORMAL_ARRAY)
-        if model.model_has_texture
+        if model.has_texture?
           glDisableClientState(GL_TEXTURE_COORD_ARRAY)
           # glBindTexture(GL_TEXTURE_2D, 0)
           glDisable(GL_TEXTURE_2D)

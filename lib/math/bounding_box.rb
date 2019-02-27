@@ -2,9 +2,9 @@ class IMICFPS
   class BoundingBox
     attr_accessor :min, :max
 
-    def initialize
-      @min = Vector.new
-      @max = Vector.new
+    def initialize(minx = 0, miny = 0, minz = 0, maxx = 0, maxy = 0, maxz = 0)
+      @min = Vector.new(minx, miny, minz)
+      @max = Vector.new(maxx, maxy, maxz)
     end
 
     def ==(other)
@@ -115,6 +115,10 @@ class IMICFPS
 
     def sum
       @min.sum + @max.sum
+    end
+
+    def clone
+      BoundingBox.new(@min.x, @min.y, @min.z, @max.x, @max.y, @max.z)
     end
   end
 end

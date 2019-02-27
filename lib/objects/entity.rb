@@ -7,8 +7,8 @@ class IMICFPS
     include GLU
     include CommonMethods
     attr_accessor :scale, :visible, :renderable, :backface_culling
-    attr_reader :position, :rotation, :velocity, :collision
-    attr_reader :model, :name, :debug_color, :bounding_box
+    attr_accessor :position, :rotation, :velocity
+    attr_reader :model, :name, :debug_color, :bounding_box, :collision
     def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, manifest_file: nil)
       @position = Vector.new(x, y, z)
       @scale = scale

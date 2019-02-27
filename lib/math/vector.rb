@@ -22,10 +22,17 @@ class IMICFPS
     # def xyzw=(nx, ny, nz, nw); @x = nx; @y = ny; @z = nz; @weight = nw; end
 
     def ==(other)
-      @x      == other.x &&
-      @y      == other.y &&
-      @z      == other.z &&
-      @weight == other.weight
+      if other.is_a?(Numeric)
+        @x      == other &&
+        @y      == other &&
+        @z      == other &&
+        @weight == other
+      else
+        @x      == other.x &&
+        @y      == other.y &&
+        @z      == other.z &&
+        @weight == other.weight
+      end
     end
 
     def +(other)

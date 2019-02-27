@@ -27,10 +27,8 @@ class IMICFPS
 
       @physics_manager.update
 
-      # binding.irb
-      # p @aabb_tree
       collisions.each do |ent, list|
-        # puts "#{ent.class} -> [#{list.map{|e| e.class}.join(', ')}]"
+        # puts "#{ent.class} -> [#{list.map{|e| e.class}.join(', ')}] (#{Gosu.milliseconds})"
       end
     end
 
@@ -39,6 +37,7 @@ class IMICFPS
     end
 
     def check_broadphase
+      # FIXME: Cache collisions to speed things up
       @collisions.clear
       broadphase = {}
 
@@ -54,13 +53,33 @@ class IMICFPS
       end
 
       broadphase.each do |entity, _collisions|
-        _collisions.reject! {|ent| !entity.bounding_box.intersect?(ent.bounding_box)}
-        # TODO: mesh aabb tree vs other mesh aabb tree check
-        # TODO: triangle vs other triangle check
         _collisions.each do |ent|
+          # aabb vs aabb
+          next unless entity.bounding_box.intersect?(ent.bounding_box)
+          # entity model aabb tree vs ent model aabb tree
+          # ent_tree_search = ent.model.aabb_tree.search(localize_entity_bounding_box(entity, ent), true)
+          # next if ent_tree_search.size == 0
+
+          # puts "#{ent.class} -> #{ent_tree_search.size} (#{Gosu.milliseconds})"
+
+          # entity.position.y = ent_tree_search.first.object.vertices.first.y if entity.is_a?(Player) && ent.is_a?(Terrain)
+
           @collisions[entity] = _collisions
         end
       end
+    end
+
+    # AABBTree on entities is relative to model origin of 0,0,0
+    def localize_entity_bounding_box(entity, target)
+      return entity.bounding_box if target.position == 0 && target.rotation == 0
+
+      # "tranform" entity bounding box into target's space
+      local =  (target.position) # needs tweaking, works well enough for now
+      box = entity.bounding_box.clone
+      box.min -= local
+      box.max -= local
+
+      return box
     end
   end
 end

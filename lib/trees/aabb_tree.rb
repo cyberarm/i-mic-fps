@@ -36,11 +36,11 @@ class IMICFPS
     end
 
     # Returns a list of all collided objects inside Bounding Box
-    def search(bounding_box)
+    def search(bounding_box, return_nodes = false)
       items = []
       if @root
         items = @root.search_subtree(bounding_box)
-        items.map! {|e| e.object}
+        items.map! {|e| e.object} unless return_nodes
       end
 
       return items

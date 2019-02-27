@@ -32,7 +32,6 @@ class IMICFPS
           return
         end
       end
-      @bounding_boxes[mesh_object_id] = {}
       @bounding_boxes[mesh_object_id] = {object: object, box: box, color: color, objects: []}
 
       box = object.normalize_bounding_box
