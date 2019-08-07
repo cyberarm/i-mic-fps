@@ -10,7 +10,7 @@ class IMICFPS
       @dummy_entity = nil
       @assets = []
       @asset_index = 0
-      add_asset(:model, "base", "randomish_terrain")
+      add_asset(:model, "base", "river_terrain")
       add_asset(:model, "base", "skydome")
       add_asset(:model, "base", "tree")
       add_asset(:model, "base", "biped")
@@ -48,7 +48,7 @@ class IMICFPS
         hash = @assets[@asset_index]
         case hash[:type]
         when :model
-          ModelLoader.new(manifest_file: IMICFPS.assets_path + "/#{hash[:package]}/#{hash[:name]}/#{hash[:name]}.yaml", entity: @dummy_entity)
+          ModelLoader.new(manifest_file: IMICFPS.assets_path + "/#{hash[:package]}/#{hash[:name]}/manifest.yaml", entity: @dummy_entity)
         # when :shader
         else
           warn "Unknown asset: #{hash}"

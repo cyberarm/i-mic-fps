@@ -47,7 +47,7 @@ class IMICFPS
     end
 
     def bind_model(package, name)
-      model = ModelLoader.new(manifest_file: IMICFPS.assets_path + "/#{package}/#{name}/#{name}.yaml", entity: @dummy_entity)
+      model = ModelLoader.new(manifest_file: IMICFPS.assets_path + "/#{package}/#{name}/manifest.yaml", entity: @dummy_entity)
 
       raise "model isn't a model!" unless model.is_a?(ModelLoader)
       @bound_model = model
