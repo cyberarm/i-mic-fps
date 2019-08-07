@@ -61,8 +61,6 @@ if RUBY_VERSION < "2.5.0"
   end
 end
 
-$debug = ARGV.join.include?("--debug") ? true : false
-
 class IMICFPS
   GAME_ROOT_PATH = File.expand_path(File.dirname(__FILE__))
 end

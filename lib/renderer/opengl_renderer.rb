@@ -70,7 +70,7 @@ class IMICFPS
         # glBindBuffer(GL_ARRAY_BUFFER, model.vertices_buffer)
         # glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0)
 
-        if $debug # This is kinda expensive
+        if $debug.get(:wireframe) # This is kinda expensive
           glDisable(GL_LIGHTING)
           glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
           glPolygonOffset(2, 0.5)

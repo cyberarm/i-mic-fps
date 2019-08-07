@@ -10,13 +10,13 @@ class IMICFPS
       end
 
       def setup
+        $debug = self
+        set(:skydome, true)
+
         subcommand(:boundingboxes, :boolean)
         subcommand(:wireframe, :boolean)
-        subcommand(:fps, :boolean)
         subcommand(:stats, :boolean)
-        subcommand(:motd, :string)
-        subcommand(:mode, :integer)
-        subcommand(:gravity, :decimal)
+        subcommand(:skydome, :boolean)
       end
 
       def handle(arguments, console)

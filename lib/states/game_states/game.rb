@@ -168,7 +168,6 @@ Vertices: #{formatted_number(window.number_of_vertices)}
 Faces: #{formatted_number(window.number_of_vertices/3)}
 
 Draw Skydome: #{@draw_skydome}
-Debug mode: <c=992200>#{$debug}</c>
 eos
       rescue ArgumentError
         string = <<-eos
@@ -185,14 +184,18 @@ Vertices: #{formatted_number(window.number_of_vertices)}
 Faces: #{formatted_number(window.number_of_vertices/3)}
 
 Draw Skydome: #{@draw_skydome}
-Debug mode: <c=992200>#{$debug}</c>
 eos
       end
-      if $debug
+      if $debug.get(:stats)
         @text.text = string
-      else
+      elsif $debug.get(:fps)
         @text.text = "FPS: #{Gosu.fps}"
+      else
+        @text.text = ""
       end
+
+      @draw_skydome = $debug.get(:skydome)
+      @skydome.renderable = @draw_skydome
     end
 
     def button_down(id)
@@ -227,14 +230,6 @@ eos
       end
 
       @camera.button_up(id)
-
-      case id
-      when Gosu::KbZ
-        @draw_skydome = !@draw_skydome
-      when Gosu::KbBacktick
-        $debug = !$debug
-      end
-      @skydome.renderable = @draw_skydome
     end
 
     def needs_cursor?

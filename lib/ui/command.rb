@@ -5,7 +5,7 @@ class IMICFPS
         "<c=ff5555>#{string}</c>"
       end
       def self.warn(string)
-        "<c=ff5500>#{string}</c>"
+        "<c=ff7700>#{string}</c>"
       end
       def self.notice(string)
         "<c=55ff55>#{string}</c>"

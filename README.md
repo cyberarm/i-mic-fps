@@ -9,7 +9,6 @@ Requires a Ruby runtime that supports the gosu and opengl-bindings C-extensions 
 
 ### Options
 * `--native` - Launch in fullscreen using primary displays resolution
-* `--debug` - Set $debug variable to true (defaults to false)
 * `--profile` - Run ruby-prof profiler
 * `--savedemo` - Record camera movement and key events to playback later *(alpha-quality feature)*
 * `--playdemo` - Plays the previously recorded demo *(alpha-quality feature)*

@@ -41,7 +41,7 @@ class IMICFPS
 
         parse
 
-        puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if $debug
+        puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if $debug.get(:stats)
 
         # allocate_gl_objects
         # populate_buffers
@@ -49,7 +49,7 @@ class IMICFPS
 
         @objects.each {|o| @vertex_count+=o.vertices.size}
         @objects.each_with_index do |o, i|
-          puts "    Model::Object Name: #{o.name}, Vertices: #{o.vertices.size}" if $debug
+          puts "    Model::Object Name: #{o.name}, Vertices: #{o.vertices.size}" if $debug.get(:stats)
         end
         window.number_of_vertices+=@vertex_count
         @has_texture = false
@@ -130,7 +130,7 @@ class IMICFPS
           box.max += Vector.new( 0.1,  0.1,  0.1)
           @aabb_tree.insert(face, box)
         end
-        puts @aabb_tree.inspect if $debug
+        puts @aabb_tree.inspect if $debug.get(:stats)
       end
 
       def update
