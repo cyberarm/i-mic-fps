@@ -15,7 +15,45 @@ class IMICFPS
       @needs_cursor = false
       @number_of_vertices = 0
 
+      self.caption = "#{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})"
+
+      @show_console = false
+      @console = Console.new
+
       push_state(MainMenu)
+    end
+
+    def draw
+      super
+
+      @console.draw if @show_console
+    end
+
+    def update
+      super
+
+      @console.update if @show_console
+    end
+
+    def button_down(id)
+      if @show_console
+        @console.button_down(id)
+      else
+        super
+      end
+
+      if id == Gosu::KbBacktick
+        @show_console ? @console.blur : @console.focus
+        @show_console = !@show_console
+      end
+    end
+
+    def button_up(id)
+      if @show_console
+        @console.button_up(id)
+      else
+        super
+      end
     end
   end
 end

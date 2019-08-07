@@ -64,6 +64,7 @@ end
 $debug = ARGV.join.include?("--debug") ? true : false
 
 include CyberarmEngine
+require_relative "lib/version"
 require_relative "lib/common_methods"
 
 require_relative "lib/trees/aabb_tree_debug"
@@ -87,6 +88,8 @@ require_relative "lib/states/menu"
 require_relative "lib/states/game_states/game"
 require_relative "lib/states/game_states/loading_state"
 require_relative "lib/states/menus/main_menu"
+
+require_relative "lib/ui/console"
 
 require_relative "lib/objects/entity"
 require_relative "lib/objects/model_loader"

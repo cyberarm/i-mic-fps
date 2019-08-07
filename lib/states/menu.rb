@@ -81,7 +81,7 @@ class IMICFPS
 
     def button_up(id)
       window.close if id == Gosu::KbEscape
-      if Gosu::MsLeft
+      if id == Gosu::MsLeft
         @elements.each do |e|
           next unless e.is_a?(Link)
           if mouse_over?(e)
