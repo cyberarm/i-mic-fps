@@ -63,6 +63,10 @@ end
 
 $debug = ARGV.join.include?("--debug") ? true : false
 
+class IMICFPS
+  GAME_ROOT_PATH = File.expand_path(File.dirname(__FILE__))
+end
+
 include CyberarmEngine
 require_relative "lib/version"
 require_relative "lib/common_methods"
@@ -84,12 +88,17 @@ require_relative "lib/renderer/opengl_renderer"
 require_relative "lib/renderer/bounding_box_renderer"
 
 require_relative "lib/states/game_state"
-require_relative "lib/states/menu"
+require_relative "lib/ui/menu"
+
+require_relative "lib/ui/command"
+Dir.glob("#{IMICFPS::GAME_ROOT_PATH}/lib/ui/commands/*.rb").each do |cmd|
+  require_relative cmd
+end
+require_relative "lib/ui/console"
+require_relative "lib/ui/menus/main_menu"
+
 require_relative "lib/states/game_states/game"
 require_relative "lib/states/game_states/loading_state"
-require_relative "lib/states/menus/main_menu"
-
-require_relative "lib/ui/console"
 
 require_relative "lib/objects/entity"
 require_relative "lib/objects/model_loader"

@@ -62,8 +62,9 @@ class IMICFPS
       case id
       when Gosu::KbEnter, Gosu::KbReturn
         return unless @text_input.text.length > 0
-        @history.text += "\n> #{@text_input.text}"
+        @history.text += "\n<c=999999>> #{@text_input.text}</c>"
         update_history
+        handle_command
         @text_input.text = ""
       when Gosu::KbBacktick
         # Removed backtick character from input
@@ -80,6 +81,20 @@ class IMICFPS
 
     def update_history
       @history.y = @history_height - (@history.text.lines.count * (@history.textobject.height))
+    end
+
+    def handle_command
+      string = @text_input.text
+      split  = string.split(" ")
+      command = split.first
+      arguments = split.length > 0 ? split[1..split.length - 1] : []
+
+      IMICFPS::Commands::Command.use(command, arguments, self)
+    end
+
+    def stdin(string)
+      @history.text += "\n#{string}"
+      update_history
     end
 
     def focus

@@ -1,5 +1,6 @@
 class IMICFPS
   GRAVITY = 9.8 # m/s
+
   class Window < CyberarmEngine::Engine
     attr_accessor :number_of_vertices, :needs_cursor
     attr_reader :camera
@@ -19,6 +20,7 @@ class IMICFPS
 
       @show_console = false
       @console = Console.new
+      Commands::Command.setup
 
       push_state(MainMenu)
     end

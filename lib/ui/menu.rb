@@ -1,5 +1,5 @@
 class IMICFPS
-  class Menu < GameState
+  class Menu < IMICFPS::GameState
     def initialize(*args)
       @elements = []
       @size = 50
