@@ -1,9 +1,6 @@
 class IMICFPS
   class Commands
     class HelpCommand < Command
-      def initialize
-      end
-
       def group
         :global
       end
@@ -13,11 +10,17 @@ class IMICFPS
       end
 
       def handle(arguments, console)
-        console.stdin(usage)
+        console.stdin(usage(arguments.first))
       end
 
-      def usage
-        "HELP\ncommand [arguments]\ncommand subcommand [argument]"
+      def usage(command = nil)
+        if command
+          if cmd = Command.find(command)
+            cmd.usage
+          end
+        else
+          "Available commands:\n#{Command.list_commands.map { |cmd| "#{Style.highlight(cmd.command)}" }.join(', ')}"
+        end
       end
     end
   end
