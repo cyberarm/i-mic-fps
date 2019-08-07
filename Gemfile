@@ -1,3 +1,3 @@
 source "https://rubygems.org"
 gem "opengl-bindings"
-gem "gosu"
+gem "cyberarm_engine"

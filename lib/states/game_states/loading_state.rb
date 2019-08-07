@@ -16,7 +16,7 @@ class IMICFPS
       add_asset(:model, "base", "biped")
 
       # Currently broken
-      # Shader.new(name: "lighting", vertex_file: "shaders/vertex/lighting.glsl", fragment_file: "shaders/fragment/lighting.glsl")
+      Shader.new(name: "lighting", vertex: "shaders/vertex/lighting.glsl", fragment: "shaders/fragment/lighting.glsl")
 
       @act = false
       @cycled = false
@@ -59,7 +59,7 @@ class IMICFPS
 
       unless @asset_index < @assets.count
         if @act && Gosu.milliseconds-@completed_for_ms > 250
-          push_game_state(@options[:forward])
+          push_state(@options[:forward])
         else
           @act = true
           @completed_for_ms = Gosu.milliseconds unless @lock

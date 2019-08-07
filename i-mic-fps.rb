@@ -3,7 +3,12 @@ require "yaml"
 
 require "opengl"
 require "glu"
-require "gosu"
+
+begin
+  require_relative "../cyberarm_engine/lib/cyberarm_engine"
+rescue LoadError
+  require "cyberarm_engine"
+end
 
 Dir.chdir(File.dirname(__FILE__))
 
@@ -58,10 +63,8 @@ end
 
 $debug = ARGV.join.include?("--debug") ? true : false
 
+include CyberarmEngine
 require_relative "lib/common_methods"
-
-require_relative "lib/math/vector"
-require_relative "lib/math/bounding_box"
 
 require_relative "lib/trees/aabb_tree_debug"
 require_relative "lib/trees/aabb_tree"
@@ -76,7 +79,6 @@ require_relative "lib/managers/collision_manager"
 require_relative "lib/managers/physics_manager"
 
 require_relative "lib/renderer/renderer"
-require_relative "lib/renderer/shader"
 require_relative "lib/renderer/opengl_renderer"
 require_relative "lib/renderer/bounding_box_renderer"
 
@@ -86,8 +88,6 @@ require_relative "lib/states/game_states/game"
 require_relative "lib/states/game_states/loading_state"
 require_relative "lib/states/menus/main_menu"
 
-require_relative "lib/objects/text"
-require_relative "lib/objects/multi_line_text"
 require_relative "lib/objects/entity"
 require_relative "lib/objects/model_loader"
 require_relative "lib/objects/light"

@@ -92,11 +92,8 @@ class IMICFPS
     end
 
     def mouse_over?(object)
-      if mouse_x.between?(object.x, object.x+object.width)
-        if mouse_y.between?(object.y, object.y+object.height)
-          true
-        end
-      end
+      mouse_x.between?(object.x, object.x+object.width) &&
+      mouse_y.between?(object.y, object.y+object.height)
     end
 
     class Link
@@ -105,14 +102,17 @@ class IMICFPS
         @text, @host, @block = text, host, block
         @color = @text.color
         @hover_color = Gosu::Color.rgb(64, 127, 255)
+        @text.shadow_alpha = 100
       end
 
       def update
         if @host.mouse_over?(self)
           @text.color = @hover_color
-          @text.shadow_size = 2
+          @text.shadow_color= Gosu::Color::BLACK
+          @text.shadow_size = 3
         else
           @text.color = @color
+          @text.shadow_color = nil
           @text.shadow_size = 1
         end
       end

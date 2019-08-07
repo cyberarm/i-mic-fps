@@ -3,7 +3,7 @@ class IMICFPS
     def setup
       title "I-MIC FPS"
       link "Single Player" do
-        push_game_state(LoadingState.new(forward: Game))
+        push_state(LoadingState.new(forward: Game))
       end
       link "Settings" do
         # push_game_state(SettingsMenu)
