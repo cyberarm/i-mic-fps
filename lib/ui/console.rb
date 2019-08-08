@@ -14,6 +14,9 @@ class IMICFPS
       @history = Text.new("=== #{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME}) ===\n\n", x: 4, y: @history_height, z: Console::Z + 1)
       update_history
 
+      @command_history       = []
+      @command_history_index = 0
+
       @background_color = Gosu::Color.rgba(0, 0, 0, 200)
       @foreground_color = Gosu::Color.rgba(100, 100, 100, 100)
       @input_color      = Gosu::Color.rgba(100, 100, 100, 200)
@@ -63,9 +66,26 @@ class IMICFPS
       when Gosu::KbEnter, Gosu::KbReturn
         return unless @text_input.text.length > 0
         @history.text += "\n<c=999999>> #{@text_input.text}</c>"
+        @command_history << @text_input.text
+        @command_history_index = @command_history.size
         update_history
         handle_command
         @text_input.text = ""
+
+      when Gosu::KbUp
+        @command_history_index -= 1
+        @command_history_index = 0 if @command_history_index < 0
+        @text_input.text = @command_history[@command_history_index]
+
+      when Gosu::KbDown
+        @command_history_index += 1
+        if @command_history_index > @command_history.size - 1
+          @command_history_index = @command_history.size - 1
+          @text_input.text = ""
+        else
+          @text_input.text = @command_history[@command_history_index]
+        end
+
       when Gosu::KbBacktick
         # Removed backtick character from input
         if @text_input.text.size > 1
