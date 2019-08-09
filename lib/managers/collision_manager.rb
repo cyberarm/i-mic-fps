@@ -28,7 +28,7 @@ class IMICFPS
       @physics_manager.update
 
       collisions.each do |ent, list|
-        # puts "#{ent.class} -> [#{list.map{|e| e.class}.join(', ')}] (#{Gosu.milliseconds})"
+        # puts "#{ent.class} -> [#{list.map { |e| e.class }.join(', ')}] (#{Gosu.milliseconds})"
       end
     end
 
@@ -57,12 +57,12 @@ class IMICFPS
           # aabb vs aabb
           next unless entity.bounding_box.intersect?(ent.bounding_box)
           # entity model aabb tree vs ent model aabb tree
-          # ent_tree_search = ent.model.aabb_tree.search(localize_entity_bounding_box(entity, ent), true)
-          # next if ent_tree_search.size == 0
+          ent_tree_search = ent.model.aabb_tree.search(localize_entity_bounding_box(entity, ent), true)
+          next if ent_tree_search.size == 0
 
           # puts "#{ent.class} -> #{ent_tree_search.size} (#{Gosu.milliseconds})"
 
-          # entity.position.y = ent_tree_search.first.object.vertices.first.y if entity.is_a?(Player) && ent.is_a?(Terrain)
+          entity.position.y = ent_tree_search.first.object.vertices.first.y if entity.is_a?(Player) && ent.is_a?(Terrain)
 
           @collisions[entity] = _collisions
         end
