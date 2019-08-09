@@ -80,8 +80,8 @@ class IMICFPS
       when Gosu::KbDown
         @command_history_index += 1
         if @command_history_index > @command_history.size - 1
+          @text_input.text = "" unless @command_history_index > @command_history.size
           @command_history_index = @command_history.size
-          @text_input.text = ""
         else
           @text_input.text = @command_history[@command_history_index]
         end
