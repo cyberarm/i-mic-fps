@@ -17,6 +17,8 @@ class IMICFPS
         if command
           if cmd = Command.find(command)
             cmd.usage
+          else
+            "#{Style.error(command)} is not a command"
           end
         else
           "Available commands:\n#{Command.list_commands.map { |cmd| "#{Style.highlight(cmd.command)}" }.join(', ')}"

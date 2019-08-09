@@ -1,5 +1,6 @@
 require "fiddle"
 require "yaml"
+require "abbrev"
 
 require "opengl"
 require "glu"

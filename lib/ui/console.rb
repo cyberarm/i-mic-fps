@@ -86,6 +86,24 @@ class IMICFPS
           @text_input.text = @command_history[@command_history_index]
         end
 
+      when Gosu::KbTab
+        split = @text_input.text.split(" ")
+
+        if !@text_input.text.end_with?(" ") && split.size == 1
+          list = command_search(@text_input.text)
+
+          if list.size == 1
+            @text_input.text = "#{list.first} "
+          else
+            @history.text += "\n#{list.map { |cmd| Commands::Style.highlight(cmd)}.join(", ")}"
+            update_history
+          end
+        else
+          if split.size > 0 && cmd = Commands::Command.find(split.first)
+            cmd.autocomplete(self)
+          end
+        end
+
       when Gosu::KbBacktick
         # Removed backtick character from input
         if @text_input.text.size > 1
@@ -110,6 +128,21 @@ class IMICFPS
       arguments = split.length > 0 ? split[1..split.length - 1] : []
 
       IMICFPS::Commands::Command.use(command, arguments, self)
+    end
+
+    def command_search(text)
+      return [] unless text.length > 0
+
+      @command_search ||= Abbrev.abbrev(Commands::Command.list_commands.map { |cmd| cmd.command.to_s})
+
+      list = []
+      @command_search.each do |abbrev, value|
+        next unless abbrev && abbrev.start_with?(text)
+
+        list << value
+      end
+
+      return list.uniq
     end
 
     def stdin(string)

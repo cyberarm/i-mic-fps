@@ -10,6 +10,11 @@ class IMICFPS
       end
 
       def handle(arguments, console)
+        if arguments.size > 1
+          console.stdin("to many arguments for #{Style.highlight("#{command}")}, got #{Style.error(arguments.size)} expected #{Style.notice(1)}.")
+          return
+        end
+
         case arguments.last
         when "", nil
           console.stdin("#{Style.highlight("fps")}: #{$debug.get(:fps)}")

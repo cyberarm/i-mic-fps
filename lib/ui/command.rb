@@ -26,7 +26,10 @@ class IMICFPS
         @list ||= []
         @commands = []
         @list.each do |subclass|
-          @commands << subclass.new
+          cmd = subclass.new
+          raise "Command '#{cmd.command}' from '#{cmd.class}' already exists!" if @commands.detect { |c| c.command == cmd.command }
+
+          @commands << cmd
         end
       end
 
@@ -58,6 +61,7 @@ class IMICFPS
       def setup; end
 
       def subcommand(command, type)
+        raise "Subcommand '#{command}' for '#{self.command}' already exists!" if @subcommands.detect { |subcmd| subcmd.command == command.to_sym }
         @subcommands << SubCommand.new(self, command, type)
       end
 
@@ -79,6 +83,9 @@ class IMICFPS
 
       def handle(arguments, console)
         raise NotImplementedError
+      end
+
+      def autocomplete(console)
       end
 
       def handle_subcommand(arguments, console)
@@ -113,6 +120,11 @@ class IMICFPS
       end
 
       def handle(arguments, console)
+        if arguments.size > 1
+          console.stdin("to many arguments for #{Style.highlight("#{command}")}, got #{Style.error(arguments.size)} expected #{Style.notice(1)}.")
+          return
+        end
+
         case @type
         when :boolean
           case arguments.last
@@ -125,6 +137,8 @@ class IMICFPS
           when "off"
             var = @parent.set(command.to_sym, false)
             console.stdin("#{command} => #{Style.highlight(var)}")
+          else
+            console.stdin("Invalid argument for #{Style.highlight("#{command}")}, got #{Style.error(arguments.last)} expected #{Style.notice("on")}, or #{Style.notice("off")}.")
           end
         when :string
           case arguments.last
@@ -141,8 +155,12 @@ class IMICFPS
             var = @parent.get(command.to_sym) ? @parent.get(command.to_sym) : "nil"
             console.stdin("#{command}: #{Style.highlight(var)}")
           else
-            var = @parent.set(command.to_sym, arguments.last.to_i)
-            console.stdin("#{command} => #{Style.highlight(var)}")
+            begin
+              var = @parent.set(command.to_sym, Integer(arguments.last))
+              console.stdin("#{command} => #{Style.highlight(var)}")
+            rescue ArgumentError
+              console.stdin("Error: #{Style.error("Expected an integer, got '#{arguments.last}'")}")
+            end
           end
         when :decimal
           case arguments.last
@@ -150,8 +168,12 @@ class IMICFPS
             var = @parent.get(command.to_sym) ? @parent.get(command.to_sym) : "nil"
             console.stdin("#{command}: #{Style.highlight(var)}")
           else
-            var = @parent.set(command.to_sym, arguments.last.to_f)
-            console.stdin("#{command} => #{Style.highlight(var)}")
+            begin
+              var = @parent.set(command.to_sym, Float(arguments.last))
+              console.stdin("#{command} => #{Style.highlight(var)}")
+            rescue ArgumentError
+              console.stdin("Error: #{Style.error("Expected a decimal or integer, got '#{arguments.last}'")}")
+            end
           end
         else
           raise RuntimeError
@@ -163,11 +185,11 @@ class IMICFPS
         when :boolean
           "#{Style.highlight(command)} #{Style.notice("[on|off]")}"
         when :string
-          "#{Style.highlight(command)} #{Style.notice("[on|off]")}"
+          "#{Style.highlight(command)} #{Style.notice("[string]")}"
         when :integer
-          "#{Style.highlight(command)} #{Style.notice("[on|off]")}"
+          "#{Style.highlight(command)} #{Style.notice("[0]")}"
         when :decimal
-          "#{Style.highlight(command)} #{Style.notice("[on|off]")}"
+          "#{Style.highlight(command)} #{Style.notice("[0.0]")}"
         end
       end
     end
