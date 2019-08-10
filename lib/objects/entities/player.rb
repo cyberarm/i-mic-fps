@@ -11,11 +11,12 @@ class IMICFPS
       @collision = :dynamic
 
       @speed = 2.5 # meter's per second
-      @running_speed = 6.8 # meter's per second
+      @running_speed = 5.0 # meter's per second
       @turn_speed = 50.0
       @old_speed = @speed
       @mass = 72 # kg
       @first_person_view = true
+      @visible = false
       @drag = 0.6
 
       @devisor = 500.0

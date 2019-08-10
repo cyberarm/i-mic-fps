@@ -96,6 +96,12 @@ class IMICFPS
       raise "InputMapper.action(#{key}) is nil!" unless answer
       answer
     end
+
+    def self.reset_keys
+      @@keys.each do |key, value|
+        @@keys[key] = false
+      end
+    end
   end
 end
 

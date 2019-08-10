@@ -28,18 +28,22 @@ class IMICFPS
 
       handleGlError
 
-      if ShaderManager.shader("lighting")
-        ShaderManager.shader("lighting").use do |shader|
-          glUniform3f(shader.variable("SunLight"), 1.0, 1.0, 1.0)
+      if Shader.available?("lighting")
+        Shader.use("lighting") do |shader|
+          glUniform3f(shader.attribute_location("SunLight"), 1.0, 1.0, 1.0)
 
           handleGlError
-          draw_mesh(object.model)
-          object.draw
+          if object.visible
+            draw_mesh(object.model)
+            object.draw
+          end
         end
       else
         handleGlError
-        draw_mesh(object.model)
-        object.draw
+        if object.visible
+          draw_mesh(object.model)
+          object.draw
+        end
       end
       handleGlError
 

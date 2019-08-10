@@ -62,12 +62,9 @@ if RUBY_VERSION < "2.5.0"
   end
 end
 
-class IMICFPS
-  GAME_ROOT_PATH = File.expand_path(File.dirname(__FILE__))
-end
-
 include CyberarmEngine
 require_relative "lib/version"
+require_relative "lib/constants"
 require_relative "lib/common_methods"
 
 require_relative "lib/trees/aabb_tree_debug"
@@ -75,7 +72,6 @@ require_relative "lib/trees/aabb_tree"
 require_relative "lib/trees/aabb_node"
 
 require_relative "lib/managers/input_mapper"
-require_relative "lib/managers/shader_manager"
 require_relative "lib/managers/entity_manager"
 require_relative "lib/managers/light_manager"
 require_relative "lib/managers/network_manager"

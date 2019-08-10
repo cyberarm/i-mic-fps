@@ -15,8 +15,7 @@ class IMICFPS
       add_asset(:model, "base", "tree")
       add_asset(:model, "base", "biped")
 
-      # Currently broken
-      Shader.new(name: "lighting", vertex: "shaders/vertex/lighting.glsl", fragment: "shaders/fragment/lighting.glsl")
+      add_asset(:shader, nil, "lighting")
 
       @act = false
       @cycled = false
@@ -37,7 +36,6 @@ class IMICFPS
     end
 
     def update
-      # puts (@asset_index.to_f/@assets.count)
       @percentage.text = "#{((@asset_index.to_f/@assets.count)*100.0).round}%"
       @act = true if @cycled
 
@@ -49,7 +47,8 @@ class IMICFPS
         case hash[:type]
         when :model
           ModelLoader.new(manifest_file: IMICFPS.assets_path + "/#{hash[:package]}/#{hash[:name]}/manifest.yaml", entity: @dummy_entity)
-        # when :shader
+        when :shader
+          Shader.new(name: hash[:name], vertex: "shaders/vertex/#{hash[:name]}.glsl", fragment: "shaders/fragment/#{hash[:name]}.glsl")
         else
           warn "Unknown asset: #{hash}"
         end
@@ -66,7 +65,7 @@ class IMICFPS
           @lock = true
         end
       else
-        @state.text = "Loading #{@assets[@asset_index][:name].split('/').last}..."
+        @state.text = "Loading #{@assets[@asset_index][:type]} #{@assets[@asset_index][:name].split('/').last}..."
         @state.x = (window.width/2)-(@state.width/2)
         @cycled = true
       end

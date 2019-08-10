@@ -151,6 +151,8 @@ class IMICFPS
     end
 
     def focus
+      InputMapper.reset_keys
+
       @active_text_input = window.text_input
       window.text_input = @text_input
 

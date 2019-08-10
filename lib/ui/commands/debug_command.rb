@@ -11,6 +11,7 @@ class IMICFPS
 
       def setup
         $debug = self
+
         set(:boundingboxes, false)
         set(:wireframe, false)
         set(:stats, false)
