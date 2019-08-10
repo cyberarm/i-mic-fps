@@ -98,7 +98,6 @@ class IMICFPS
         glDisableClientState(GL_NORMAL_ARRAY)
         if model.has_texture?
           glDisableClientState(GL_TEXTURE_COORD_ARRAY)
-          # glBindTexture(GL_TEXTURE_2D, 0)
           glDisable(GL_TEXTURE_2D)
         end
         glDisable(GL_CULL_FACE) if model.entity.backface_culling

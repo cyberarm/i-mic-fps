@@ -42,18 +42,25 @@ class IMICFPS
             face.vertices = []
             face.uvs      = []
             face.normals  = []
+            face.colors   = []
             face.material = material
             face.smoothing= @smoothing
 
+            mat   = face.material.diffuse
+            color = Vector.new(mat.red, mat.green, mat.blue)
+
             verts.each_with_index do |v, index|
+
               if uvs.first != ""
                 face.vertices << @vertices[Integer(v)-1]
                 face.uvs      << @uvs[Integer(uvs[index])-1]
                 face.normals  << @normals[Integer(norms[index])-1]
+                face.colors   << color
               else
                 face.vertices << @vertices[Integer(v)-1]
                 face.uvs      << nil
                 face.normals  << @normals[Integer(norms[index])-1]
+                face.colors   << color
               end
             end
 

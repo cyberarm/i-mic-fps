@@ -10,12 +10,12 @@ class IMICFPS
 
       include Parser
 
-      attr_accessor :objects, :materials, :vertices, :texures, :normals, :faces
+      attr_accessor :objects, :materials, :vertices, :texures, :normals, :faces, :colors
       attr_accessor :scale, :entity
       attr_reader :position, :bounding_box, :textured_material
 
-      attr_reader :normals_buffer, :uvs_buffer, :vertices_buffer
-      attr_reader :vertices_buffer_data, :uvs_buffer_data, :normals_buffer_data
+      attr_reader :vertices_buffer
+      attr_reader :vertices_buffer_data
       attr_reader :vertex_array_id
       attr_reader :aabb_tree
 
@@ -31,6 +31,7 @@ class IMICFPS
         @objects  = []
         @materials= {}
         @vertices = []
+        @colors   = []
         @uvs      = []
         @normals  = []
         @faces    = []
@@ -67,39 +68,44 @@ class IMICFPS
         # Allocate arrays for future use
         @vertex_array_id = nil
         buffer = " " * 4
+
         glGenVertexArrays(1, buffer)
         @vertex_array_id = buffer.unpack('L2').first
 
         # Allocate buffers for future use
-        @normals_buffer, @colors_buffer, @vertices_buffer = nil
+        @vertices_buffer = nil
         buffer = " " * 4
-        glGenBuffers(1, buffer)
-        @normals_buffer = buffer.unpack('L2').first
 
-        buffer = " " * 4
-        glGenBuffers(1, buffer)
-        @uvs_buffer = buffer.unpack('L2').first
-
-        buffer = " " * 4
         glGenBuffers(1, buffer)
         @vertices_buffer = buffer.unpack('L2').first
       end
 
       def populate_buffers
-        @vertices_buffer_data = @vertices.map {|vert| [vert.x, vert.y, vert.z]}.flatten.pack("f*")
-        @uvs_buffer_data      = @uvs.map {|uv| [uv.x, uv.y, uv.z]}.flatten.pack("f*")
-        @normals_buffer_data  = @normals.map {|norm| [norm.x, norm.y, norm.z, norm.weight]}.flatten.pack("f*")
+        @vertices_buffer_data = []
+
+        verts = []
+        colors= []
+        norms = []
+        uvs   = []
+
+        @faces.each do |face|
+          verts  << face.vertices.map    { |vert| [vert.x, vert.y, vert.z] }
+          colors << face.colors.map   { |vert| [vert.x, vert.y, vert.z] }
+          norms  << face.normals.map  { |vert| [vert.x, vert.y, vert.z, vert.weight] }
+          uvs    << face.uvs.map      { |vert| [vert.x, vert.y, vert.z] } if face.material.texture
+        end
+
+        verts.each_with_index do |vert, i|
+          @vertices_buffer_data << vert
+          @vertices_buffer_data << colors[i]
+          @vertices_buffer_data << norms[i]
+          @vertices_buffer_data << uvs[i] if uvs.size > 0
+        end
+
+        data = @vertices_buffer_data.flatten.pack("f*")
 
         glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer)
-        glBufferData(GL_ARRAY_BUFFER, Fiddle::SIZEOF_FLOAT * @vertices.size, @vertices_buffer_data, GL_STATIC_DRAW)
-        glBindBuffer(GL_ARRAY_BUFFER, 0)
-
-        glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer)
-        glBufferData(GL_ARRAY_BUFFER, @uvs.size, @uvs_buffer_data, GL_STATIC_DRAW)
-        glBindBuffer(GL_ARRAY_BUFFER, 0)
-
-        glBindBuffer(GL_ARRAY_BUFFER, @normals_buffer)
-        glBufferData(GL_ARRAY_BUFFER, @normals.size, @normals_buffer_data, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, Fiddle::SIZEOF_FLOAT * @vertices_buffer_data.size, data, GL_STATIC_DRAW)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
       end
 

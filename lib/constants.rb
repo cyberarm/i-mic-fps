@@ -4,5 +4,5 @@ class IMICFPS
   TextureCoordinate = Struct.new(:u, :v, :weight)
   Point = Struct.new(:x, :y)
   Color = Struct.new(:red, :green, :blue, :alpha)
-  Face  = Struct.new(:vertices, :uvs, :normals, :material, :smoothing)
+  Face  = Struct.new(:vertices, :uvs, :normals, :colors, :material, :smoothing)
 end
