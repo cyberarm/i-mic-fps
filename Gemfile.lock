@@ -1,16 +1,18 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    cyberarm_engine (0.10.0)
+      gosu (~> 0.14.0)
     gosu (0.14.5)
     gosu (0.14.5-x86-mingw32)
-    opengl-bindings (1.6.7)
+    opengl-bindings (1.6.9)
 
 PLATFORMS
   ruby
   x86-mingw32
 
 DEPENDENCIES
-  gosu
+  cyberarm_engine
   opengl-bindings
 
 BUNDLED WITH

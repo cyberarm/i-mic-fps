@@ -12,9 +12,11 @@ class IMICFPS
 
       @speed = 2.5 # meter's per second
       @running_speed = 6.8 # meter's per second
+      @turn_speed = 50.0
       @old_speed = @speed
       @mass = 72 # kg
       @first_person_view = true
+      @drag = 0.6
 
       @devisor = 500.0
       @name_image = Gosu::Image.from_text("#{Etc.getlogin}", 100, font: "Consolas", align: :center)
@@ -89,9 +91,9 @@ class IMICFPS
     def update
       relative_speed = @speed
       if InputMapper.down?(:sprint)
-        relative_speed = (@running_speed) * (delta_time)
+        relative_speed = @running_speed
       else
-        relative_speed = @speed * (delta_time)
+        relative_speed = @speed
       end
 
       relative_y_rotation = @rotation.y * -1
@@ -114,10 +116,10 @@ class IMICFPS
       end
 
       if InputMapper.down?(:turn_left)
-        @rotation.y += (relative_speed * 1000) * delta_time
+        @rotation.y += @turn_speed * delta_time
       end
       if InputMapper.down?(:turn_right)
-        @rotation.y -= (relative_speed * 1000) * delta_time
+        @rotation.y -= @turn_speed * delta_time
       end
 
       if @_time_in_air
@@ -141,7 +143,7 @@ class IMICFPS
 
       if @jumping && !@falling
         if InputMapper.down?(:jump)
-          @velocity.y += 1.5
+          @velocity.y = 1.5
           @falling = true
         end
       end
