@@ -33,17 +33,13 @@ class IMICFPS
           glUniform3f(shader.attribute_location("SunLight"), 1.0, 1.0, 1.0)
 
           handleGlError
-          if object.visible
-            draw_mesh(object.model)
-            object.draw
-          end
-        end
-      else
-        handleGlError
-        if object.visible
           draw_mesh(object.model)
           object.draw
         end
+      else
+        handleGlError
+        draw_mesh(object.model)
+        object.draw
       end
       handleGlError
 
