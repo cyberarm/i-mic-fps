@@ -5,7 +5,6 @@ require_relative "material"
 class IMICFPS
   class Wavefront
     class Model
-      include OpenGL
       include CommonMethods
 
       include Parser
@@ -14,8 +13,9 @@ class IMICFPS
       attr_accessor :scale, :entity
       attr_reader :position, :bounding_box, :textured_material
 
-      attr_reader :vertices_buffer
+      attr_reader :vertices_buffer_id
       attr_reader :vertices_buffer_data
+      attr_reader :vertices_buffer_size
       attr_reader :vertex_array_id
       attr_reader :aabb_tree
 
@@ -45,8 +45,8 @@ class IMICFPS
         puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if $debug.get(:stats)
 
         allocate_gl_objects
-        populate_buffers
-        # populate_arrays
+        populate_vertex_buffer
+        configure_vao
 
         @objects.each {|o| @vertex_count+=o.vertices.size}
         @objects.each_with_index do |o, i|
@@ -61,7 +61,9 @@ class IMICFPS
           end
         end
 
+        start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
         build_collision_tree
+        puts "    Building mesh collision tree took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds" if $debug.get(:stats)
       end
 
       def allocate_gl_objects
@@ -73,15 +75,17 @@ class IMICFPS
         @vertex_array_id = buffer.unpack('L2').first
 
         # Allocate buffers for future use
-        @vertices_buffer = nil
+        @vertices_buffer_id = nil
         buffer = " " * 4
 
         glGenBuffers(1, buffer)
-        @vertices_buffer = buffer.unpack('L2').first
+        @vertices_buffer_id = buffer.unpack('L2').first
       end
 
-      def populate_buffers
+      def populate_vertex_buffer
+        @vertices_buffer_size = 0
         @vertices_buffer_data = []
+        model_has_texture = @materials.any? { |id, mat| mat.texture_id != nil }
 
         verts   = []
         colors  = []
@@ -93,8 +97,11 @@ class IMICFPS
           verts   << face.vertices.map    { |vert| [vert.x, vert.y, vert.z] }
           colors  << face.colors.map   { |vert| [vert.x, vert.y, vert.z] }
           norms   << face.normals.map  { |vert| [vert.x, vert.y, vert.z, vert.weight] }
-          uvs     << face.uvs.map      { |vert| [vert.x, vert.y, vert.z] } if face.material.texture_id
-          tex_ids << face.material.texture_id if face.material.texture_id
+
+          if model_has_texture
+            uvs     << face.uvs.map      { |vert| [vert.x, vert.y, vert.z] }
+            tex_ids << face.material.texture_id ? face.material.texture_id : -1
+          end
         end
 
         verts.each_with_index do |vert, i|
@@ -105,18 +112,57 @@ class IMICFPS
           @vertices_buffer_data << tex_ids[i] if tex_ids.size > 0
         end
 
+        data_size = 0
+        data_size += Fiddle::SIZEOF_FLOAT * 3 * verts.size
+        data_size += Fiddle::SIZEOF_FLOAT * 3 * colors.size
+        data_size += Fiddle::SIZEOF_FLOAT * 4 * norms.size
+        data_size += Fiddle::SIZEOF_FLOAT * 3 * uvs.size
+        data_size += Fiddle::SIZEOF_INT * 1 * tex_ids.size
+
+        @vertices_buffer_size = data_size
+
         data = @vertices_buffer_data.flatten.pack("f*")
 
-        glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer)
-        glBufferData(GL_ARRAY_BUFFER, Fiddle::SIZEOF_FLOAT * @vertices_buffer_data.size, data, GL_STATIC_DRAW)
+        glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer_id)
+        glBufferData(GL_ARRAY_BUFFER, @vertices_buffer_size, data, GL_STATIC_DRAW)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
       end
 
-      def populate_arrays
+      def configure_vao
+        glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer_id)
         glBindVertexArray(@vertex_array_id)
-        glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer)
-        glBindVertexArray(0)
+
+        glEnableVertexAttribArray(0)
+        glEnableVertexAttribArray(1)
+        glEnableVertexAttribArray(2)
+        glEnableVertexAttribArray(3)
+        glEnableVertexAttribArray(4)
+
+        # index, size, type, normalized, stride, pointer
+        # vertices (positions)
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * 3, nil)
+        handleGlError
+        # colors
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (3 + 3), nil)
+        handleGlError
+        # normals
+        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (4 + 3 + 3), nil)
+        handleGlError
+        # uvs
+        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (3 + 4 + 3 + 3), nil)
+        handleGlError
+        # texture ids
+        glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT + (Fiddle::SIZEOF_FLOAT * (3 + 4 + 3 + 3)), nil)
+        handleGlError
+
+        glDisableVertexAttribArray(4)
+        glDisableVertexAttribArray(3)
+        glDisableVertexAttribArray(2)
+        glDisableVertexAttribArray(1)
+        glDisableVertexAttribArray(0)
+
         glBindBuffer(GL_ARRAY_BUFFER, 0)
+        glBindVertexArray(0)
       end
 
       def build_collision_tree

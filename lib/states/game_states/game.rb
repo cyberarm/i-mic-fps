@@ -1,8 +1,5 @@
 class IMICFPS
   class Game < GameState
-    include OpenGL
-    include GLU
-
     def setup
       @collision_manager = CollisionManager.new(game_state: self)
       @renderer = Renderer.new(game_state: self)

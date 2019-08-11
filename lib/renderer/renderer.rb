@@ -1,8 +1,6 @@
 class IMICFPS
   class Renderer
     include CommonMethods
-    include OpenGL
-    include GLU
 
     attr_reader :opengl_renderer, :bounding_box_renderer
 
@@ -26,14 +24,6 @@ class IMICFPS
       @bounding_box_renderer.draw_bounding_boxes if $debug.get(:boundingboxes)
       window.number_of_vertices+=@bounding_box_renderer.vertex_count if $debug.get(:boundingboxes)
       # @bounding_box_renderer.bounding_boxes.clear
-    end
-
-    def handleGlError
-      e = glGetError()
-      if e != GL_NO_ERROR
-        $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
-        exit
-      end
     end
 
     def finalize # cleanup

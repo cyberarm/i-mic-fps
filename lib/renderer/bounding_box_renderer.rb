@@ -1,22 +1,11 @@
 class IMICFPS
   class BoundingBoxRenderer
-    include OpenGL
-    include GLU
-
     attr_reader :bounding_boxes, :vertex_count
     def initialize(game_state:)
       @game_state = game_state
 
       @bounding_boxes = {}
       @vertex_count = 0
-    end
-
-    def handleGlError
-      e = glGetError()
-      if e != GL_NO_ERROR
-        $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
-        exit
-      end
     end
 
     def create_bounding_box(object, box, color = nil, mesh_object_id)

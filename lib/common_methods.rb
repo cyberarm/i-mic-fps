@@ -42,5 +42,14 @@ class IMICFPS
     def fill(color = Gosu::Color::WHITE)
       draw_rect(0, 0, window.width, window.height, color)
     end
+
+    def handleGlError
+      e = glGetError()
+      if e != GL_NO_ERROR
+        $stderr.puts "OpenGL error detected by handler at: #{caller[0]}"
+        $stderr.puts "    #{gluErrorString(e)} (#{e})\n"
+        exit
+      end
+    end
   end
 end

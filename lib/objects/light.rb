@@ -1,6 +1,5 @@
 class IMICFPS
   class Light
-    include OpenGL
     attr_reader :ambient, :diffuse, :specular, :position, :light_id
     attr_accessor :x, :y, :z, :intensity
     def initialize(x:,y:,z:, game_state:,

@@ -21,6 +21,12 @@ when :OPENGL_PLATFORM_MACOSX
   OpenGL.load_lib("libGL.dylib", "/System/Library/Frameworks/OpenGL.framework/Libraries")
   GLU.load_lib("libGLU.dylib", "/System/Library/Frameworks/OpenGL.framework/Libraries")
 when :OPENGL_PLATFORM_LINUX
+  # Black magic to get GLSL 3.30 support on older Intel hardware
+  if `glxinfo | egrep "OpenGL vendor|OpenGL renderer"`.include?("Intel")
+    ENV["MESA_GL_VERSION_OVERRIDE"] = "3.3"
+    ENV["MESA_GLSL_VERSION_OVERRIDE"] = "330"
+  end
+
   gl_library_path = nil
 
   if File.exist?("/usr/lib/x86_64-linux-gnu/libGL.so") # Ubuntu (Debian)
@@ -63,6 +69,9 @@ if RUBY_VERSION < "2.5.0"
 end
 
 include CyberarmEngine
+include OpenGL
+include GLU
+
 require_relative "lib/version"
 require_relative "lib/constants"
 require_relative "lib/common_methods"
@@ -110,9 +119,6 @@ require_relative "lib/objects/entities/terrain"
 require_relative "lib/wavefront/model"
 
 require_relative "lib/window"
-
-MODEL_METER_SCALE = 1.0 # Objects exported from blender using the default or meter object scale will be close to 1 GL unit
-
 
 if ARGV.join.include?("--profile")
   begin

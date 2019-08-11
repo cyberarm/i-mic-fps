@@ -1,8 +1,6 @@
 class IMICFPS
   class Camera
     include CommonMethods
-    include OpenGL
-    include GLU
 
     attr_accessor :field_of_view, :pitch, :yaw, :roll, :mouse_sensitivity
     attr_reader :entity, :position

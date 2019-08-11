@@ -3,8 +3,6 @@ class IMICFPS
 
   # A game object is any renderable thing
   class Entity
-    include OpenGL
-    include GLU
     include CommonMethods
 
     attr_accessor :scale, :visible, :renderable, :backface_culling
@@ -103,14 +101,6 @@ class IMICFPS
 
     def normalize_bounding_box
       @bound_model.model.bounding_box.normalize(self)
-    end
-
-    def handleGlError
-      e = glGetError()
-      if e != GL_NO_ERROR
-        $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
-        exit
-      end
     end
   end
 end

@@ -1,19 +1,6 @@
 class IMICFPS
   class OpenGLRenderer
     include CommonMethods
-    include OpenGL
-    include GLU
-
-    def initialize
-    end
-
-    def handleGlError
-      e = glGetError()
-      if e != GL_NO_ERROR
-        $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
-        exit
-      end
-    end
 
     def draw_object(object)
       handleGlError
@@ -28,12 +15,12 @@ class IMICFPS
 
       handleGlError
 
-      if Shader.available?("lighting")
-        Shader.use("lighting") do |shader|
-          glUniform3f(shader.attribute_location("SunLight"), 1.0, 1.0, 1.0)
+      if Shader.available?("default")
+        Shader.use("default") do |shader|
+          glUniform3f(shader.attribute_location("worldPosition"), object.position.x, object.position.y, object.position.z)
 
           handleGlError
-          draw_mesh(object.model)
+          draw_model(object.model)
           object.draw
         end
       else
@@ -45,6 +32,28 @@ class IMICFPS
 
       glPopMatrix
       handleGlError
+    end
+
+    def draw_model(model)
+      glBindVertexArray(model.vertex_array_id)
+      glBindBuffer(GL_ARRAY_BUFFER, model.vertices_buffer_id)
+      glEnableVertexAttribArray(0)
+      glEnableVertexAttribArray(1)
+      glEnableVertexAttribArray(2)
+      glEnableVertexAttribArray(3)
+      glEnableVertexAttribArray(4)
+
+      glDrawArrays(GL_TRIANGLES, 0, model.vertices.count)
+      window.number_of_vertices+=model.vertices.size
+
+      glDisableVertexAttribArray(4)
+      glDisableVertexAttribArray(3)
+      glDisableVertexAttribArray(2)
+      glDisableVertexAttribArray(1)
+      glDisableVertexAttribArray(0)
+
+      glBindBuffer(GL_ARRAY_BUFFER, 0)
+      glBindVertexArray(0)
     end
 
     def draw_mesh(model)

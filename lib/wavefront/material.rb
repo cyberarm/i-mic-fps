@@ -1,7 +1,6 @@
 class IMICFPS
   class Wavefront
     class Material
-      include OpenGL
       attr_accessor :name, :ambient, :diffuse, :specular
       attr_reader :texture_id
       def initialize(name)
