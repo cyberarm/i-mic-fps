@@ -13,6 +13,18 @@ class IMICFPS
         console.stdin(usage(arguments.first))
       end
 
+      def autocomplete(console)
+        split = console.text_input.text.split(" ")
+        if !console.text_input.text.start_with?(" ") && split.size == 2
+          list = console.abbrev_search(Commands::Command.list_commands.map { |cmd| cmd.command.to_s }, split.last)
+          if list.size == 1
+            console.text_input.text = "#{split.first} #{list.first} "
+          elsif list.size > 1
+            console.stdin(list.map { |cmd| Style.highlight(cmd) }.join(', '))
+          end
+        end
+      end
+
       def usage(command = nil)
         if command
           if cmd = Command.find(command)
