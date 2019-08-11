@@ -3,7 +3,7 @@ class IMICFPS
     class Material
       include OpenGL
       attr_accessor :name, :ambient, :diffuse, :specular
-      attr_reader :texture
+      attr_reader :texture_id
       def initialize(name)
         @name    = name
         @ambient = Color.new(1, 1, 1, 1)
@@ -31,10 +31,6 @@ class IMICFPS
         glGenerateMipmap(GL_TEXTURE_2D)
 
         @texture = nil
-      end
-
-      def texture_id
-        @texture_id
       end
     end
   end

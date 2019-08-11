@@ -10,7 +10,7 @@ class IMICFPS
         query = @@keymap.dig(id_or_action)
 
         if query.is_a?(Integer)
-          id = query
+           query
         elsif query.is_a?(Array)
           query.each do |key|
             @@keys[key] = true
@@ -28,7 +28,7 @@ class IMICFPS
         query = @@keymap.dig(id_or_action)
 
         if query.is_a?(Integer)
-          id = query
+          query
         elsif query.is_a?(Array)
           query.each do |key|
             @@keys[key] = false
@@ -40,7 +40,7 @@ class IMICFPS
     end
 
     def self.get(action)
-      key = @@keymap.dig(action)
+      @@keymap.dig(action)
     end
 
     def self.set(action, key)

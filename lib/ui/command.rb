@@ -86,6 +86,41 @@ class IMICFPS
       end
 
       def autocomplete(console)
+        split = console.text_input.text.split(" ")
+
+        if @subcommands.size > 0
+          if !console.text_input.text.end_with?(" ") && split.size == 2
+            list = console.abbrev_search(@subcommands.map { |cmd| cmd.command.to_s}, split.last)
+
+            if list.size == 1
+              console.text_input.text = "#{split.first} #{list.first} "
+            else
+              return unless list.size > 0
+              console.stdin("#{list.map { |cmd| Commands::Style.highlight(cmd)}.join(", ")}")
+            end
+
+          # List available options on subcommand
+          elsif (console.text_input.text.end_with?(" ") && split.size == 2) || !console.text_input.text.end_with?(" ") && split.size == 3
+            subcommand = @subcommands.detect { |cmd| cmd.command.to_s == (split[1]) }
+
+            if subcommand
+              if split.size == 2
+                console.stdin("Available options: #{subcommand.values.map { |value| Commands::Style.highlight(value) }.join(",")}")
+              else
+                list = console.abbrev_search(subcommand.values, split.last)
+                if list.size == 1
+                  console.text_input.text = "#{split.first} #{split[1]} #{list.first} "
+                else
+                  console.stdin("Available options: #{list.map { |value| Commands::Style.highlight(value) }.join(",")}")
+                end
+              end
+            end
+
+          # List available subcommands if command was entered and has only a space after it
+          elsif console.text_input.text.end_with?(" ") && split.size == 1
+            console.stdin("Available subcommands: #{@subcommands.map { |cmd| Commands::Style.highlight(cmd.command)}.join(", ")}")
+          end
+        end
       end
 
       def handle_subcommand(arguments, console)
@@ -105,92 +140,6 @@ class IMICFPS
 
       def usage
         raise NotImplementedError
-      end
-    end
-
-    class SubCommand
-      def initialize(parent, command, type)
-        @parent = parent
-        @command = command
-        @type = type
-      end
-
-      def command
-        @command
-      end
-
-      def handle(arguments, console)
-        if arguments.size > 1
-          console.stdin("to many arguments for #{Style.highlight("#{command}")}, got #{Style.error(arguments.size)} expected #{Style.notice(1)}.")
-          return
-        end
-
-        case @type
-        when :boolean
-          case arguments.last
-          when "", nil
-            var = @parent.get(command.to_sym) ? @parent.get(command.to_sym) : false
-            console.stdin("#{command}: #{Style.highlight(var)}")
-          when "on"
-            var = @parent.set(command.to_sym, true)
-            console.stdin("#{command} => #{Style.highlight(var)}")
-          when "off"
-            var = @parent.set(command.to_sym, false)
-            console.stdin("#{command} => #{Style.highlight(var)}")
-          else
-            console.stdin("Invalid argument for #{Style.highlight("#{command}")}, got #{Style.error(arguments.last)} expected #{Style.notice("on")}, or #{Style.notice("off")}.")
-          end
-        when :string
-          case arguments.last
-          when "", nil
-            var = @parent.get(command.to_sym) ? @parent.get(command.to_sym) : "\"\""
-            console.stdin("#{command}: #{Style.highlight(var)}")
-          else
-            var = @parent.set(command.to_sym, arguments.last)
-            console.stdin("#{command} => #{Style.highlight(var)}")
-          end
-        when :integer
-          case arguments.last
-          when "", nil
-            var = @parent.get(command.to_sym) ? @parent.get(command.to_sym) : "nil"
-            console.stdin("#{command}: #{Style.highlight(var)}")
-          else
-            begin
-              var = @parent.set(command.to_sym, Integer(arguments.last))
-              console.stdin("#{command} => #{Style.highlight(var)}")
-            rescue ArgumentError
-              console.stdin("Error: #{Style.error("Expected an integer, got '#{arguments.last}'")}")
-            end
-          end
-        when :decimal
-          case arguments.last
-          when "", nil
-            var = @parent.get(command.to_sym) ? @parent.get(command.to_sym) : "nil"
-            console.stdin("#{command}: #{Style.highlight(var)}")
-          else
-            begin
-              var = @parent.set(command.to_sym, Float(arguments.last))
-              console.stdin("#{command} => #{Style.highlight(var)}")
-            rescue ArgumentError
-              console.stdin("Error: #{Style.error("Expected a decimal or integer, got '#{arguments.last}'")}")
-            end
-          end
-        else
-          raise RuntimeError
-        end
-      end
-
-      def usage
-        case @type
-        when :boolean
-          "#{Style.highlight(command)} #{Style.notice("[on|off]")}"
-        when :string
-          "#{Style.highlight(command)} #{Style.notice("[string]")}"
-        when :integer
-          "#{Style.highlight(command)} #{Style.notice("[0]")}"
-        when :decimal
-          "#{Style.highlight(command)} #{Style.notice("[0.0]")}"
-        end
       end
     end
   end

@@ -4,6 +4,7 @@ class IMICFPS
     PADDING = 2
     include CommonMethods
 
+    attr_reader :text_input
     def initialize
       @text_input = Gosu::TextInput.new
 
@@ -12,10 +13,12 @@ class IMICFPS
 
       @history_height = window.height / 4 * 3 - (PADDING * 2 + @input.textobject.height)
       @history = Text.new("=== #{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME}) ===\n\n", x: 4, y: @history_height, z: Console::Z + 1)
-      update_history
+      update_history_y
 
       @command_history       = []
       @command_history_index = 0
+
+      @memory = ""
 
       @background_color = Gosu::Color.rgba(0, 0, 0, 200)
       @foreground_color = Gosu::Color.rgba(100, 100, 100, 100)
@@ -28,6 +31,7 @@ class IMICFPS
       @caret_last_change = Gosu.milliseconds
       @caret_interval = 250
       @caret_color = Gosu::Color::WHITE
+      @selection_color = Gosu::Color.new(0x5522ff22)
 
       @width  = window.width  / 4 * 3
       @height = window.height / 4 * 3
@@ -44,12 +48,36 @@ class IMICFPS
       @history.draw
       @input.draw
       # Caret
-      draw_rect(@input.x + caret_pos, @input.y, Console::PADDING, @input.height, @caret_color, Console::Z + 2) if @show_caret
+      draw_rect(@input.x + caret_from_left, @input.y, Console::PADDING, @input.height, @caret_color, Console::Z + 2) if @show_caret
+      # Caret selection
+      if caret_start != caret_end
+        if caret_start < @text_input.selection_start
+          draw_rect(@input.x + caret_from_left, @input.y, caret_selection_width, @input.height, @selection_color, Console::Z)
+        else
+          draw_rect((@input.x + caret_from_left) - caret_selection_width, @input.y, caret_selection_width, @input.height, @selection_color, Console::Z)
+        end
+      end
+    end
+
+    def caret_from_left
+      return 0 if @text_input.caret_pos == 0
+      @input.textobject.text_width(@text_input.text[0..@text_input.caret_pos-1])
+    end
+
+    def caret_selection_width
+      @input.textobject.text_width(@text_input.text[caret_start..(caret_end - 1)])
     end
 
     def caret_pos
-      return 0 if @text_input.caret_pos == 0
-      @input.textobject.text_width(@text_input.text[0..@text_input.caret_pos-1])
+      @text_input.caret_pos
+    end
+
+    def caret_start
+      @text_input.selection_start < @text_input.caret_pos ? @text_input.selection_start : @text_input.caret_pos
+    end
+
+    def caret_end
+      @text_input.selection_start > @text_input.caret_pos ? @text_input.selection_start : @text_input.caret_pos
     end
 
     def update
@@ -68,7 +96,7 @@ class IMICFPS
         @history.text += "\n<c=999999>> #{@text_input.text}</c>"
         @command_history << @text_input.text
         @command_history_index = @command_history.size
-        update_history
+        update_history_y
         handle_command
         @text_input.text = ""
 
@@ -90,13 +118,12 @@ class IMICFPS
         split = @text_input.text.split(" ")
 
         if !@text_input.text.end_with?(" ") && split.size == 1
-          list = command_search(@text_input.text)
+          list = abbrev_search(Commands::Command.list_commands.map { |cmd| cmd.command.to_s}, @text_input.text)
 
           if list.size == 1
             @text_input.text = "#{list.first} "
           else
-            @history.text += "\n#{list.map { |cmd| Commands::Style.highlight(cmd)}.join(", ")}"
-            update_history
+            stdin("\n#{list.map { |cmd| Commands::Style.highlight(cmd)}.join(", ")}")
           end
         else
           if split.size > 0 && cmd = Commands::Command.find(split.first)
@@ -105,11 +132,56 @@ class IMICFPS
         end
 
       when Gosu::KbBacktick
-        # Removed backtick character from input
+        # Remove backtick character from input
         if @text_input.text.size > 1
           @text_input.text = @text_input.text[0..@text_input.text.size - 2]
         else
           @text_input.text = ""
+        end
+
+      # Copy
+      when Gosu::KbC
+        if control_down? && shift_down?
+          @memory = @text_input.text[caret_start..caret_end - 1] if caret_start != caret_end
+          p @memory
+        elsif control_down?
+          @text_input.text = ""
+        end
+
+      # Paste
+      when Gosu::KbV
+        if control_down? && shift_down?
+          string = @text_input.text.chars.insert(caret_pos, @memory).join
+          _caret_pos = caret_pos
+          @text_input.text = string
+          @text_input.caret_pos = _caret_pos + @memory.length
+          @text_input.selection_start = _caret_pos + @memory.length
+        end
+
+      # Cut
+      when Gosu::KbX
+        if control_down? && shift_down?
+          @memory = @text_input.text[caret_start..caret_end - 1] if caret_start != caret_end
+          string  = @text_input.text.chars
+          Array(caret_start..caret_end - 1).each_with_index do |i, j|
+            string.delete_at(i - j)
+          end
+
+          @text_input.text = string.join
+        end
+
+      # Delete word to left of caret
+      when Gosu::KbW
+        if control_down?
+          split = @text_input.text.split(" ")
+          split.delete(split.last)
+          @text_input.text = split.join(" ")
+        end
+
+      # Clear history
+      when Gosu::KbL
+        if control_down?
+          @history.text = ""
         end
       end
     end
@@ -117,7 +189,7 @@ class IMICFPS
     def button_up(id)
     end
 
-    def update_history
+    def update_history_y
       @history.y = @history_height - (@history.text.lines.count * (@history.textobject.height))
     end
 
@@ -130,13 +202,11 @@ class IMICFPS
       IMICFPS::Commands::Command.use(command, arguments, self)
     end
 
-    def command_search(text)
+    def abbrev_search(array, text)
       return [] unless text.length > 0
 
-      @command_search ||= Abbrev.abbrev(Commands::Command.list_commands.map { |cmd| cmd.command.to_s})
-
       list = []
-      @command_search.each do |abbrev, value|
+      Abbrev.abbrev(array).each do |abbrev, value|
         next unless abbrev && abbrev.start_with?(text)
 
         list << value
@@ -147,7 +217,7 @@ class IMICFPS
 
     def stdin(string)
       @history.text += "\n#{string}"
-      update_history
+      update_history_y
     end
 
     def focus

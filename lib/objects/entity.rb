@@ -9,7 +9,7 @@ class IMICFPS
 
     attr_accessor :scale, :visible, :renderable, :backface_culling
     attr_accessor :position, :rotation, :velocity
-    attr_reader :model, :name, :debug_color, :bounding_box, :collision, :physics, :mass, :drag
+    attr_reader :name, :debug_color, :bounding_box, :collision, :physics, :mass, :drag
 
     def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, manifest_file: nil)
       @position = Vector.new(x, y, z)
@@ -42,7 +42,7 @@ class IMICFPS
         @bound_model.model.objects.each { |o| o.scale = self.scale }
         @normalized_bounding_box = normalize_bounding_box_with_offset
 
-        box = normalize_bounding_box
+        normalize_bounding_box
       end
 
       return self

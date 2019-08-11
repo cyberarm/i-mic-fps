@@ -29,7 +29,7 @@ class IMICFPS
       end
 
       def usage
-        string = "debug\n    #{@subcommands.map { |sub| sub.usage }.join("\n    ")}"
+        "debug\n    #{@subcommands.map { |sub| sub.usage }.join("\n    ")}"
       end
     end
   end

@@ -7,15 +7,13 @@ class IMICFPS
 
     def window; $window; end
 
-    def delta_time
-      (Gosu.milliseconds-@delta_time)/1000.0
-    end
+    def delta_time; (Gosu.milliseconds - @delta_time) / 1000.0; end
     def button_down?(id); window.button_down?(id); end
 
     def mouse_x; window.mouse_x; end
     def mouse_y; window.mouse_y; end
-    def mouse_x=int; window.mouse_x=int; end
-    def mouse_y=int; window.mouse_y=int; end
+    def mouse_x=(int); window.mouse_x = int; end
+    def mouse_y=(int); window.mouse_y = int; end
 
     def gl(&block)
       window.gl do
@@ -30,6 +28,10 @@ class IMICFPS
 
       return string
     end
+
+    def control_down?; button_down?(Gosu::KbLeftControl) || button_down?(Gosu::KbRightControl); end
+    def shift_down?; button_down?(Gosu::KbLeftShift) || button_down?(Gosu::KbRightShift); end
+    def alt_down?; button_down?(Gosu::KbLeftAlt) || button_down?(Gosu::KbRightAlt); end
 
     def draw_rect(*args)
       window.draw_rect(*args)

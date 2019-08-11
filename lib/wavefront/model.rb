@@ -44,8 +44,8 @@ class IMICFPS
 
         puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if $debug.get(:stats)
 
-        # allocate_gl_objects
-        # populate_buffers
+        allocate_gl_objects
+        populate_buffers
         # populate_arrays
 
         @objects.each {|o| @vertex_count+=o.vertices.size}
@@ -83,16 +83,18 @@ class IMICFPS
       def populate_buffers
         @vertices_buffer_data = []
 
-        verts = []
-        colors= []
-        norms = []
-        uvs   = []
+        verts   = []
+        colors  = []
+        norms   = []
+        uvs     = []
+        tex_ids = []
 
         @faces.each do |face|
-          verts  << face.vertices.map    { |vert| [vert.x, vert.y, vert.z] }
-          colors << face.colors.map   { |vert| [vert.x, vert.y, vert.z] }
-          norms  << face.normals.map  { |vert| [vert.x, vert.y, vert.z, vert.weight] }
-          uvs    << face.uvs.map      { |vert| [vert.x, vert.y, vert.z] } if face.material.texture
+          verts   << face.vertices.map    { |vert| [vert.x, vert.y, vert.z] }
+          colors  << face.colors.map   { |vert| [vert.x, vert.y, vert.z] }
+          norms   << face.normals.map  { |vert| [vert.x, vert.y, vert.z, vert.weight] }
+          uvs     << face.uvs.map      { |vert| [vert.x, vert.y, vert.z] } if face.material.texture_id
+          tex_ids << face.material.texture_id if face.material.texture_id
         end
 
         verts.each_with_index do |vert, i|
@@ -100,6 +102,7 @@ class IMICFPS
           @vertices_buffer_data << colors[i]
           @vertices_buffer_data << norms[i]
           @vertices_buffer_data << uvs[i] if uvs.size > 0
+          @vertices_buffer_data << tex_ids[i] if tex_ids.size > 0
         end
 
         data = @vertices_buffer_data.flatten.pack("f*")
