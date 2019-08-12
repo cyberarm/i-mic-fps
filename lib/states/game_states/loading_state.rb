@@ -10,12 +10,12 @@ class IMICFPS
       @dummy_entity = nil
       @assets = []
       @asset_index = 0
+      add_asset(:shader, nil, "default")
+
       add_asset(:model, "base", "river_terrain")
       add_asset(:model, "base", "skydome")
       add_asset(:model, "base", "tree")
       add_asset(:model, "base", "biped")
-
-      add_asset(:shader, nil, "default")
 
       @act = false
       @cycled = false

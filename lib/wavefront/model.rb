@@ -94,13 +94,13 @@ class IMICFPS
         tex_ids = []
 
         @faces.each do |face|
-          verts   << face.vertices.map    { |vert| [vert.x, vert.y, vert.z] }
+          verts   << face.vertices.map { |vert| [vert.x, vert.y, vert.z] }
           colors  << face.colors.map   { |vert| [vert.x, vert.y, vert.z] }
           norms   << face.normals.map  { |vert| [vert.x, vert.y, vert.z, vert.weight] }
 
           if model_has_texture
-            uvs     << face.uvs.map      { |vert| [vert.x, vert.y, vert.z] }
-            tex_ids << face.material.texture_id ? face.material.texture_id : -1
+            uvs     << face.uvs.map    { |vert| [vert.x, vert.y, vert.z] }
+            tex_ids << face.material.texture_id ? face.material.texture_id.to_f : -1.0
           end
         end
 
@@ -117,14 +117,14 @@ class IMICFPS
         data_size += Fiddle::SIZEOF_FLOAT * 3 * colors.size
         data_size += Fiddle::SIZEOF_FLOAT * 4 * norms.size
         data_size += Fiddle::SIZEOF_FLOAT * 3 * uvs.size
-        data_size += Fiddle::SIZEOF_INT * 1 * tex_ids.size
+        data_size += Fiddle::SIZEOF_FLOAT * 1 * tex_ids.size
 
         @vertices_buffer_size = data_size
 
-        data = @vertices_buffer_data.flatten.pack("f*")
+        data = @vertices_buffer_data.flatten
 
         glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer_id)
-        glBufferData(GL_ARRAY_BUFFER, @vertices_buffer_size, data, GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, @vertices_buffer_size, data.pack("f*"), GL_STATIC_DRAW)
         glBindBuffer(GL_ARRAY_BUFFER, 0)
       end
 
@@ -138,21 +138,23 @@ class IMICFPS
         glEnableVertexAttribArray(3)
         glEnableVertexAttribArray(4)
 
+        program = Shader.get("default").program
+
         # index, size, type, normalized, stride, pointer
         # vertices (positions)
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * 3, nil)
+        glVertexAttribPointer(glGetAttribLocation(program, "inPosition"), 3, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * 3, nil)
         handleGlError
         # colors
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (3 + 3), nil)
+        glVertexAttribPointer(glGetAttribLocation(program, "inColor"), 3, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (3 + 3), nil)
         handleGlError
         # normals
-        glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (4 + 3 + 3), nil)
+        glVertexAttribPointer(glGetAttribLocation(program, "inNormal"), 4, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (4 + 3 + 3), nil)
         handleGlError
         # uvs
-        glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (3 + 4 + 3 + 3), nil)
+        glVertexAttribPointer(glGetAttribLocation(program, "inUV"), 4, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (3 + 4 + 3 + 3), nil)
         handleGlError
         # texture ids
-        glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT + (Fiddle::SIZEOF_FLOAT * (3 + 4 + 3 + 3)), nil)
+        glVertexAttribPointer(glGetAttribLocation(program, "inTextureID"), 1, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT + (Fiddle::SIZEOF_FLOAT * (3 + 4 + 3 + 3)), nil)
         handleGlError
 
         glDisableVertexAttribArray(4)
