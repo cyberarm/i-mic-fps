@@ -89,9 +89,22 @@ class IMICFPS
       @collision_manager.update
       @entities.each(&:update)
 
+      control_player
+
       @skydome.update if @skydome.renderable
 
       @camera.update
+
+      if $debug.get(:stats)
+        @text.text = update_text
+      elsif $debug.get(:fps)
+        @text.text = "FPS: #{Gosu.fps}"
+      else
+        @text.text = ""
+      end
+
+      @draw_skydome = $debug.get(:skydome)
+      @skydome.renderable = @draw_skydome
 
       if ARGV.join.include?("--playdemo")
         if @demo_data[@demo_index]&.start_with?("tick")
@@ -149,7 +162,6 @@ class IMICFPS
     end
 
     def update_text
-      begin
       string = <<-eos
 OpenGL Vendor: #{glGetString(GL_VENDOR)}
 OpenGL Renderer: #{glGetString(GL_RENDERER)}
@@ -161,40 +173,24 @@ Camera X:#{@camera.position.x.round(2)} Y:#{@camera.position.y.round(2)} Z:#{@ca
 #{if @camera.entity then "Actor X:#{@camera.entity.position.x.round(2)} Y:#{@camera.entity.position.y.round(2)} Z:#{@camera.entity.position.z.round(2)}";end}
 Field Of View: #{@camera.field_of_view}
 Mouse Sesitivity: #{@camera.mouse_sensitivity}
-Last Frame: #{delta_time*1000.0}ms (#{Gosu.fps} fps)
+Last Frame: #{delta_time * 1000.0}ms (#{Gosu.fps} fps)
 
 Vertices: #{formatted_number(window.number_of_vertices)}
 Faces: #{formatted_number(window.number_of_vertices/3)}
 
 Draw Skydome: #{@draw_skydome}
 eos
-      rescue ArgumentError
-        string = <<-eos
-Unable to call glGetString!
+    end
 
-Camera pitch: #{@camera.pitch.round(2)} Yaw: #{@camera.yaw.round(2)} Roll #{@camera.roll.round(2)}
-Camera X:#{@camera.x.round(2)} Y:#{@camera.y.round(2)} Z:#{@camera.z.round(2)}
-#{if @camera.entity then "Actor X:#{@camera.entity.x.round(2)} Y:#{@camera.entity.y.round(2)} Z:#{@camera.entity.z.round(2)}";end}
-Field Of View: #{@camera.field_of_view}
-Mouse Sesitivity: #{@camera.mouse_sensitivity}
-Last Frame: #{delta_time*1000.0}ms (#{Gosu.fps} fps)
+    def control_player
+      InputMapper.keys.each do |key, pressed|
+        next unless pressed
 
-Vertices: #{formatted_number(window.number_of_vertices)}
-Faces: #{formatted_number(window.number_of_vertices/3)}
+        action = InputMapper.action(key)
+        next unless action
 
-Draw Skydome: #{@draw_skydome}
-eos
+        @player.send(action) if @player.respond_to?(action)
       end
-      if $debug.get(:stats)
-        @text.text = string
-      elsif $debug.get(:fps)
-        @text.text = "FPS: #{Gosu.fps}"
-      else
-        @text.text = ""
-      end
-
-      @draw_skydome = $debug.get(:skydome)
-      @skydome.renderable = @draw_skydome
     end
 
     def button_down(id)

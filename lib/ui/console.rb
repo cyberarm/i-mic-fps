@@ -123,7 +123,7 @@ class IMICFPS
           if list.size == 1
             @text_input.text = "#{list.first} "
           else
-            stdin("\n#{list.map { |cmd| Commands::Style.highlight(cmd)}.join(", ")}")
+            stdin("\n#{list.map { |cmd| Commands::Style.highlight(cmd)}.join(", ")}") if list.size > 0
           end
         else
           if split.size > 0 && cmd = Commands::Command.find(split.first)

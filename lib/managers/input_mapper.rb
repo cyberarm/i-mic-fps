@@ -3,6 +3,14 @@ class IMICFPS
     @@keymap = {}
     @@keys   = Hash.new(false)
 
+    def self.keymap
+      @@keymap
+    end
+
+    def self.keys
+      @@keys
+    end
+
     def self.keydown(id_or_action)
       if id_or_action.is_a?(Integer)
         @@keys[id_or_action] = true
@@ -77,8 +85,6 @@ class IMICFPS
     def self.action(key)
       answer = nil
       @@keymap.each do |action, value|
-        p action, value
-
         if value.is_a?(Array)
           if value.include?(key)
             answer = action
@@ -93,7 +99,6 @@ class IMICFPS
         end
       end
 
-      raise "InputMapper.action(#{key}) is nil!" unless answer
       answer
     end
 

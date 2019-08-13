@@ -93,44 +93,51 @@ class IMICFPS
       # Do not handle movement if mouse is not captured
       return if @camera && !@camera.mouse_captured
 
-      relative_speed = @speed
-      if InputMapper.down?(:sprint)
-        relative_speed = @running_speed
-      else
-        relative_speed = @speed
-      end
-
-      relative_y_rotation = @rotation.y * -1
-
-      if InputMapper.down?(:forward)
-        @velocity.z += Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
-        @velocity.x -= Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
-      end
-      if InputMapper.down?(:backward)
-        @velocity.z -= Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
-        @velocity.x += Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
-      end
-      if InputMapper.down?(:strife_left)
-        @velocity.z += Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
-        @velocity.x += Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
-      end
-      if InputMapper.down?(:strife_right)
-        @velocity.z -= Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
-        @velocity.x -= Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
-      end
-
-      if InputMapper.down?(:turn_left)
-        @rotation.y += @turn_speed * delta_time
-      end
-      if InputMapper.down?(:turn_right)
-        @rotation.y -= @turn_speed * delta_time
-      end
-
       if @_time_in_air
         air_time = (Gosu.milliseconds - @_time_in_air) / 1000.0
         @velocity.y -= IMICFPS::GRAVITY * air_time * delta_time
       end
 
+      super
+    end
+
+    def relative_speed
+      InputMapper.down?(:sprint) ? @running_speed : @speed
+    end
+
+    def relative_y_rotation
+      @rotation.y * -1
+    end
+
+    def forward
+      @velocity.z += Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+      @velocity.x -= Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
+    end
+
+    def backward
+      @velocity.z -= Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+      @velocity.x += Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
+    end
+
+    def strife_left
+      @velocity.z += Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
+      @velocity.x += Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+    end
+
+    def strife_right
+      @velocity.z -= Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
+      @velocity.x -= Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+    end
+
+    def turn_left
+      @rotation.y += @turn_speed * delta_time
+    end
+
+    def turn_right
+      @rotation.y -= @turn_speed * delta_time
+    end
+
+    def jump
       if InputMapper.down?(:jump) && !@jumping
         @jumping = true
         @_time_in_air = Gosu.milliseconds
@@ -151,20 +158,17 @@ class IMICFPS
           @falling = true
         end
       end
-
-      super
     end
 
-    def button_down(id)
-      if InputMapper.is?(:toggle_first_person_view, id)
-        @first_person_view = !@first_person_view
-        @visible = !@first_person_view
-        puts "First Person? #{@first_person_view}"
+    def toggle_first_person_view
+      @first_person_view = !@first_person_view
+      @visible = !@first_person_view
+      puts "First Person? #{@first_person_view}"
+    end
 
-      elsif InputMapper.is?(:turn_180, id)
-        @rotation.y = @rotation.y + 180
-        @rotation.y %= 360
-      end
+    def turn_180
+      @rotation.y = @rotation.y + 180
+      @rotation.y %= 360
     end
   end
 end
