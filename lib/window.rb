@@ -1,6 +1,4 @@
 class IMICFPS
-  GRAVITY = 9.8 # m/s
-
   class Window < CyberarmEngine::Engine
     attr_accessor :number_of_vertices, :needs_cursor
     attr_reader :camera

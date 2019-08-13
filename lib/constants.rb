@@ -8,4 +8,9 @@ class IMICFPS
 
   # Objects exported from blender using the default or meter object scale will be close to 1 GL unit
   MODEL_METER_SCALE = 1.0
+
+  # Earth
+  GRAVITY = 9.8 # m/s
+  # Moon
+  # GRAVITY = 1.625 # m/s
 end

@@ -55,13 +55,13 @@ class IMICFPS
         end
       end
 
-      def search_subtree(bounding_box, items = [])
-        if @bounding_box.intersect?(bounding_box)
+      def search_subtree(collider, items = [])
+        if @bounding_box.intersect?(collider)
           if leaf?
             items << self
           else
-            @a.search_subtree(bounding_box, items)
-            @b.search_subtree(bounding_box, items)
+            @a.search_subtree(collider, items)
+            @b.search_subtree(collider, items)
           end
         end
 

@@ -90,6 +90,9 @@ class IMICFPS
     end
 
     def update
+      # Do not handle movement if mouse is not captured
+      return if @camera && !@camera.mouse_captured
+
       relative_speed = @speed
       if InputMapper.down?(:sprint)
         relative_speed = @running_speed

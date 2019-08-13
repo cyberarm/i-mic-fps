@@ -7,7 +7,7 @@ class IMICFPS
 
     attr_accessor :scale, :visible, :renderable, :backface_culling
     attr_accessor :position, :rotation, :velocity
-    attr_reader :name, :debug_color, :bounding_box, :collision, :physics, :mass, :drag
+    attr_reader :name, :debug_color, :bounding_box, :collision, :physics, :mass, :drag, :camera
 
     def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, manifest_file: nil)
       @position = Vector.new(x, y, z)
@@ -43,6 +43,8 @@ class IMICFPS
         normalize_bounding_box
       end
 
+      @camera = nil
+
       return self
     end
 
@@ -68,6 +70,14 @@ class IMICFPS
 
     def unbind_model
       @bound_model = nil
+    end
+
+    def attach_camera(camera)
+      @camera = camera
+    end
+
+    def detach_camera
+      @camera = nil
     end
 
     def setup

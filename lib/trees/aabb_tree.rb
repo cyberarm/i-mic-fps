@@ -35,11 +35,11 @@ class IMICFPS
       insert_leaf(leaf)
     end
 
-    # Returns a list of all collided objects inside Bounding Box
-    def search(bounding_box, return_nodes = false)
+    # Returns a list of all objects that collided with collider
+    def search(collider, return_nodes = false)
       items = []
       if @root
-        items = @root.search_subtree(bounding_box)
+        items = @root.search_subtree(collider)
         items.map! {|e| e.object} unless return_nodes
       end
 

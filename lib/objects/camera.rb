@@ -2,13 +2,11 @@ class IMICFPS
   class Camera
     include CommonMethods
 
-    attr_accessor :field_of_view, :pitch, :yaw, :roll, :mouse_sensitivity
-    attr_reader :entity, :position
+    attr_accessor :field_of_view, :mouse_sensitivity
+    attr_reader :entity, :position, :orientation, :mouse_captured
     def initialize(x: 0, y: 0, z: 0, fov: 70.0, view_distance: 155.0)
       @position = Vector.new(x,y,z)
-      @pitch = 0.0
-      @yaw   = 0.0
-      @roll  = 0.0
+      @orientation = Vector.new(0, 0, 0)
       @field_of_view = fov
       @view_distance = view_distance
       @constant_pitch = 20.0
@@ -17,8 +15,8 @@ class IMICFPS
       @distance = 4
       @origin_distance = @distance
 
-      self.mouse_x, self.mouse_y = window.width/2, window.height/2
-      @true_mouse = Point.new(window.width/2, window.height/2)
+      self.mouse_x, self.mouse_y = window.width / 2, window.height / 2
+      @true_mouse = Point.new(window.width / 2, window.height / 2)
       @mouse_sensitivity = 20.0 # Less is faster, more is slower
       @mouse_captured = true
       @mouse_checked = 0
@@ -27,9 +25,11 @@ class IMICFPS
     def attach_to(entity)
       raise "Not an Entity!" unless entity.is_a?(Entity)
       @entity = entity
+      @entity.attach_camera(self)
     end
 
     def detach
+      @entity.detach_camera
       @entity = nil
     end
 
@@ -61,7 +61,7 @@ class IMICFPS
       @position.y = @entity.position.y + 2
       @position.z = @entity.position.z - z_offset
 
-      @yaw = 180 - @entity.rotation.y
+      @orientation.y = 180 - @entity.rotation.y
     end
 
     def draw
@@ -71,8 +71,8 @@ class IMICFPS
       # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
       gluPerspective(@field_of_view, window.width / window.height, 0.1, @view_distance)
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-      glRotatef(@pitch,1,0,0)
-      glRotatef(@yaw,0,1,0)
+      glRotatef(@orientation.z, 1, 0, 0)
+      glRotatef(@orientation.y, 0, 1, 0)
       glTranslatef(-@position.x, -@position.y, -@position.z)
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
       glLoadIdentity
@@ -82,25 +82,30 @@ class IMICFPS
     def update
       if @mouse_captured
 
-        delta = Float(@true_mouse.x-self.mouse_x)/(@mouse_sensitivity*@field_of_view)*70
-        @yaw -= delta
-        @yaw %= 360.0
+        delta = Float(@true_mouse.x - self.mouse_x) / (@mouse_sensitivity * @field_of_view) * 70
+        @orientation.y -= delta
+        @orientation.y %= 360.0
 
-        @pitch -= Float(@true_mouse.y-self.mouse_y)/(@mouse_sensitivity*@field_of_view)*70
-        @pitch = @pitch.clamp(-90.0, 90.0)
+        @orientation.z -= Float(@true_mouse.y - self.mouse_y) / (@mouse_sensitivity * @field_of_view) * 70
+        @orientation.z = @orientation.z.clamp(-90.0, 90.0)
 
         @entity.rotation.y += delta if @entity
         free_move unless @entity
         position_camera if @entity
 
-        self.mouse_x = window.width/2 if self.mouse_x <= 1 || window.mouse_x >= window.width-1
-        self.mouse_y = window.height/2 if self.mouse_y <= 1 || window.mouse_y >= window.height-1
+        self.mouse_x = window.width  / 2 if self.mouse_x <= 1 || window.mouse_x >= window.width-1
+        self.mouse_y = window.height / 2 if self.mouse_y <= 1 || window.mouse_y >= window.height-1
         @true_mouse.x, @true_mouse.y = self.mouse_x, self.mouse_y
       end
     end
 
+    def looking_at
+      ray = Ray.new(@position, @orientation.direction * -1)
+      window.current_state.collision_manager.search(ray)
+    end
+
     def free_move
-      relative_y_rotation = (@yaw + 180)
+      relative_y_rotation = (@orientation.y + 180)
       relative_speed = 0.25
 
       if InputMapper.down?( :forward)

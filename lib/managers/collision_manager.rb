@@ -19,17 +19,18 @@ class IMICFPS
         next unless node = @aabb_tree.objects[entity]
 
         unless entity.bounding_box == node.bounding_box
-          @aabb_tree.update(entity, entity.bounding_box)
+          puts "Updating #{entity.class}"
+          @aabb_tree.update(entity, entity.bounding_box.clone)
         end
       end
 
       check_broadphase
 
       @physics_manager.update
+    end
 
-      collisions.each do |ent, list|
-        # puts "#{ent.class} -> [#{list.map { |e| e.class }.join(', ')}] (#{Gosu.milliseconds})"
-      end
+    def search(collider)
+      @aabb_tree.search(collider)
     end
 
     def remove(entity)

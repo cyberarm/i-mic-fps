@@ -1,5 +1,7 @@
 class IMICFPS
   class Game < GameState
+
+    attr_reader :collision_manager
     def setup
       @collision_manager = CollisionManager.new(game_state: self)
       @renderer = Renderer.new(game_state: self)
@@ -154,7 +156,7 @@ OpenGL Renderer: #{glGetString(GL_RENDERER)}
 OpenGL Version: #{glGetString(GL_VERSION)}
 OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}
 
-Camera pitch: #{@camera.pitch.round(2)} Yaw: #{@camera.yaw.round(2)} Roll #{@camera.roll.round(2)}
+Camera pitch: #{@camera.orientation.z.round(2)} Yaw: #{@camera.orientation.y.round(2)} Roll #{@camera.orientation.x.round(2)}
 Camera X:#{@camera.position.x.round(2)} Y:#{@camera.position.y.round(2)} Z:#{@camera.position.z.round(2)}
 #{if @camera.entity then "Actor X:#{@camera.entity.position.x.round(2)} Y:#{@camera.entity.position.y.round(2)} Z:#{@camera.entity.position.z.round(2)}";end}
 Field Of View: #{@camera.field_of_view}
