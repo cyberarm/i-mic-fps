@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    cyberarm_engine (0.10.1)
+    cyberarm_engine (0.10.2)
       gosu (~> 0.14.0)
     gosu (0.14.5)
     gosu (0.14.5-x86-mingw32)
