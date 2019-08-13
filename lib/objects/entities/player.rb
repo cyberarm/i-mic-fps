@@ -163,7 +163,6 @@ class IMICFPS
     def toggle_first_person_view
       @first_person_view = !@first_person_view
       @visible = !@first_person_view
-      puts "First Person? #{@first_person_view}"
     end
 
     def turn_180

@@ -84,17 +84,12 @@ class IMICFPS
 
     def self.action(key)
       answer = nil
-      @@keymap.each do |action, value|
+      @@keymap.detect do |action, value|
         if value.is_a?(Array)
-          if value.include?(key)
-            answer = action
-            break
-          end
-
+          answer = action if value.include?(key)
         else
           if value == key
             answer = action
-            break
           end
         end
       end
