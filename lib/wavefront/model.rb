@@ -85,7 +85,6 @@ class IMICFPS
       def populate_vertex_buffer
         @vertices_buffer_size = 0
         @vertices_buffer_data = []
-        model_has_texture = @materials.any? { |id, mat| mat.texture_id != nil }
 
         verts   = []
         colors  = []
@@ -98,7 +97,7 @@ class IMICFPS
           colors  << face.colors.map   { |vert| [vert.x, vert.y, vert.z] }
           norms   << face.normals.map  { |vert| [vert.x, vert.y, vert.z, vert.weight] }
 
-          if model_has_texture
+          if @has_texture
             uvs     << face.uvs.map    { |vert| [vert.x, vert.y, vert.z] }
             tex_ids << face.material.texture_id ? face.material.texture_id.to_f : -1.0
           end
@@ -108,16 +107,22 @@ class IMICFPS
           @vertices_buffer_data << vert
           @vertices_buffer_data << colors[i]
           @vertices_buffer_data << norms[i]
-          @vertices_buffer_data << uvs[i] if uvs.size > 0
-          @vertices_buffer_data << tex_ids[i] if tex_ids.size > 0
+
+          # if @has_texture
+            # @vertices_buffer_data << uvs[i] if uvs.size > 0
+            # @vertices_buffer_data << tex_ids[i] if tex_ids.size > 0
+          # end
         end
 
         data_size = 0
         data_size += Fiddle::SIZEOF_FLOAT * 3 * verts.size
         data_size += Fiddle::SIZEOF_FLOAT * 3 * colors.size
         data_size += Fiddle::SIZEOF_FLOAT * 4 * norms.size
-        data_size += Fiddle::SIZEOF_FLOAT * 3 * uvs.size
-        data_size += Fiddle::SIZEOF_FLOAT * 1 * tex_ids.size
+
+        if @has_texture
+          data_size += Fiddle::SIZEOF_FLOAT * 3 * uvs.size
+          data_size += Fiddle::SIZEOF_FLOAT * 1 * tex_ids.size
+        end
 
         @vertices_buffer_size = data_size
 
@@ -140,21 +145,34 @@ class IMICFPS
 
         program = Shader.get("default").program
 
+        stride = 0
+        position_stride   = Fiddle::SIZEOF_FLOAT * 3
+        color_stride      = Fiddle::SIZEOF_FLOAT * 3
+        normal_stride     = Fiddle::SIZEOF_FLOAT * 4
+        uv_stride         = Fiddle::SIZEOF_FLOAT * 3
+        texture_id_stride = Fiddle::SIZEOF_FLOAT
+
+        if @has_texture
+          stride = position_stride + color_stride + normal_stride + uv_stride + texture_id_stride
+        else
+          stride = position_stride + color_stride + normal_stride
+        end
+
         # index, size, type, normalized, stride, pointer
         # vertices (positions)
-        glVertexAttribPointer(glGetAttribLocation(program, "inPosition"), 3, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * 3, nil)
+        glVertexAttribPointer(glGetAttribLocation(program, "inPosition"), 3, GL_FLOAT, GL_FALSE, stride, nil)
         handleGlError
         # colors
-        glVertexAttribPointer(glGetAttribLocation(program, "inColor"), 3, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (3 + 3), nil)
+        glVertexAttribPointer(glGetAttribLocation(program, "inColor"), 3, GL_FLOAT, GL_FALSE, stride + position_stride, nil)
         handleGlError
         # normals
-        glVertexAttribPointer(glGetAttribLocation(program, "inNormal"), 4, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (4 + 3 + 3), nil)
+        glVertexAttribPointer(glGetAttribLocation(program, "inNormal"), 4, GL_FLOAT, GL_FALSE, stride + position_stride + color_stride, nil)
         handleGlError
         # uvs
-        glVertexAttribPointer(glGetAttribLocation(program, "inUV"), 4, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT * (3 + 4 + 3 + 3), nil)
+        glVertexAttribPointer(glGetAttribLocation(program, "inUV"), 3, GL_FLOAT, GL_FALSE, stride + position_stride + color_stride + normal_stride, nil)
         handleGlError
         # texture ids
-        glVertexAttribPointer(glGetAttribLocation(program, "inTextureID"), 1, GL_FLOAT, GL_FALSE, Fiddle::SIZEOF_FLOAT + (Fiddle::SIZEOF_FLOAT * (3 + 4 + 3 + 3)), nil)
+        glVertexAttribPointer(glGetAttribLocation(program, "inTextureID"), 1, GL_FLOAT, GL_FALSE, stride + position_stride + color_stride + normal_stride + uv_stride, nil)
         handleGlError
 
         glDisableVertexAttribArray(4)

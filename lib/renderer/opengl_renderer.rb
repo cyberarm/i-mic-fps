@@ -15,12 +15,13 @@ class IMICFPS
 
       handleGlError
 
-      if Shader.available?("default")
+      if Shader.available?("ddefault")
         Shader.use("default") do |shader|
           glUniform3f(shader.attribute_location("worldPosition"), object.position.x, object.position.y, object.position.z)
 
           handleGlError
-          draw_model(object.model)
+          draw_mesh(object.model)
+          # draw_model(object.model)
           object.draw
         end
       else

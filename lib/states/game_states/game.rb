@@ -24,7 +24,7 @@ class IMICFPS
       @crosshair_color = Gosu::Color.rgb(255,127,0)
 
       # @font = Gosu::Font.new(18, name: "DejaVu Sans")
-      @text = Text.new("Pending...", x: 10, y: 10, z: 1, size: 18, font: "DejaVu Sans")
+      @text = Text.new("Pending...", x: 10, y: 10, z: 1, size: 18, font: "DejaVu Sans", shadow_color: Gosu::Color::BLACK)
 
       Light.new(x: 3, y: -6, z: 6, game_state: self)
       Light.new(x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1), game_state: self)

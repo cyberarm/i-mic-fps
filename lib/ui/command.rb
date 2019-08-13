@@ -111,7 +111,7 @@ class IMICFPS
                 if list.size == 1
                   console.text_input.text = "#{split.first} #{split[1]} #{list.first} "
                 else
-                  console.stdin("Available options: #{list.map { |value| Commands::Style.highlight(value) }.join(",")}")
+                  console.stdin("Available options: #{list.map { |value| Commands::Style.highlight(value) }.join(",")}") if list.size > 0
                 end
               end
             end
