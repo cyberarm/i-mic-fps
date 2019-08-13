@@ -44,9 +44,9 @@ class IMICFPS
 
         puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if $debug.get(:stats)
 
-        allocate_gl_objects
-        populate_vertex_buffer
-        configure_vao
+        # allocate_gl_objects
+        # populate_vertex_buffer
+        # configure_vao
 
         @objects.each {|o| @vertex_count+=o.vertices.size}
         @objects.each_with_index do |o, i|
