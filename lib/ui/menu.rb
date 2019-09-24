@@ -36,6 +36,7 @@ class IMICFPS
             Gosu::Color.rgba(@base_color.red-i*@color_step, @base_color.green-i*@color_step, @base_color.blue-i*@color_step, 200)
           )
         end
+
       end
 
       @background.draw(0, 0, 0)

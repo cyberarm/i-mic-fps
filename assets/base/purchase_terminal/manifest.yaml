@@ -1,0 +1,3 @@
+name: "purchase_terminal"
+model: "purchase_terminal.obj"
+collision: "boundingbox"

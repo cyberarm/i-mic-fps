@@ -1,2 +1,3 @@
 name: "skydome"
 model: "skydome.obj"
+collision: null

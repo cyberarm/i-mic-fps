@@ -5,11 +5,11 @@ require "abbrev"
 require "opengl"
 require "glu"
 
-begin
+#begin
   require_relative "../cyberarm_engine/lib/cyberarm_engine"
-rescue LoadError
-  require "cyberarm_engine"
-end
+#rescue LoadError
+#  require "cyberarm_engine"
+#end
 
 Dir.chdir(File.dirname(__FILE__))
 

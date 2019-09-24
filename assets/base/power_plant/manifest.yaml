@@ -1,0 +1,4 @@
+name: "power_plant"
+model: "power_plant.obj"
+collision: "mesh"
+collision_mesh: null # Use model mesh for collision detection

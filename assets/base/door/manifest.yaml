@@ -1,0 +1,4 @@
+---
+name: "door"
+model: "door.obj"
+collision: "boundingbox"

@@ -1,0 +1,4 @@
+name: "information_panel"
+model: "information_panel.obj"
+collision: "mesh"
+collision_mesh: null
