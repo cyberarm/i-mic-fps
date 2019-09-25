@@ -11,7 +11,7 @@ class IMICFPS
 
     def initialize(map_entity: nil, spawnpoint: nil, backface_culling: true, auto_manage: true)
       @position = map_entity ? map_entity.position : spawnpoint.position
-      @orientation = map_entity ? map_entity.orientation : spawnpoint.position
+      @orientation = map_entity ? map_entity.orientation : spawnpoint.orientation
       @scale = map_entity ? map_entity.scale : 1.0
 
       @backface_culling = backface_culling
