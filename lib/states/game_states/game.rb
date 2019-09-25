@@ -40,8 +40,8 @@ class IMICFPS
         @demo_index= 0
         @demo_changed = false
 
-        @demo_last_pitch = @camera.pitch
-        @demo_last_yaw   = @camera.yaw
+        @demo_last_pitch = @camera.orientation.z
+        @demo_last_yaw   = @camera.orientation.y
 
         at_exit { @demo_file.close }
       end
@@ -138,15 +138,15 @@ class IMICFPS
       end
 
       if ARGV.join.include?("--savedemo")
-        if @camera.pitch != @demo_last_pitch || @camera.yaw != @demo_last_yaw
+        if @camera.orientation.z != @demo_last_pitch || @camera.orientation.y != @demo_last_yaw
           unless @demo_last_written_index == @demo_index
             @demo_last_written_index = @demo_index
             @demo_file.puts("tick #{@demo_index}")
           end
 
-          @demo_file.puts("mouse #{@camera.z} #{@camera.y}")
-          @demo_last_pitch = @camera.z
-          @demo_last_yaw   = @camera.y
+          @demo_file.puts("mouse #{@camera.orientation.z} #{@camera.orientation.y}")
+          @demo_last_pitch = @camera.orientation.z
+          @demo_last_yaw   = @camera.orientation.y
         end
 
         @demo_changed = false

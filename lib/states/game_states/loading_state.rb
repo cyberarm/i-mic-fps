@@ -5,6 +5,7 @@ class IMICFPS
 
       title "I-MIC FPS"
       @subheading = Text.new("Loading Map: #{@map.metadata.name}", y: 100, size: 50, alignment: :center)
+      @description = Text.new("Map created by: #{@map.metadata.authors.join(", ")}\n#{@map.metadata.description}", y: 180, size: 24, alignment: :center)
       @state = Text.new("Preparing...", y: window.height/2-40, size: 40, alignment: :center)
       @percentage = Text.new("0%", y: window.height - 100 + 25, size: 50, alignment: :center)
 
@@ -33,6 +34,7 @@ class IMICFPS
     def draw
       super
       @subheading.draw
+      @description.draw
       @state.draw
 
 

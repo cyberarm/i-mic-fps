@@ -130,7 +130,6 @@ class IMICFPS
     end
 
     def turn_left
-      puts "CALLED"
       @orientation.y += @turn_speed * delta_time
     end
 
