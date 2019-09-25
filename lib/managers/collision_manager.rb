@@ -72,7 +72,7 @@ class IMICFPS
 
     # AABBTree on entities is relative to model origin of 0,0,0
     def localize_entity_bounding_box(entity, target)
-      return entity.bounding_box if target.position == 0 && target.rotation == 0
+      return entity.bounding_box if target.position == 0 && target.orientation == 0
 
       # "tranform" entity bounding box into target's space
       local =  (target.position) # needs tweaking, works well enough for now

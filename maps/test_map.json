@@ -1,0 +1,70 @@
+{
+  "metadata": {
+    "name":"Testing Map",
+    "gamemode":"C&C",
+    "authors":["Cyberarm"],
+    "datetime":"2019-09-25 13:54:34 UTC",
+    "thumbnail":"",
+    "description":"A map for testing the map specification."
+  },
+
+  "terrain":{
+    "package":"base",
+    "model":"river_terrain",
+    "water_level":null
+  },
+
+  "skydome":{
+    "package":"base",
+    "model":"skydome",
+    "scale":0.08
+  },
+
+  "entities":[
+    {
+      "package":"base",
+      "model":"tree",
+      "position": {
+        "x":0,
+        "y":1,
+        "z":0
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1.0,
+      "scripts": []
+    }
+  ],
+
+  "spawnpoints": [
+    {
+      "team":0,
+      "position": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "team":1,
+      "position": {
+        "x": 0,
+        "y": 1,
+        "z": 0
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    }
+  ]
+}

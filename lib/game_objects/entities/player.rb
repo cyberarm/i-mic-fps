@@ -106,7 +106,7 @@ class IMICFPS
     end
 
     def relative_y_rotation
-      @rotation.y * -1
+      @orientation.y * -1
     end
 
     def forward
@@ -130,11 +130,12 @@ class IMICFPS
     end
 
     def turn_left
-      @rotation.y += @turn_speed * delta_time
+      puts "CALLED"
+      @orientation.y += @turn_speed * delta_time
     end
 
     def turn_right
-      @rotation.y -= @turn_speed * delta_time
+      @orientation.y -= @turn_speed * delta_time
     end
 
     def jump
@@ -166,8 +167,8 @@ class IMICFPS
     end
 
     def turn_180
-      @rotation.y = @rotation.y + 180
-      @rotation.y %= 360
+      @orientation.y = @orientation.y + 180
+      @orientation.y %= 360
     end
   end
 end

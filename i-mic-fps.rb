@@ -1,6 +1,8 @@
 require "fiddle"
 require "yaml"
+require "json"
 require "abbrev"
+require "time"
 
 require "opengl"
 require "glu"
@@ -105,18 +107,18 @@ require_relative "lib/ui/menus/main_menu"
 require_relative "lib/states/game_states/game"
 require_relative "lib/states/game_states/loading_state"
 
-require_relative "lib/objects/entity"
-require_relative "lib/objects/model_loader"
-require_relative "lib/objects/light"
+require_relative "lib/game_objects/entity"
+require_relative "lib/game_objects/model_loader"
+require_relative "lib/game_objects/light"
 
-require_relative "lib/objects/camera"
-require_relative "lib/objects/entities/player"
-require_relative "lib/objects/entities/tree"
-require_relative "lib/objects/entities/skydome"
-require_relative "lib/objects/entities/test_object"
-require_relative "lib/objects/entities/terrain"
+require_relative "lib/game_objects/camera"
+require_relative "lib/game_objects/entities/player"
+require_relative "lib/game_objects/entities/skydome"
+require_relative "lib/game_objects/entities/terrain"
 
 require_relative "lib/wavefront/model"
+
+require_relative "lib/map"
 
 require_relative "lib/window"
 

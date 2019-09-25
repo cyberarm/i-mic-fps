@@ -1,7 +1,6 @@
 class IMICFPS
   class Skydome < Entity
     def setup
-      bind_model("base", "skydome")
       @collision = :none
     end
 
@@ -12,8 +11,8 @@ class IMICFPS
     end
 
     def update
-      @rotation.y += 0.01
-      @rotation.y %= 360
+      @orientation.y += 0.01
+      @orientation.y %= 360
       super
     end
   end

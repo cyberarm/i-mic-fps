@@ -3,7 +3,7 @@ class IMICFPS
     def setup
       title "I-MIC FPS"
       link "Single Player" do
-        push_state(LoadingState.new(forward: Game))
+        push_state(LoadingState.new(forward: Game, map_file: GAME_ROOT_PATH + "/maps/test_map.json"))
       end
       link "Settings" do
         # push_game_state(SettingsMenu)

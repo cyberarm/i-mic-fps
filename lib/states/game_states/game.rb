@@ -5,27 +5,26 @@ class IMICFPS
     def setup
       @collision_manager = CollisionManager.new(game_state: self)
       @renderer = Renderer.new(game_state: self)
-      add_entity(Terrain.new)
+      @map = @options[:map]
+      add_entity(Terrain.new(map_entity: @map.terrain))
+
       @draw_skydome = true
-      @skydome = Skydome.new(scale: 0.08, backface_culling: false)
+      @skydome = Skydome.new(map_entity: @map.skydome, backface_culling: false)
       add_entity(@skydome)
 
-      25.times do
-        add_entity(Tree.new)
+      @map.entities.each do |ent|
+        add_entity(Entity.new(map_entity: ent))
       end
 
-      add_entity(TestObject.new(z: 10))
-
-      @player = Player.new(x: 1, y: 0, z: -1)
+      @player = Player.new(spawnpoint: @map.spawnpoints.sample)
       add_entity(@player)
-      @camera = Camera.new(x: 0, y: -2, z: 1)
+      @camera = Camera.new(position: @player.position.clone)
       @camera.attach_to(@player)
 
       @crosshair_size = 10
       @crosshair_thickness = 3
       @crosshair_color = Gosu::Color.rgb(255,127,0)
 
-      # @font = Gosu::Font.new(18, name: "DejaVu Sans")
       @text = Text.new("Pending...", x: 10, y: 10, z: 1, size: 18, font: "DejaVu Sans", shadow_color: Gosu::Color::BLACK)
 
       Light.new(x: 3, y: -6, z: 6, game_state: self)
@@ -126,8 +125,8 @@ class IMICFPS
                 self.button_down(key)
 
               elsif data.first == "mouse"
-                @camera.pitch = data[1].to_f
-                @player.rotation.y = (data[2].to_f * -1) - 180
+                @camera.orientation.z = data[1].to_f
+                @player.orientation.y = (data[2].to_f * -1) - 180
               else
                 # hmm
               end
@@ -145,9 +144,9 @@ class IMICFPS
             @demo_file.puts("tick #{@demo_index}")
           end
 
-          @demo_file.puts("mouse #{@camera.pitch} #{@camera.yaw}")
-          @demo_last_pitch = @camera.pitch
-          @demo_last_yaw   = @camera.yaw
+          @demo_file.puts("mouse #{@camera.z} #{@camera.y}")
+          @demo_last_pitch = @camera.z
+          @demo_last_yaw   = @camera.y
         end
 
         @demo_changed = false

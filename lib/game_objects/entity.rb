@@ -6,17 +6,20 @@ class IMICFPS
     include CommonMethods
 
     attr_accessor :scale, :visible, :renderable, :backface_culling
-    attr_accessor :position, :rotation, :velocity
+    attr_accessor :position, :orientation, :velocity
     attr_reader :name, :debug_color, :bounding_box, :collision, :physics, :mass, :drag, :camera
 
-    def initialize(x: 0, y: 0, z: 0, bound_model: nil, scale: MODEL_METER_SCALE, backface_culling: true, auto_manage: true, manifest_file: nil)
-      @position = Vector.new(x, y, z)
-      @scale = scale
-      @bound_model = bound_model
+    def initialize(map_entity: nil, spawnpoint: nil, backface_culling: true, auto_manage: true)
+      @position = map_entity ? map_entity.position : spawnpoint.position
+      @orientation = map_entity ? map_entity.orientation : spawnpoint.position
+      @scale = map_entity ? map_entity.scale : 1.0
+
       @backface_culling = backface_culling
+      @bound_model = map_entity ? bind_model(map_entity.package, map_entity.model) : nil
+
       @visible = true
       @renderable = true
-      @rotation   = Vector.new(0, 0, 0)
+
       @velocity   = Vector.new(0, 0, 0)
       @drag       = 1.0
 
@@ -61,7 +64,7 @@ class IMICFPS
       @bound_model.model.objects.each { |o| o.scale = self.scale }
       @bounding_box = normalize_bounding_box_with_offset
 
-      # box = normalize_bounding_box
+      return model
     end
 
     def model

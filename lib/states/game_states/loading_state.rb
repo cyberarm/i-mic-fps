@@ -1,9 +1,10 @@
 class IMICFPS
   class LoadingState < Menu
     def setup
+      @map = Map.new(map_file: @options[:map_file])
+
       title "I-MIC FPS"
-      #@header = Text.new("I-MIC FPS", y: 10, size: 100, alignment: :center)
-      @subheading = Text.new("Loading Assets", y: 100, size: 50, alignment: :center)
+      @subheading = Text.new("Loading Map: #{@map.metadata.name}", y: 100, size: 50, alignment: :center)
       @state = Text.new("Preparing...", y: window.height/2-40, size: 40, alignment: :center)
       @percentage = Text.new("0%", y: window.height - 100 + 25, size: 50, alignment: :center)
 
@@ -12,9 +13,10 @@ class IMICFPS
       @asset_index = 0
       # add_asset(:shader, nil, "default")
 
-      add_asset(:model, "base", "randomish_terrain")
-      add_asset(:model, "base", "skydome")
-      add_asset(:model, "base", "tree")
+      @map.entities.each do |entity|
+        add_asset(:model, entity.package, entity.model)
+      end
+
       add_asset(:model, "base", "biped")
 
       @act = false
@@ -58,7 +60,7 @@ class IMICFPS
 
       unless @asset_index < @assets.count
         if @act && Gosu.milliseconds-@completed_for_ms > 250
-          push_state(@options[:forward])
+          push_state(@options[:forward], map: @map)
         else
           @act = true
           @completed_for_ms = Gosu.milliseconds unless @lock

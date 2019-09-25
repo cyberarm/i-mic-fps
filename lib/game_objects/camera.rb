@@ -4,9 +4,9 @@ class IMICFPS
 
     attr_accessor :field_of_view, :mouse_sensitivity
     attr_reader :entity, :position, :orientation, :mouse_captured
-    def initialize(x: 0, y: 0, z: 0, fov: 70.0, view_distance: 155.0)
-      @position = Vector.new(x,y,z)
-      @orientation = Vector.new(0, 0, 0)
+    def initialize(position:, orientation: Vector.new(0, 0, 0), fov: 70.0, view_distance: 155.0)
+      @position = position
+      @orientation = orientation
       @field_of_view = fov
       @view_distance = view_distance
       @constant_pitch = 20.0
@@ -54,14 +54,14 @@ class IMICFPS
         end
       end
 
-      x_offset = horizontal_distance_from_object * Math.sin(@entity.rotation.y.degrees_to_radians)
-      z_offset = horizontal_distance_from_object * Math.cos(@entity.rotation.y.degrees_to_radians)
-      # p @entity.x, @entity.z;exit
+      x_offset = horizontal_distance_from_object * Math.sin(@entity.orientation.y.degrees_to_radians)
+      z_offset = horizontal_distance_from_object * Math.cos(@entity.orientation.y.degrees_to_radians)
+
       @position.x = @entity.position.x - x_offset
       @position.y = @entity.position.y + 2
       @position.z = @entity.position.z - z_offset
 
-      @orientation.y = 180 - @entity.rotation.y
+      @orientation.y = 180 - @entity.orientation.y
     end
 
     def draw
@@ -89,9 +89,13 @@ class IMICFPS
         @orientation.z -= Float(@true_mouse.y - self.mouse_y) / (@mouse_sensitivity * @field_of_view) * 70
         @orientation.z = @orientation.z.clamp(-90.0, 90.0)
 
-        @entity.rotation.y += delta if @entity
-        free_move unless @entity
-        position_camera if @entity
+        if @entity
+          @entity.orientation.y += delta
+          @entity.orientation.y %= 360
+          position_camera
+        else
+          free_move
+        end
 
         self.mouse_x = window.width  / 2 if self.mouse_x <= 1 || window.mouse_x >= window.width-1
         self.mouse_y = window.height / 2 if self.mouse_y <= 1 || window.mouse_y >= window.height-1
