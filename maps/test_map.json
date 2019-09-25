@@ -26,7 +26,7 @@
       "model":"tree",
       "position": {
         "x":0,
-        "y":1,
+        "y":0.6,
         "z":0
       },
       "orientation": {
@@ -36,6 +36,134 @@
       },
       "scale": 1.0,
       "scripts": []
+    },
+    {
+      "package":"base",
+      "model":"tree",
+      "position": {
+        "x":16.7,
+        "y":1.1,
+        "z":-7.27
+      },
+      "orientation": {
+        "x": 0,
+        "y": 37.0,
+        "z": 0
+      },
+      "scale": 0.9,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "model":"tree",
+      "position": {
+        "x":-21.2121,
+        "y":0.06,
+        "z":6.06061
+      },
+      "orientation": {
+        "x": 0,
+        "y": 64.0,
+        "z": 0
+      },
+      "scale": 0.25,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "model":"power_plant",
+      "position": {
+        "x":37.8788,
+        "y":0.343869,
+        "z":-6.06061
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "model":"purchase_terminal",
+      "position": {
+        "x":37.8788,
+        "y":1.843869,
+        "z":-6.06061
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "model":"information_panel",
+      "position": {
+        "x":37.8788,
+        "y":0.343869,
+        "z":-6.06061
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "model":"door",
+      "position": {
+        "x":37.8788,
+        "y":0.343869,
+        "z":-12.06061
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "model":"door",
+      "position": {
+        "x":37.8788,
+        "y":0.343869,
+        "z":-12.06061
+      },
+      "orientation": {
+        "x": 0,
+        "y": 180,
+        "z": 0
+      },
+      "scale": 1,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "model":"war_factory",
+      "position": {
+        "x":39.3939,
+        "y":0.499657,
+        "z":9.69697
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1,
+      "scripts": []
     }
   ],
 
@@ -43,26 +171,26 @@
     {
       "team":0,
       "position": {
-        "x": 0,
-        "y": 1,
-        "z": 0
+        "x": 37.8788,
+        "y": 0.343869,
+        "z": -2.06061
       },
       "orientation": {
         "x": 0,
-        "y": 0,
+        "y": 180,
         "z": 0
       }
     },
     {
       "team":1,
       "position": {
-        "x": 0,
-        "y": 1,
-        "z": 0
+        "x": 37.8788,
+        "y": 0.343869,
+        "z": -4.06061
       },
       "orientation": {
         "x": 0,
-        "y": 0,
+        "y": 180,
         "z": 0
       }
     }

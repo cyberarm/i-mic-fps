@@ -9,13 +9,14 @@ class IMICFPS
     attr_accessor :position, :orientation, :velocity
     attr_reader :name, :debug_color, :bounding_box, :collision, :physics, :mass, :drag, :camera
 
-    def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: true, auto_manage: true)
+    def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: false, auto_manage: true)
       @manifest = manifest
-      @position = map_entity ? map_entity.position : spawnpoint.position
-      @orientation = map_entity ? map_entity.orientation : spawnpoint.orientation
+      @position = map_entity ? map_entity.position.clone : spawnpoint.position.clone
+      @orientation = map_entity ? map_entity.orientation.clone : spawnpoint.orientation.clone
       @scale = map_entity ? map_entity.scale : 1.0
 
       @backface_culling = backface_culling
+      @name = @manifest.name
       @bound_model = map_entity ? bind_model(map_entity.package, map_entity.model) : nil
 
       @visible = true
@@ -41,7 +42,6 @@ class IMICFPS
 
       if @bound_model
         @bound_model.model.entity = self
-        @bound_model.model.objects.each { |o| o.scale = self.scale }
         @normalized_bounding_box = normalize_bounding_box_with_offset
 
         normalize_bounding_box
@@ -62,7 +62,6 @@ class IMICFPS
       raise "model isn't a model!" unless model.is_a?(ModelLoader)
       @bound_model = model
       @bound_model.model.entity = self
-      @bound_model.model.objects.each { |o| o.scale = self.scale }
       @bounding_box = normalize_bounding_box_with_offset
 
       return model

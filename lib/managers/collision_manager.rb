@@ -82,5 +82,29 @@ class IMICFPS
 
       return box
     end
+
+    def on_ground?(entity) # TODO: Use some form of caching to speed this up
+      on_ground = false
+      @collisions.detect do |a, b|
+        next unless entity == a || entity == b
+
+        vs = a
+        vs = b if a == entity
+
+        broadphase = search(Ray.new(entity.position, Vector.new(0, -1, 0), entity.velocity.y.abs))
+
+        broadphase.detect do |ent|
+          ray = Ray.new(entity.position - ent.position, Vector.new(0, -1, 0))
+          if ent.model.aabb_tree.search(ray).size > 0
+            on_ground = true
+            return true
+          end
+        end
+
+        break if on_ground
+      end
+
+      return on_ground
+    end
   end
 end

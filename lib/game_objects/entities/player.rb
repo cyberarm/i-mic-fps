@@ -9,6 +9,7 @@ class IMICFPS
     def setup
       bind_model("base", "biped")
       @collision = :dynamic
+      @physics = true
 
       @speed = 2.5 # meter's per second
       @running_speed = 5.0 # meter's per second
@@ -93,11 +94,6 @@ class IMICFPS
       # Do not handle movement if mouse is not captured
       return if @camera && !@camera.mouse_captured
 
-      if @_time_in_air
-        air_time = (Gosu.milliseconds - @_time_in_air) / 1000.0
-        @velocity.y -= IMICFPS::GRAVITY * air_time * delta_time
-      end
-
       super
     end
 
@@ -138,25 +134,8 @@ class IMICFPS
     end
 
     def jump
-      if InputMapper.down?(:jump) && !@jumping
-        @jumping = true
-        @_time_in_air = Gosu.milliseconds
-
-      elsif !@jumping
-        @falling = true
-        @_time_in_air ||= Gosu.milliseconds # FIXME
-      else
-        if @jumping && @velocity.y <= 0
-          @falling = false
-          @jumping = false
-        end
-      end
-
-      if @jumping && !@falling
-        if InputMapper.down?(:jump)
-          @velocity.y = 1.5
-          @falling = true
-        end
+      if InputMapper.down?(:jump) && window.current_state.collision_manager.on_ground?(self)
+        @velocity.y = 1.5
       end
     end
 
