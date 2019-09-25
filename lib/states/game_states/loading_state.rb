@@ -13,6 +13,8 @@ class IMICFPS
       @asset_index = 0
       # add_asset(:shader, nil, "default")
 
+      add_asset(:model, @map.terrain.package, @map.terrain.model)
+      add_asset(:model, @map.skydome.package, @map.skydome.model)
       @map.entities.each do |entity|
         add_asset(:model, entity.package, entity.model)
       end
