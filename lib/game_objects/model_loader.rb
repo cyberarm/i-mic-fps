@@ -8,13 +8,11 @@ class IMICFPS
 
     attr_reader :model, :name, :debug_color
 
-    def initialize(manifest_file:, entity: nil)
-      @manifest = YAML.load(File.read(manifest_file))
-      # pp @manifest
-      @file_path = File.expand_path("./../model/", manifest_file) + "/#{@manifest["model"]}"
-      @name = @manifest["name"]
+    def initialize(manifest:, entity: nil)
+      @name = manifest.name
+      @model_file = model_file = manifest.file_path + "/model/#{manifest.model}"
 
-      @type = File.basename(@file_path).split(".").last.to_sym
+      @type = File.basename(@model_file).split(".").last.to_sym
       @debug_color = Color.new(0.0, 1.0, 0.0)
 
       @model = nil
@@ -23,7 +21,7 @@ class IMICFPS
       unless load_model_from_cache
         case @type
         when :obj
-          @model = Wavefront::Model.new(file_path: @file_path, entity: entity)
+          @model = Wavefront::Model.new(file_path: @model_file, entity: entity)
         else
           raise "Unsupported model type, supported models are: #{@supported_models.join(', ')}"
         end
@@ -38,9 +36,9 @@ class IMICFPS
     def load_model_from_cache
       found = false
       if CACHE[@type].is_a?(Hash)
-        if CACHE[@type][@file_path]
-          @model = CACHE[@type][@file_path]#.dup # Don't know why, but adding .dup improves performance with Sponza (1 fps -> 20 fps)
-          puts "Used cached model for: #{@file_path.split('/').last}" if $debug.get(:stats)
+        if CACHE[@type][@model_file]
+          @model = CACHE[@type][@model_file]#.dup # Don't know why, but adding .dup improves performance with Sponza (1 fps -> 20 fps)
+          puts "Used cached model for: #{@model_file.split('/').last}" if $debug.get(:stats)
           found = true
         end
       end
@@ -50,7 +48,7 @@ class IMICFPS
 
     def cache_model
       CACHE[@type] = {} unless CACHE[@type].is_a?(Hash)
-      CACHE[@type][@file_path] = @model
+      CACHE[@type][@model_file] = @model
     end
   end
 end

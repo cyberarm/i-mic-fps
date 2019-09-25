@@ -119,6 +119,7 @@ require_relative "lib/game_objects/entities/terrain"
 require_relative "lib/wavefront/model"
 
 require_relative "lib/map"
+require_relative "lib/manifest"
 
 require_relative "lib/window"
 

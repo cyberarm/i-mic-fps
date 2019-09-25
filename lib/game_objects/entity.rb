@@ -9,7 +9,8 @@ class IMICFPS
     attr_accessor :position, :orientation, :velocity
     attr_reader :name, :debug_color, :bounding_box, :collision, :physics, :mass, :drag, :camera
 
-    def initialize(map_entity: nil, spawnpoint: nil, backface_culling: true, auto_manage: true)
+    def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: true, auto_manage: true)
+      @manifest = manifest
       @position = map_entity ? map_entity.position : spawnpoint.position
       @orientation = map_entity ? map_entity.orientation : spawnpoint.orientation
       @scale = map_entity ? map_entity.scale : 1.0
@@ -56,7 +57,7 @@ class IMICFPS
     end
 
     def bind_model(package, name)
-      model = ModelLoader.new(manifest_file: IMICFPS.assets_path + "/#{package}/#{name}/manifest.yaml", entity: @dummy_entity)
+      model = ModelLoader.new(manifest: @manifest, entity: @dummy_entity)
 
       raise "model isn't a model!" unless model.is_a?(ModelLoader)
       @bound_model = model
