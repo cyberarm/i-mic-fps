@@ -1,2 +1,5 @@
 name: "Alternate Tank"
 model: "alternate_tank.obj"
+scripts: [
+  "vehicle"
+]

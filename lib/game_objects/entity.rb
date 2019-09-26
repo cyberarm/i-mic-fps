@@ -17,7 +17,7 @@ class IMICFPS
 
       @backface_culling = backface_culling
       @name = @manifest.name
-      @bound_model = map_entity ? bind_model(map_entity.package, map_entity.model) : nil
+      @bound_model = map_entity ? bind_model : nil
 
       @visible = true
       @renderable = true
@@ -32,7 +32,7 @@ class IMICFPS
       # :static => does not move ever,
       # :none => no collision check, entities can pass through
       @collision  = :static
-      @physics    = false # Entity affected by gravity and what not
+      @physics    = @manifest.physics # Entity affected by gravity and what not
       @mass       = 100 # kg
 
       @delta_time = Gosu.milliseconds
@@ -56,7 +56,7 @@ class IMICFPS
       @collidable.include?(@collision)
     end
 
-    def bind_model(package, name)
+    def bind_model
       model = ModelLoader.new(manifest: @manifest, entity: @dummy_entity)
 
       raise "model isn't a model!" unless model.is_a?(ModelLoader)

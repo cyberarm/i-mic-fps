@@ -91,6 +91,7 @@ class IMICFPS
 
         if @entity
           @entity.orientation.y += delta
+          @entity.orientation.y %= 360.0
           position_camera
         else
           free_move

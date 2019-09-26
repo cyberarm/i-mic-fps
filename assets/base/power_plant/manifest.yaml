@@ -2,10 +2,16 @@ name: "power_plant"
 model: "power_plant.obj"
 collision: "mesh"
 collision_mesh: null # Use model mesh for collision detection
+scripts: [
+  "power_plant"
+]
 uses:
   -
     package: "base"
-    model: "purchase_terminal"
+    name: "purchase_terminal"
   -
     package: "base"
-    model: "information_panel"
+    name: "information_panel"
+  -
+    package: "base"
+    name: "door"

@@ -7,7 +7,7 @@ class IMICFPS
     attr_reader :name, :bound_model, :first_person_view
 
     def setup
-      bind_model("base", "biped")
+      bind_model
       @collision = :dynamic
       @physics = true
 

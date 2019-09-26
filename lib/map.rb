@@ -31,7 +31,7 @@ class IMICFPS
 
       if section = data["terrain"]
         @terrain.package     = section["package"]
-        @terrain.model       = section["model"]
+        @terrain.name        = section["name"]
         @terrain.position    = Vector.new
         @terrain.orientation = Vector.new
         if section["scale"]
@@ -55,7 +55,7 @@ class IMICFPS
 
       if section = data["skydome"]
         @skydome.package     = section["package"]
-        @skydome.model       = section["model"]
+        @skydome.name        = section["name"]
         @skydome.position    = Vector.new
         @skydome.orientation = Vector.new
         if section["scale"]
@@ -80,7 +80,7 @@ class IMICFPS
         section.each do |ent|
           entity = Map::Entity.new
           entity.package  = ent["package"]
-          entity.model    = ent["model"]
+          entity.name     = ent["name"]
           entity.position = Vector.new(
             ent["position"]["x"],
             ent["position"]["y"],
@@ -132,7 +132,7 @@ class IMICFPS
     end
 
     MetaData   = Struct.new(:name, :gamemode, :authors, :datetime, :thumbnail, :description)
-    Entity     = Struct.new(:package, :model, :position, :orientation, :scale, :water_level, :scripts)
+    Entity     = Struct.new(:package, :name, :position, :orientation, :scale, :water_level, :scripts)
     SpawnPoint = Struct.new(:team, :position, :orientation)
   end
 end

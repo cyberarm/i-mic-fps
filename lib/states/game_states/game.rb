@@ -6,17 +6,17 @@ class IMICFPS
       @collision_manager = CollisionManager.new(game_state: self)
       @renderer = Renderer.new(game_state: self)
       @map = @options[:map]
-      add_entity(Terrain.new(map_entity: @map.terrain, manifest: Manifest.new(package: @map.terrain.package, model: @map.terrain.model)))
+      add_entity(Terrain.new(map_entity: @map.terrain, manifest: Manifest.new(package: @map.terrain.package, name: @map.terrain.name)))
 
       @draw_skydome = true
-      @skydome = Skydome.new(map_entity: @map.skydome, manifest: Manifest.new(package: @map.skydome.package, model: @map.skydome.model), backface_culling: false)
+      @skydome = Skydome.new(map_entity: @map.skydome, manifest: Manifest.new(package: @map.skydome.package, name: @map.skydome.name), backface_culling: false)
       add_entity(@skydome)
 
       @map.entities.each do |ent|
-        add_entity(Entity.new(map_entity: ent, manifest: Manifest.new(package: ent.package, model: ent.model)))
+        add_entity(Entity.new(map_entity: ent, manifest: Manifest.new(package: ent.package, name: ent.name)))
       end
 
-      @player = Player.new(spawnpoint: @map.spawnpoints.sample, manifest: Manifest.new(package: "base", model: "biped"))
+      @player = Player.new(spawnpoint: @map.spawnpoints.sample, manifest: Manifest.new(package: "base", name: "biped"))
       add_entity(@player)
       @camera = Camera.new(position: @player.position.clone)
       @camera.attach_to(@player)

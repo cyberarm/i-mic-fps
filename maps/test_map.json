@@ -10,20 +10,20 @@
 
   "terrain":{
     "package":"base",
-    "model":"river_terrain",
+    "name":"river_terrain",
     "water_level":null
   },
 
   "skydome":{
     "package":"base",
-    "model":"skydome",
+    "name":"skydome",
     "scale":0.08
   },
 
   "entities":[
     {
       "package":"base",
-      "model":"tree",
+      "name":"tree",
       "position": {
         "x":0,
         "y":0.6,
@@ -39,7 +39,7 @@
     },
     {
       "package":"base",
-      "model":"tree",
+      "name":"tree",
       "position": {
         "x":16.7,
         "y":1.1,
@@ -55,7 +55,7 @@
     },
     {
       "package":"base",
-      "model":"tree",
+      "name":"tree",
       "position": {
         "x":-21.2121,
         "y":0.06,
@@ -71,7 +71,7 @@
     },
     {
       "package":"base",
-      "model":"power_plant",
+      "name":"power_plant",
       "position": {
         "x":37.8788,
         "y":0.343869,
@@ -87,7 +87,7 @@
     },
     {
       "package":"base",
-      "model":"purchase_terminal",
+      "name":"purchase_terminal",
       "position": {
         "x":37.8788,
         "y":1.843869,
@@ -103,7 +103,7 @@
     },
     {
       "package":"base",
-      "model":"information_panel",
+      "name":"information_panel",
       "position": {
         "x":37.8788,
         "y":0.343869,
@@ -119,7 +119,7 @@
     },
     {
       "package":"base",
-      "model":"door",
+      "name":"door",
       "position": {
         "x":37.8788,
         "y":0.343869,
@@ -135,7 +135,7 @@
     },
     {
       "package":"base",
-      "model":"door",
+      "name":"door",
       "position": {
         "x":37.8788,
         "y":0.343869,
@@ -151,7 +151,7 @@
     },
     {
       "package":"base",
-      "model":"war_factory",
+      "name":"war_factory",
       "position": {
         "x":39.3939,
         "y":0.499657,
@@ -167,7 +167,7 @@
     },
     {
       "package":"base",
-      "model":"alternate_tank",
+      "name":"alternate_tank",
       "position": {
         "x":39.3939,
         "y":0.799657,
@@ -200,13 +200,13 @@
     {
       "team":1,
       "position": {
-        "x": 37.8788,
-        "y": 0.343869,
-        "z": -4.06061
+        "x": 39.3939,
+        "y": 0.799657,
+        "z": 17.69697
       },
       "orientation": {
         "x": 0,
-        "y": 180,
+        "y": 0,
         "z": 0
       }
     }

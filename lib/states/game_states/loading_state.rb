@@ -14,10 +14,10 @@ class IMICFPS
       @asset_index = 0
       # add_asset(:shader, nil, "default")
 
-      add_asset(:model, @map.terrain.package, @map.terrain.model)
-      add_asset(:model, @map.skydome.package, @map.skydome.model)
+      add_asset(:model, @map.terrain.package, @map.terrain.name)
+      add_asset(:model, @map.skydome.package, @map.skydome.name)
       @map.entities.each do |entity|
-        add_asset(:model, entity.package, entity.model)
+        add_asset(:model, entity.package, entity.name)
       end
 
       add_asset(:model, "base", "biped")
@@ -53,6 +53,7 @@ class IMICFPS
         case hash[:type]
         when :model
           manifest = Manifest.new(manifest_file: IMICFPS.assets_path + "/#{hash[:package]}/#{hash[:name]}/manifest.yaml")
+          add_required_assets(manifest)
           ModelLoader.new(manifest: manifest, entity: @dummy_entity)
         when :shader
           Shader.new(name: hash[:name], vertex: "shaders/vertex/#{hash[:name]}.glsl", fragment: "shaders/fragment/#{hash[:name]}.glsl")
@@ -80,6 +81,15 @@ class IMICFPS
 
     def add_asset(type, package, name)
       @assets << {type: type, package: package, name: name}
+    end
+
+    def add_required_assets(manifest)
+      manifest.uses.each do |dependency|
+        known = @assets.detect {|asset| asset[:package] == dependency.package && asset[:name] == dependency.name}
+        unless known
+          add_asset(:model, dependency.package, dependency.name)
+        end
+      end
     end
 
     def progressbar(x = window.width/4, y = window.height - 104)
