@@ -2,9 +2,12 @@
 ## Directory Structure
 * /__package__
   * /__name__
-    * /model -
+    * /model
+      * model.obj
     * /scripts
+      * script.rb
     * /textures
+      * texture.png
     * manifest.yaml
 
 ## Manifest File
