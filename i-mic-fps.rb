@@ -62,6 +62,7 @@ require_relative "lib/publisher"
 require_relative "lib/event"
 require_relative "lib/event_handler"
 require_relative "lib/event_handlers/input"
+require_relative "lib/event_handlers/entity_moved"
 require_relative "lib/event_handlers/entity_lifecycle"
 
 require_relative "lib/component"

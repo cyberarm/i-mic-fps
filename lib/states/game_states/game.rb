@@ -1,7 +1,7 @@
 class IMICFPS
   class Game < GameState
 
-    attr_reader :collision_manager
+    attr_reader :collision_manager, :delta_time
     def setup
       @collision_manager = CollisionManager.new(game_state: self)
       @renderer = Renderer.new(game_state: self)
@@ -84,10 +84,9 @@ class IMICFPS
     end
 
     def update
-      @last_frame_time = Gosu.milliseconds
       update_text
 
-      @publisher.publish(:tick, Gosu.milliseconds - @delta_time)
+      @publisher.publish(:tick, Gosu.milliseconds - window.delta_time)
 
       @collision_manager.update
       @entities.each(&:update)
@@ -161,7 +160,6 @@ class IMICFPS
 
       window.close if window.button_down?(Gosu::KbEscape)
       window.number_of_vertices = 0
-      @delta_time = Gosu.milliseconds
     end
 
     def update_text
@@ -176,7 +174,7 @@ Camera X:#{@camera.position.x.round(2)} Y:#{@camera.position.y.round(2)} Z:#{@ca
 #{if @camera.entity then "Actor X:#{@camera.entity.position.x.round(2)} Y:#{@camera.entity.position.y.round(2)} Z:#{@camera.entity.position.z.round(2)}";end}
 Field Of View: #{@camera.field_of_view}
 Mouse Sesitivity: #{@camera.mouse_sensitivity}
-Last Frame: #{delta_time * 1000.0}ms (#{Gosu.fps} fps)
+Last Frame: #{Gosu.milliseconds - window.delta_time}ms (#{Gosu.fps} fps)
 
 Vertices: #{formatted_number(window.number_of_vertices)}
 Faces: #{formatted_number(window.number_of_vertices/3)}

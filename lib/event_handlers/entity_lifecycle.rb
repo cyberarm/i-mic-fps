@@ -2,7 +2,7 @@ class IMICFPS
   class EventHandler
     class EntityLifeCycle < EventHandler
       def handles
-        [:create, :entity_move, :destroy]
+        [:create, :move, :destroy]
       end
 
       def handle(subscriber, context, *args)

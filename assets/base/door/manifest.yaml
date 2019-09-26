@@ -2,3 +2,6 @@
 name: "door"
 model: "door.obj"
 collision: "boundingbox"
+scripts: [
+  "door"
+]

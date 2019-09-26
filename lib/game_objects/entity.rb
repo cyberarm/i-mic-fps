@@ -36,7 +36,6 @@ class IMICFPS
       @physics    = @manifest.physics # Entity affected by gravity and what not
       @mass       = 100 # kg
 
-      @delta_time = Gosu.milliseconds
       @last_position = Vector.new(@position.x, @position.y, @position.z)
 
       load_scripts
@@ -110,11 +109,13 @@ class IMICFPS
 
     def update
       model.update
-      @delta_time = Gosu.milliseconds
 
       unless at_same_position?
+        Publisher.instance.publish(:entity_moved, self, self)
         @bounding_box = normalize_bounding_box_with_offset if model
       end
+
+      @last_position = Vector.new(@position.x, @position.y, @position.z)
     end
 
     def debug_color=(color)

@@ -25,11 +25,10 @@ class IMICFPS
     private def subscribable_events
       [
         :tick,
-        :create,
-        :destroy,
+        :create, :move, :destroy,
+        :entity_moved,
         :button_down, :button_up,
         :mouse_move,
-        :entity_move,
         :interact,
         :player_join, :player_leave, :player_die,
         :pickup_item, :use_item, :drop_item,

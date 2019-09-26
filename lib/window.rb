@@ -3,7 +3,7 @@ class IMICFPS
     attr_accessor :number_of_vertices, :needs_cursor
     attr_reader :camera
 
-    attr_reader :console
+    attr_reader :console, :delta_time
     def initialize(window_width = 1280, window_height = 800, fullscreen = false)
       fps_target = (ARGV.first.to_i != 0) ? ARGV.first.to_i : 60
       if ARGV.join.include?("--native")
@@ -22,6 +22,8 @@ class IMICFPS
       Commands::Command.setup
 
       push_state(MainMenu)
+
+      @delta_time = Gosu.milliseconds
     end
 
     def draw
@@ -34,6 +36,7 @@ class IMICFPS
       super
 
       @console.update if @show_console
+      @delta_time = Gosu.milliseconds
     end
 
     def button_down(id)

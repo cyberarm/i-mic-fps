@@ -7,7 +7,7 @@ class IMICFPS
 
     def window; $window; end
 
-    def delta_time; (Gosu.milliseconds - @delta_time) / 1000.0; end
+    def delta_time; (Gosu.milliseconds - window.delta_time) / 1000.0; end
     def button_down?(id); window.button_down?(id); end
 
     def mouse_x; window.mouse_x; end
