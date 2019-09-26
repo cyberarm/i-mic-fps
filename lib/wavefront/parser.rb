@@ -1,10 +1,13 @@
 class IMICFPS
   class Wavefront
-    module Parser
+    class Parser
+      def initialize(model)
+        @model = model
+      end
+
       def parse
         lines = 0
-        list = @file.read.split("\n")
-        # @file.each_line do |line|
+        list = File.read(@model.file_path).split("\n")
         list.each do |line|
           lines+=1
           line = line.strip
@@ -12,7 +15,7 @@ class IMICFPS
           array = line.split(' ')
           case array[0]
           when 'mtllib'
-            @material_file = array[1]
+            @model.material_file = array[1]
             parse_mtllib
           when 'usemtl'
             set_material(array[1])
@@ -44,7 +47,7 @@ class IMICFPS
             face.normals  = []
             face.colors   = []
             face.material = material
-            face.smoothing= @smoothing
+            face.smoothing= @model.smoothing
 
             mat   = face.material.diffuse
             color = Vector.new(mat.red, mat.green, mat.blue)
@@ -52,85 +55,85 @@ class IMICFPS
             verts.each_with_index do |v, index|
 
               if uvs.first != ""
-                face.vertices << @vertices[Integer(v)-1]
-                face.uvs      << @uvs[Integer(uvs[index])-1]
-                face.normals  << @normals[Integer(norms[index])-1]
+                face.vertices << @model.vertices[Integer(v)-1]
+                face.uvs      << @model.uvs[Integer(uvs[index])-1]
+                face.normals  << @model.normals[Integer(norms[index])-1]
                 face.colors   << color
               else
-                face.vertices << @vertices[Integer(v)-1]
+                face.vertices << @model.vertices[Integer(v)-1]
                 face.uvs      << nil
-                face.normals  << @normals[Integer(norms[index])-1]
+                face.normals  << @model.normals[Integer(norms[index])-1]
                 face.colors   << color
               end
             end
 
-            @current_object.faces << face
-            @faces << face
+            @model.current_object.faces << face
+            @model.faces << face
           end
         end
 
         puts "Total Lines: #{lines}" if $debug.get(:stats)
-        calculate_bounding_box(@vertices, @bounding_box)
-        @objects.each do |o|
-          calculate_bounding_box(o.vertices, o.bounding_box)
+        @model.calculate_bounding_box(@model.vertices, @model.bounding_box)
+        @model.objects.each do |o|
+          @model.calculate_bounding_box(o.vertices, o.bounding_box)
         end
       end
 
       def parse_mtllib
-        file = File.open(@file_path.sub(File.basename(@file_path), '')+@material_file, 'r')
+        file = File.open(@model.file_path.sub(File.basename(@model.file_path), '')+@model.material_file, 'r')
         file.readlines.each do |line|
           array = line.strip.split(' ')
           case array.first
           when 'newmtl'
             material = Material.new(array.last)
-            @current_material = array.last
-            @materials[array.last] = material
+            @model.current_material = array.last
+            @model.materials[array.last] = material
           when 'Ns' # Specular Exponent
           when 'Ka' # Ambient color
-            @materials[@current_material].ambient  = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
+            @model.materials[@model.current_material].ambient  = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
           when 'Kd' # Diffuse color
-            @materials[@current_material].diffuse  = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
+            @model.materials[@model.current_material].diffuse  = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
           when 'Ks' # Specular color
-            @materials[@current_material].specular = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
+            @model.materials[@model.current_material].specular = Color.new(Float(array[1]), Float(array[2]), Float(array[3]))
           when 'Ke' # Emissive
           when 'Ni' # Unknown (Blender Specific?)
           when 'd'  # Dissolved (Transparency)
           when 'illum' # Illumination model
           when 'map_Kd' # Diffuse texture
-            @materials[@current_material].set_texture(array[1])
+            @model.materials[@model.current_material].set_texture(array[1])
           end
         end
       end
 
       def change_object(name)
-        @objects << Object.new(name)
-        @current_object = @objects.last
+        @model.objects << Object.new(name)
+        @model.current_object = @model.objects.last
       end
 
       def set_smoothing(value)
         if value == "1"
-          @smoothing = true
+          @model.smoothing = true
         else
-          @smoothing = false
+          @model.smoothing = false
         end
       end
 
       def set_material(name)
-        @current_material = name
+        @model.current_material = name
       end
 
       def material
-        @materials[@current_material]
+        @model.materials[@model.current_material]
       end
 
       def faces_count
         count = 0
-        @objects.each {|o| count+=o.faces.count}
+        @model.objects.each {|o| count+=o.faces.count}
         return count
       end
 
       def add_vertex(array)
-        @vertex_count+=1
+        @model.vertex_count+=1
         vert = nil
         if array.size == 5
           vert = Vector.new(Float(array[1]), Float(array[2]), Float(array[3]), Float(array[4]))
@@ -139,8 +142,8 @@ class IMICFPS
         else
           raise
         end
-        @current_object.vertices << vert
-        @vertices << vert
+        @model.current_object.vertices << vert
+        @model.vertices << vert
       end
 
       def add_normal(array)
@@ -152,8 +155,8 @@ class IMICFPS
         else
           raise
         end
-        @current_object.normals << vert
-        @normals << vert
+        @model.current_object.normals << vert
+        @model.normals << vert
       end
 
       def add_texture_coordinate(array)
@@ -165,31 +168,8 @@ class IMICFPS
         else
           raise
         end
-        @current_object.textures << texture
-        @uvs << texture
-      end
-
-      def calculate_bounding_box(vertices, bounding_box)
-        unless bounding_box.min.x.is_a?(Float)
-          vertex = vertices.last
-          bounding_box.min.x = vertex.x
-          bounding_box.min.y = vertex.y
-          bounding_box.min.z = vertex.z
-
-          bounding_box.max.x = vertex.x
-          bounding_box.max.y = vertex.y
-          bounding_box.max.z = vertex.z
-        end
-
-        vertices.each do |vertex|
-          bounding_box.min.x = vertex.x if vertex.x <= bounding_box.min.x
-          bounding_box.min.y = vertex.y if vertex.y <= bounding_box.min.y
-          bounding_box.min.z = vertex.z if vertex.z <= bounding_box.min.z
-
-          bounding_box.max.x = vertex.x if vertex.x >= bounding_box.max.x
-          bounding_box.max.y = vertex.y if vertex.y >= bounding_box.max.y
-          bounding_box.max.z = vertex.z if vertex.z >= bounding_box.max.z
-        end
+        @model.current_object.textures << texture
+        @model.uvs << texture
       end
     end
   end

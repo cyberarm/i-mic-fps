@@ -23,7 +23,7 @@ class IMICFPS
       @devisor = 500.0
       @name_image = Gosu::Image.from_text("#{Etc.getlogin}", 100, font: "Consolas", align: :center)
       # @name_image.save("temp.png")
-      @name_tex = @name_image.gl_tex_info
+      # @name_tex = @name_image.gl_tex_info
       array_of_pixels = @name_image.to_blob
 
       tex_names_buf = ' ' * 8

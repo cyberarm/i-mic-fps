@@ -76,7 +76,10 @@ require_relative "lib/game_objects/entities/player"
 require_relative "lib/game_objects/entities/skydome"
 require_relative "lib/game_objects/entities/terrain"
 
-require_relative "lib/wavefront/model"
+require_relative "lib/model"
+require_relative "lib/wavefront/parser"
+require_relative "lib/wavefront/object"
+require_relative "lib/wavefront/material"
 
 require_relative "lib/map"
 require_relative "lib/manifest"
