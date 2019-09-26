@@ -9,11 +9,11 @@ class IMICFPS
     attr_accessor :position, :orientation, :velocity
     attr_reader :name, :debug_color, :bounding_box, :collision, :physics, :mass, :drag, :camera
 
-    def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: false, auto_manage: true)
+    def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: true, auto_manage: true)
       @manifest = manifest
       @position = map_entity ? map_entity.position.clone : spawnpoint.position.clone
       @orientation = map_entity ? map_entity.orientation.clone : spawnpoint.orientation.clone
-      @scale = map_entity ? map_entity.scale : 1.0
+      @scale = map_entity ? map_entity.scale.clone : Vector.new(1, 1, 1)
 
       @backface_culling = backface_culling
       @name = @manifest.name

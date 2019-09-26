@@ -8,6 +8,8 @@ class IMICFPS
         manifest_file = "#{IMICFPS.assets_path}/#{package}/#{model}/manifest.yaml"
       end
 
+      raise "No manifest found at: #{manifest_file}" unless  File.exist?(manifest_file)
+
       @file = manifest_file
       parse(manifest_file)
     end

@@ -9,6 +9,7 @@ class IMICFPS
       glPushMatrix
 
       glTranslatef(object.position.x, object.position.y, object.position.z)
+      glScalef(object.scale.x, object.scale.y, object.scale.z)
       glRotatef(object.orientation.x, 1.0, 0, 0)
       glRotatef(object.orientation.y, 0, 1.0, 0)
       glRotatef(object.orientation.z, 0, 0, 1.0)

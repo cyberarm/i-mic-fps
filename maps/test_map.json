@@ -164,6 +164,22 @@
       },
       "scale": 1,
       "scripts": []
+    },
+    {
+      "package":"base",
+      "model":"alternate_tank",
+      "position": {
+        "x":39.3939,
+        "y":0.799657,
+        "z":20.69697
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1.0,
+      "scripts": []
     }
   ],
 

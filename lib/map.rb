@@ -34,7 +34,20 @@ class IMICFPS
         @terrain.model       = section["model"]
         @terrain.position    = Vector.new
         @terrain.orientation = Vector.new
-        @terrain.scale       = 1.0
+        if section["scale"]
+          if section["scale"].is_a?(Hash)
+            @terrain.scale = Vector.new(
+              section["scale"]["x"],
+              section["scale"]["y"],
+              section["scale"]["z"]
+            )
+          else
+            scale = Float(section["scale"])
+            @terrain.scale = Vector.new(scale, scale, scale)
+          end
+        else
+          @terrain.scale = Vector.new(1, 1, 1)
+        end
         @terrain.water_level = section["water_level"]
       else
         raise "Map terrain data is missing!"
@@ -45,7 +58,20 @@ class IMICFPS
         @skydome.model       = section["model"]
         @skydome.position    = Vector.new
         @skydome.orientation = Vector.new
-        @skydome.scale       = section["scale"] ? section["scale"] : 1.0
+        if section["scale"]
+          if section["scale"].is_a?(Hash)
+            @skydome.scale = Vector.new(
+              section["scale"]["x"],
+              section["scale"]["y"],
+              section["scale"]["z"]
+            )
+          else
+            scale = Float(section["scale"])
+            @skydome.scale = Vector.new(scale, scale, scale)
+          end
+        else
+          @skydome.scale = Vector.new(1, 1, 1)
+        end
       else
         raise "Map skydome data is missing!"
       end
@@ -65,7 +91,16 @@ class IMICFPS
             ent["orientation"]["y"],
             ent["orientation"]["z"]
           )
-          entity.scale = ent["scale"]
+          if ent["scale"].is_a?(Hash)
+            entity.scale = Vector.new(
+              ent["scale"]["x"],
+              ent["scale"]["y"],
+              ent["scale"]["z"]
+            )
+          else
+            scale = Float(ent["scale"])
+            entity.scale = Vector.new(scale, scale, scale)
+          end
           entity.scripts = ent["scripts"]
 
           @entities << entity
