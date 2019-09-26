@@ -91,10 +91,10 @@ class IMICFPS
         vs = a
         vs = b if a == entity
 
-        broadphase = search(Ray.new(entity.position, Vector.new(0, -1, 0), entity.velocity.y.abs))
+        broadphase = search(Ray.new(entity.position, Vector.down, entity.velocity.y.abs))
 
         broadphase.detect do |ent|
-          ray = Ray.new(entity.position - ent.position, Vector.new(0, -1, 0))
+          ray = Ray.new(entity.position - ent.position, Vector.down)
           if ent.model.aabb_tree.search(ray).size > 0
             on_ground = true
             return true

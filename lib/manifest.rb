@@ -12,8 +12,6 @@ class IMICFPS
 
       @file = manifest_file
       parse(manifest_file)
-
-      pp @scripts
     end
 
     def parse(file)

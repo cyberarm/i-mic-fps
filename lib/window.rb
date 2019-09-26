@@ -3,6 +3,7 @@ class IMICFPS
     attr_accessor :number_of_vertices, :needs_cursor
     attr_reader :camera
 
+    attr_reader :console
     def initialize(window_width = 1280, window_height = 800, fullscreen = false)
       fps_target = (ARGV.first.to_i != 0) ? ARGV.first.to_i : 60
       if ARGV.join.include?("--native")

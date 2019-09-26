@@ -5,6 +5,8 @@ class IMICFPS
     def setup
       @collision_manager = CollisionManager.new(game_state: self)
       @renderer = Renderer.new(game_state: self)
+      @publisher = Publisher.new
+
       @map = @options[:map]
       add_entity(Terrain.new(map_entity: @map.terrain, manifest: Manifest.new(package: @map.terrain.package, name: @map.terrain.name)))
 
@@ -84,6 +86,8 @@ class IMICFPS
     def update
       @last_frame_time = Gosu.milliseconds
       update_text
+
+      @publisher.publish(:tick, Gosu.milliseconds - @delta_time)
 
       @collision_manager.update
       @entities.each(&:update)
@@ -202,6 +206,7 @@ eos
         @demo_changed = true
       end
       InputMapper.keydown(id)
+      @publisher.publish(:button_down, nil, id)
 
       @entities.each do |entity|
         entity.button_down(id) if defined?(entity.button_down)
@@ -218,6 +223,7 @@ eos
         @demo_changed = true
       end
       InputMapper.keyup(id)
+      @publisher.publish(:button_up, nil, id)
 
       @entities.each do |entity|
         entity.button_up(id) if defined?(entity.button_up)
