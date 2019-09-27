@@ -85,8 +85,9 @@ require_relative "lib/wavefront/parser"
 require_relative "lib/wavefront/object"
 require_relative "lib/wavefront/material"
 
-require_relative "lib/map"
+require_relative "lib/map_loader"
 require_relative "lib/manifest"
+require_relative "lib/map"
 
 require_relative "lib/window"
 

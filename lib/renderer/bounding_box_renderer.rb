@@ -1,8 +1,8 @@
 class IMICFPS
   class BoundingBoxRenderer
     attr_reader :bounding_boxes, :vertex_count
-    def initialize(game_state:)
-      @game_state = game_state
+    def initialize(map:)
+      @map = map
 
       @bounding_boxes = {}
       @vertex_count = 0
@@ -205,7 +205,7 @@ class IMICFPS
 
         glPopMatrix
 
-        found = @game_state.entities.detect { |o| o == bounding_box[:object] }
+        found = @map.entities.detect { |o| o == bounding_box[:object] }
 
         unless found
           @vertex_count -= @bounding_boxes[key][:vertices_size]

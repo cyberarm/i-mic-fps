@@ -1,138 +1,73 @@
 class IMICFPS
   class Map
-    attr_reader :metadata, :terrain, :skydome, :entities, :spawnpoints
-    attr_reader :assets, :missing_assets
-    def initialize(map_file:)
-      @metadata    = Map::MetaData.new
-      @terrain     = Map::Entity.new
-      @skydome     = Map::Entity.new
-      @entities    = []
-      @spawnpoints = []
+    include EntityManager
+    include LightManager
 
-      @assets = []
-      @missing_assets = []
+    attr_reader :gravity
+    def initialize(map_loader:, gravity: IMICFPS::GRAVITY)
+      @map_loader = map_loader
+      @gravity = gravity
 
-      parse(map_file)
+      @entities = []
+      @lights   = []
+
+      @collision_manager = CollisionManager.new(map: self)
+      @renderer = Renderer.new(map: self)
+      Publisher.new
     end
 
-    def parse(file)
-      data = JSON.parse(File.read(file))
+    def setup
+      add_entity(Terrain.new(map_entity: @map_loader.terrain, manifest: Manifest.new(package: @map_loader.terrain.package, name: @map_loader.terrain.name)))
 
-      if section = data["metadata"]
-        @metadata.name        = section["name"]
-        @metadata.gamemode    = section["gamemode"]
-        @metadata.authors     = section["authors"]
-        @metadata.datetime    = Time.parse(section["datetime"])
-        @metadata.thumbnail   = section["thumbnail"] # TODO: convert thumbnail to Image
-        @metadata.description = section["description"]
-      else
-        raise "Map metadata is missing!"
+      add_entity(Skydome.new(map_entity: @map_loader.skydome, manifest: Manifest.new(package: @map_loader.skydome.package, name: @map_loader.skydome.name), backface_culling: false))
+
+      @map_loader.entities.each do |ent|
+        add_entity(Entity.new(map_entity: ent, manifest: Manifest.new(package: ent.package, name: ent.name)))
       end
 
-      if section = data["terrain"]
-        @terrain.package     = section["package"]
-        @terrain.name        = section["name"]
-        @terrain.position    = Vector.new
-        @terrain.orientation = Vector.new
-        if section["scale"]
-          if section["scale"].is_a?(Hash)
-            @terrain.scale = Vector.new(
-              section["scale"]["x"],
-              section["scale"]["y"],
-              section["scale"]["z"]
-            )
-          else
-            scale = Float(section["scale"])
-            @terrain.scale = Vector.new(scale, scale, scale)
-          end
-        else
-          @terrain.scale = Vector.new(1, 1, 1)
-        end
-        @terrain.water_level = section["water_level"]
-      else
-        raise "Map terrain data is missing!"
-      end
+      add_entity(Player.new(spawnpoint: @map_loader.spawnpoints.sample, manifest: Manifest.new(package: "base", name: "biped")))
 
-      if section = data["skydome"]
-        @skydome.package     = section["package"]
-        @skydome.name        = section["name"]
-        @skydome.position    = Vector.new
-        @skydome.orientation = Vector.new
-        if section["scale"]
-          if section["scale"].is_a?(Hash)
-            @skydome.scale = Vector.new(
-              section["scale"]["x"],
-              section["scale"]["y"],
-              section["scale"]["z"]
-            )
-          else
-            scale = Float(section["scale"])
-            @skydome.scale = Vector.new(scale, scale, scale)
-          end
-        else
-          @skydome.scale = Vector.new(1, 1, 1)
-        end
-      else
-        raise "Map skydome data is missing!"
-      end
+      # TODO: Load lights from MapLoader
+      add_light(Light.new(id: available_light, x: 3, y: -6, z: 6))
+      add_light(Light.new(id: available_light, x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1)))
+    end
 
-      if section = data["entities"]
-        section.each do |ent|
-          entity = Map::Entity.new
-          entity.package  = ent["package"]
-          entity.name     = ent["name"]
-          entity.position = Vector.new(
-            ent["position"]["x"],
-            ent["position"]["y"],
-            ent["position"]["z"]
-          )
-          entity.orientation = Vector.new(
-            ent["orientation"]["x"],
-            ent["orientation"]["y"],
-            ent["orientation"]["z"]
-          )
-          if ent["scale"].is_a?(Hash)
-            entity.scale = Vector.new(
-              ent["scale"]["x"],
-              ent["scale"]["y"],
-              ent["scale"]["z"]
-            )
-          else
-            scale = Float(ent["scale"])
-            entity.scale = Vector.new(scale, scale, scale)
-          end
-          entity.scripts = ent["scripts"]
+    def data
+      @map_loader
+    end
 
-          @entities << entity
-        end
-      else
-        raise "Map has no entities!"
-      end
-
-      if section = data["spawnpoints"]
-        section.each do |point|
-          spawnpoint = SpawnPoint.new
-          spawnpoint.team = point["team"]
-          spawnpoint.position = Vector.new(
-            point["position"]["x"],
-            point["position"]["y"],
-            point["position"]["z"]
-          )
-          spawnpoint.orientation = Vector.new(
-            point["orientation"]["x"],
-            point["orientation"]["y"],
-            point["orientation"]["z"]
-          )
-
-          @spawnpoints << spawnpoint
-        end
-      else
-        raise "Map has no spawnpoints!"
+    def glError?
+      e = glGetError()
+      if e != GL_NO_ERROR
+        $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
+        exit
       end
     end
 
-    MetaData   = Struct.new(:name, :gamemode, :authors, :datetime, :thumbnail, :description)
-    Entity     = Struct.new(:package, :name, :position, :orientation, :scale, :water_level, :scripts)
-    SpawnPoint = Struct.new(:team, :position, :orientation)
+    def render(camera)
+      glError?
+
+      Gosu.gl do
+        glError?
+        glClearColor(0,0.2,0.5,1) # skyish blue
+        glError?
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
+        glError?
+
+        @lights.each(&:draw)
+
+        camera.draw
+        glEnable(GL_DEPTH_TEST)
+
+        @renderer.draw
+      end
+    end
+
+    def update
+      @collision_manager.update
+
+      @entities.each(&:update)
+      # @lights.each(&:update)
+    end
   end
 end

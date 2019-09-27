@@ -19,7 +19,7 @@ class IMICFPS
     end
 
     def simulate
-      @collision_manager.game_state.entities.each do |entity|
+      @collision_manager.map.entities.each do |entity|
         entity.position.x += entity.velocity.x * entity.delta_time
         entity.position.y += entity.velocity.y * entity.delta_time
         entity.position.z += entity.velocity.z * entity.delta_time

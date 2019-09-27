@@ -1,8 +1,8 @@
 class IMICFPS
   class CollisionManager
-    attr_reader :game_state, :collisions
-    def initialize(game_state:)
-      @game_state = game_state
+    attr_reader :map, :collisions
+    def initialize(map:)
+      @map = map
       @collisions = {}
 
       @aabb_tree       = AABBTree.new
@@ -14,7 +14,7 @@ class IMICFPS
     end
 
     def update
-      @game_state.entities.each do |entity|
+      @map.entities.each do |entity|
         next unless entity.is_a?(Entity)
         next unless node = @aabb_tree.objects[entity]
 
@@ -42,7 +42,7 @@ class IMICFPS
       @collisions.clear
       broadphase = {}
 
-      @game_state.entities.each do |entity|
+      @map.entities.each do |entity|
         next unless entity.collidable?
         next if entity.collision == :static # Only dynamic entities can be resolved
 

@@ -20,5 +20,11 @@ class IMICFPS
     def clear_lights
       @lights.clear
     end
+
+    def available_light
+      raise "Using to many lights, #{light_count}/#{LightManager::MAX_LIGHTS}" if light_count > LightManager::MAX_LIGHTS
+      puts "OpenGL::GL_LIGHT#{light_count}" if $debug.get(:stats)
+      Object.const_get "OpenGL::GL_LIGHT#{light_count}"
+    end
   end
 end

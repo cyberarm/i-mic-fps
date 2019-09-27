@@ -1,11 +1,11 @@
 class IMICFPS
   class LoadingState < Menu
     def setup
-      @map = Map.new(map_file: @options[:map_file])
+      @map_loader = MapLoader.new(map_file: @options[:map_file])
 
       title "I-MIC FPS"
-      @subheading = Text.new("Loading Map: #{@map.metadata.name}", y: 100, size: 50, alignment: :center)
-      @description = Text.new("Map created by: #{@map.metadata.authors.join(", ")}\n#{@map.metadata.description}", y: 180, size: 24, alignment: :center)
+      @subheading = Text.new("Loading Map: #{@map_loader.metadata.name}", y: 100, size: 50, alignment: :center)
+      @description = Text.new("Map created by: #{@map_loader.metadata.authors.join(", ")}\n#{@map_loader.metadata.description}", y: 180, size: 24, alignment: :center)
       @state = Text.new("Preparing...", y: window.height/2-40, size: 40, alignment: :center)
       @percentage = Text.new("0%", y: window.height - 100 + 25, size: 50, alignment: :center)
 
@@ -14,9 +14,9 @@ class IMICFPS
       @asset_index = 0
       # add_asset(:shader, nil, "default")
 
-      add_asset(:model, @map.terrain.package, @map.terrain.name)
-      add_asset(:model, @map.skydome.package, @map.skydome.name)
-      @map.entities.each do |entity|
+      add_asset(:model, @map_loader.terrain.package, @map_loader.terrain.name)
+      add_asset(:model, @map_loader.skydome.package, @map_loader.skydome.name)
+      @map_loader.entities.each do |entity|
         add_asset(:model, entity.package, entity.name)
       end
 
@@ -66,7 +66,7 @@ class IMICFPS
 
       unless @asset_index < @assets.count
         if @act && Gosu.milliseconds-@completed_for_ms > 250
-          push_state(@options[:forward], map: @map)
+          push_state(@options[:forward], map_loader: @map_loader)
         else
           @act = true
           @completed_for_ms = Gosu.milliseconds unless @lock

@@ -103,7 +103,7 @@ class IMICFPS
       model.update
 
       unless at_same_position?
-        Publisher.instance.publish(:entity_moved, self, self)
+        Publisher.instance.publish(:entity_moved, nil, self)
         @bounding_box = normalize_bounding_box_with_offset if model
       end
 

@@ -1,25 +1,12 @@
 class IMICFPS
   class Game < GameState
 
-    attr_reader :collision_manager, :delta_time
+    attr_reader :map
     def setup
-      @collision_manager = CollisionManager.new(game_state: self)
-      @renderer = Renderer.new(game_state: self)
-      @publisher = Publisher.new
+      @map = Map.new(map_loader: @options[:map_loader])
+      @map.setup
 
-      @map = @options[:map]
-      add_entity(Terrain.new(map_entity: @map.terrain, manifest: Manifest.new(package: @map.terrain.package, name: @map.terrain.name)))
-
-      @draw_skydome = true
-      @skydome = Skydome.new(map_entity: @map.skydome, manifest: Manifest.new(package: @map.skydome.package, name: @map.skydome.name), backface_culling: false)
-      add_entity(@skydome)
-
-      @map.entities.each do |ent|
-        add_entity(Entity.new(map_entity: ent, manifest: Manifest.new(package: ent.package, name: ent.name)))
-      end
-
-      @player = Player.new(spawnpoint: @map.spawnpoints.sample, manifest: Manifest.new(package: "base", name: "biped"))
-      add_entity(@player)
+      @player = @map.find_entity_by(name: "biped")
       @camera = Camera.new(position: @player.position.clone)
       @camera.attach_to(@player)
 
@@ -28,9 +15,6 @@ class IMICFPS
       @crosshair_color = Gosu::Color.rgb(255,127,0)
 
       @text = Text.new("Pending...", x: 10, y: 10, z: 1, size: 18, font: "DejaVu Sans", shadow_color: Gosu::Color::BLACK)
-
-      Light.new(x: 3, y: -6, z: 6, game_state: self)
-      Light.new(x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1), game_state: self)
 
       if ARGV.join.include?("--playdemo")
         @demo_data = File.exist?("./demo.dat") ? File.read("./demo.dat").lines : ""
@@ -49,33 +33,8 @@ class IMICFPS
       end
     end
 
-    def glError?
-      e = glGetError()
-      if e != GL_NO_ERROR
-        $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
-        exit
-      end
-    end
-
     def draw
-      glError?
-
-      gl do
-        glError?
-        glClearColor(0,0.2,0.5,1) # skyish blue
-        glError?
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
-        glError?
-
-        @lights.each(&:draw)
-
-        @camera.draw
-        @renderer.opengl_renderer.draw_object(@skydome) if @skydome.renderable
-        glEnable(GL_DEPTH_TEST)
-
-        @renderer.draw
-      end
-
+      @map.render(@camera)
       # Draw crosshair
       draw_rect(window.width/2-@crosshair_size, (window.height/2-@crosshair_size)-@crosshair_thickness/2, @crosshair_size*2, @crosshair_thickness, @crosshair_color, 0, :default)
       draw_rect((window.width/2)-@crosshair_thickness/2, window.height/2-(@crosshair_size*2), @crosshair_thickness, @crosshair_size*2, @crosshair_color, 0, :default)
@@ -86,14 +45,11 @@ class IMICFPS
     def update
       update_text
 
-      @publisher.publish(:tick, Gosu.milliseconds - window.delta_time)
+      Publisher.instance.publish(:tick, Gosu.milliseconds - window.delta_time)
 
-      @collision_manager.update
-      @entities.each(&:update)
+      @map.update
 
       control_player
-
-      @skydome.update if @skydome.renderable
 
       @camera.update
 
@@ -104,9 +60,6 @@ class IMICFPS
       else
         @text.text = ""
       end
-
-      @draw_skydome = $debug.get(:skydome)
-      @skydome.renderable = @draw_skydome
 
       if ARGV.join.include?("--playdemo")
         if @demo_data[@demo_index]&.start_with?("tick")
@@ -178,8 +131,6 @@ Last Frame: #{Gosu.milliseconds - window.delta_time}ms (#{Gosu.fps} fps)
 
 Vertices: #{formatted_number(window.number_of_vertices)}
 Faces: #{formatted_number(window.number_of_vertices/3)}
-
-Draw Skydome: #{@draw_skydome}
 eos
     end
 
@@ -204,9 +155,9 @@ eos
         @demo_changed = true
       end
       InputMapper.keydown(id)
-      @publisher.publish(:button_down, nil, id)
+      Publisher.instance.publish(:button_down, nil, id)
 
-      @entities.each do |entity|
+      @map.entities.each do |entity|
         entity.button_down(id) if defined?(entity.button_down)
       end
     end
@@ -221,9 +172,9 @@ eos
         @demo_changed = true
       end
       InputMapper.keyup(id)
-      @publisher.publish(:button_up, nil, id)
+      Publisher.instance.publish(:button_up, nil, id)
 
-      @entities.each do |entity|
+      @map.entities.each do |entity|
         entity.button_up(id) if defined?(entity.button_up)
       end
 

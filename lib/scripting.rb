@@ -8,5 +8,9 @@ class IMICFPS
     def component(name)
       Component.get(name)
     end
+
+    def map
+      $window.current_state.map
+    end
   end
 end

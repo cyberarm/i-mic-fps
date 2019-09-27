@@ -9,7 +9,7 @@ class IMICFPS
         action = subscriber.args.flatten.first
         key = args.flatten.first
 
-        event = EventHandler::Event.new(entity: subscriber.entity, context: context, player: context)
+        event = EventHandler::Event.new(entity: subscriber.entity, context: context)
 
         if action.is_a?(Numeric) && action == key
           subscriber.trigger(event)
