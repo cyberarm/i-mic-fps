@@ -10,7 +10,7 @@ class IMICFPS
   MODEL_METER_SCALE = 1.0
 
   # Earth
-  GRAVITY = 9.8 # m/s
+  EARTH_GRAVITY = 9.8 # m/s
   # Moon
-  # GRAVITY = 1.625 # m/s
+  MOON_GRAVITY = 1.625 # m/s
 end

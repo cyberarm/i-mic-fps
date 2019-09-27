@@ -5,7 +5,7 @@ class IMICFPS
 
     attr_reader :collision_manager
     attr_reader :gravity
-    def initialize(map_loader:, gravity: IMICFPS::GRAVITY)
+    def initialize(map_loader:, gravity: IMICFPS::EARTH_GRAVITY)
       @map_loader = map_loader
       @gravity = gravity
 

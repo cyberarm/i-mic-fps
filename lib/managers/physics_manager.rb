@@ -31,7 +31,7 @@ class IMICFPS
         if on_ground
           entity.velocity.y = 0
         else
-          entity.velocity.y -= IMICFPS::GRAVITY * entity.delta_time if entity.physics
+          entity.velocity.y -= @collision_manager.map.gravity * entity.delta_time if entity.physics
         end
       end
     end
