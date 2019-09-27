@@ -100,7 +100,9 @@ class IMICFPS
           when 'd'  # Dissolved (Transparency)
           when 'illum' # Illumination model
           when 'map_Kd' # Diffuse texture
-            @model.materials[@model.current_material].set_texture(array[1])
+            texture = File.basename(array[1])
+            texture_path = "#{File.expand_path("../../", @model.file_path)}/textures/#{texture}"
+            @model.materials[@model.current_material].set_texture(texture_path)
           end
         end
       end
