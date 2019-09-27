@@ -10,7 +10,7 @@ class IMICFPS
     end
 
     def method_missing(event, *args, &block)
-      return unless subscribable_events.include?(event)
+      return unless Subscription.subscribable_events.include?(event)
 
       @event, @args, @block = event, args, block
       Publisher.subscribe(self)
@@ -22,7 +22,7 @@ class IMICFPS
       end
     end
 
-    private def subscribable_events
+    def self.subscribable_events
       [
         :tick,
         :create, :move, :destroy,

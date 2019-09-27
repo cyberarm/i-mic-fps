@@ -1,7 +1,8 @@
 class IMICFPS
   module Scripting
     def on
-      Subscription.new(self)
+      # self is a Scripting::SandBox
+      Subscription.new(self.entity)
     end
 
     def component(name)

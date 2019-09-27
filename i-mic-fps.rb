@@ -56,7 +56,6 @@ require_relative "lib/ui/menus/main_menu"
 require_relative "lib/states/game_states/game"
 require_relative "lib/states/game_states/loading_state"
 
-require_relative "lib/scripting"
 require_relative "lib/subscription"
 require_relative "lib/publisher"
 require_relative "lib/event"
@@ -64,6 +63,10 @@ require_relative "lib/event_handler"
 require_relative "lib/event_handlers/input"
 require_relative "lib/event_handlers/entity_moved"
 require_relative "lib/event_handlers/entity_lifecycle"
+
+require_relative "lib/scripting"
+require_relative "lib/scripting/sandbox"
+require_relative "lib/scripting/whitelist"
 
 require_relative "lib/component"
 require_relative "lib/components/building"

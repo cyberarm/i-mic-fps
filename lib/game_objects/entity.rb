@@ -4,7 +4,6 @@ class IMICFPS
   # A game object is any renderable thing
   class Entity
     include CommonMethods
-    include Scripting
 
     attr_accessor :scale, :visible, :renderable, :backface_culling
     attr_accessor :position, :orientation, :velocity
@@ -38,6 +37,7 @@ class IMICFPS
 
       @last_position = Vector.new(@position.x, @position.y, @position.z)
 
+      @sandboxes = []
       load_scripts
 
       setup
@@ -56,15 +56,7 @@ class IMICFPS
 
     def load_scripts
       @manifest.scripts.each do |script|
-        instance_eval(script.source)
-      end
-    end
-
-    def method_missing(method, *args, &block)
-      unless component = Component.get(method)
-        raise NoMemoryError, "undefined method '#{method}' for #<#{self.class}:#{self.object_id}>"
-      else
-        return component
+        @sandboxes << Scripting::SandBox.new(entity: self, script: script)
       end
     end
 
