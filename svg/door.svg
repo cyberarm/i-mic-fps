@@ -26,7 +26,7 @@
        inkscape:collect="always"
        xlink:href="#pattern989"
        id="pattern2518"
-       patternTransform="matrix(0.26458333,0,0,0.26458333,-106.86051,224.00615)" />
+       patternTransform="matrix(0.26458333,0,0,0.26458333,-52.854353,262.10615)" />
     <filter
        style="color-interpolation-filters:sRGB;"
        inkscape:label="Noise Fill"
@@ -605,9 +605,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.25"
-     inkscape:cx="-145.03807"
-     inkscape:cy="583.61238"
+     inkscape:zoom="0.35355339"
+     inkscape:cx="-298.7629"
+     inkscape:cy="461.20263"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -624,8 +624,8 @@
      inkscape:snap-midpoints="true"
      inkscape:snap-object-midpoints="true"
      inkscape:snap-center="true"
-     inkscape:window-width="1920"
-     inkscape:window-height="1006"
+     inkscape:window-width="1600"
+     inkscape:window-height="834"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
@@ -683,10 +683,11 @@
        id="polygon126"
        transform="matrix(0.26458333,0,0,0.26458333,3.9999788e-8,26.066664)" />
     <path
-       style="stroke-width:0.26458332;fill:#000000;filter:url(#filter3804)"
+       style="fill:#000000;stroke-width:0.26458332;filter:url(#filter3804)"
        d="m 0,144.6 v 33.86666 A 16.933332,16.933332 0 0 0 16.933333,161.53333 16.933332,16.933332 0 0 0 0,144.6 Z"
        id="path22"
-       inkscape:connector-curvature="0" />
+       inkscape:connector-curvature="0"
+       transform="matrix(1.1795325,0,0,1.1795325,-3.7569355,-29.000485)" />
     <rect
        style="fill:#ffcc00;stroke-width:0.26458332;filter:url(#filter3816)"
        id="rect980"
@@ -698,8 +699,8 @@
        style="fill:url(#pattern2518);stroke:none"
        width="35.921028"
        height="35.921024"
-       x="-106.86051"
-       y="224.00615"
+       x="-52.854362"
+       y="262.10614"
        id="rect993" />
     <rect
        style="fill:url(#pattern989);fill-opacity:1;stroke-width:0.26458332;filter:url(#filter2908)"
