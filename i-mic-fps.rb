@@ -89,6 +89,9 @@ require_relative "lib/map_loader"
 require_relative "lib/manifest"
 require_relative "lib/map"
 
+require_relative "lib/crosshair"
+require_relative "lib/demo"
+
 require_relative "lib/window"
 
 if ARGV.join.include?("--profile")

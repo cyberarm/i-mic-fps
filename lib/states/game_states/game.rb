@@ -10,35 +10,22 @@ class IMICFPS
       @camera = Camera.new(position: @player.position.clone)
       @camera.attach_to(@player)
 
-      @crosshair_size = 10
-      @crosshair_thickness = 3
-      @crosshair_color = Gosu::Color.rgb(255,127,0)
+      @crosshair = Crosshair.new
 
       @text = Text.new("Pending...", x: 10, y: 10, z: 1, size: 18, font: "DejaVu Sans", shadow_color: Gosu::Color::BLACK)
 
       if ARGV.join.include?("--playdemo")
-        @demo_data = File.exist?("./demo.dat") ? File.read("./demo.dat").lines : ""
-        @demo_index= 0
-        @demo_tick = 0
+        @demo = Demo.new(camera: @camera, player: @player, demo: "./demo.dat", mode: :play) if File.exist?("./demo.dat")
 
       elsif ARGV.join.include?("--savedemo")
-        @demo_file = File.open("./demo.dat", "w")
-        @demo_index= 0
-        @demo_changed = false
-
-        @demo_last_pitch = @camera.orientation.z
-        @demo_last_yaw   = @camera.orientation.y
-
-        at_exit { @demo_file.close }
+        @demo = Demo.new(camera: @camera, player: @player, demo: "./demo.dat", mode: :record)
       end
     end
 
     def draw
       @map.render(@camera)
-      # Draw crosshair
-      draw_rect(window.width/2-@crosshair_size, (window.height/2-@crosshair_size)-@crosshair_thickness/2, @crosshair_size*2, @crosshair_thickness, @crosshair_color, 0, :default)
-      draw_rect((window.width/2)-@crosshair_thickness/2, window.height/2-(@crosshair_size*2), @crosshair_thickness, @crosshair_size*2, @crosshair_color, 0, :default)
 
+      @crosshair.draw
       @text.draw
     end
 
@@ -61,55 +48,7 @@ class IMICFPS
         @text.text = ""
       end
 
-      if ARGV.join.include?("--playdemo")
-        if @demo_data[@demo_index]&.start_with?("tick")
-          if @demo_tick == @demo_data[@demo_index].split(" ").last.to_i
-            @demo_index+=1
-
-            until(@demo_data[@demo_index]&.start_with?("tick"))
-              break unless @demo_data[@demo_index]
-
-              data = @demo_data[@demo_index].split(" ")
-              if data.first == "up"
-                input = InputMapper.get(data.last.to_sym)
-                key = input.is_a?(Array) ? input.first : input
-                self.button_up(key)
-
-              elsif data.first == "down"
-                input = InputMapper.get(data.last.to_sym)
-                key = input.is_a?(Array) ? input.first : input
-                self.button_down(key)
-
-              elsif data.first == "mouse"
-                @camera.orientation.z = data[1].to_f
-                @player.orientation.y = (data[2].to_f * -1) - 180
-              else
-                # hmm
-              end
-
-              @demo_index += 1
-            end
-          end
-        end
-      end
-
-      if ARGV.join.include?("--savedemo")
-        if @camera.orientation.z != @demo_last_pitch || @camera.orientation.y != @demo_last_yaw
-          unless @demo_last_written_index == @demo_index
-            @demo_last_written_index = @demo_index
-            @demo_file.puts("tick #{@demo_index}")
-          end
-
-          @demo_file.puts("mouse #{@camera.orientation.z} #{@camera.orientation.y}")
-          @demo_last_pitch = @camera.orientation.z
-          @demo_last_yaw   = @camera.orientation.y
-        end
-
-        @demo_changed = false
-        @demo_index  += 1
-      end
-
-      @demo_tick += 1 if @demo_tick
+      @demo.update if @demo
 
       window.close if window.button_down?(Gosu::KbEscape)
       window.number_of_vertices = 0
@@ -146,14 +85,8 @@ eos
     end
 
     def button_down(id)
-      if ARGV.join.include?("--savedemo")
-        unless @demo_last_written_index == @demo_index
-          @demo_last_written_index = @demo_index
-          @demo_file.puts("tick #{@demo_index}")
-        end
-        @demo_file.puts("down #{InputMapper.action(id)}")
-        @demo_changed = true
-      end
+      @demo.button_down(id) if @demo
+
       InputMapper.keydown(id)
       Publisher.instance.publish(:button_down, nil, id)
 
@@ -163,14 +96,8 @@ eos
     end
 
     def button_up(id)
-      if ARGV.join.include?("--savedemo")
-        unless @demo_last_written_index == @demo_index
-          @demo_last_written_index = @demo_index
-          @demo_file.puts("tick #{@demo_index}")
-        end
-        @demo_file.puts("up #{InputMapper.action(id)}")
-        @demo_changed = true
-      end
+      @demo.button_up(id) if @demo
+
       InputMapper.keyup(id)
       Publisher.instance.publish(:button_up, nil, id)
 
