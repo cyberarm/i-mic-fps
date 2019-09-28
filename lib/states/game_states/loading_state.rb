@@ -1,6 +1,7 @@
 class IMICFPS
   class LoadingState < Menu
     def setup
+      window.needs_cursor = false
       @map_loader = MapLoader.new(map_file: @options[:map_file])
 
       title "I-MIC FPS"

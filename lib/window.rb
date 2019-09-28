@@ -26,6 +26,10 @@ class IMICFPS
       @delta_time = Gosu.milliseconds
     end
 
+    def needs_cursor?
+      false
+    end
+
     def draw
       super
 

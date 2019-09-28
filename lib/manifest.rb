@@ -1,6 +1,6 @@
 class IMICFPS
   class Manifest
-    attr_reader :name, :model, :collision, :collision_mesh, :physics, :scripts, :uses
+    attr_reader :name, :model, :collision, :collision_mesh, :collision_resolution, :physics, :scripts, :uses
     def initialize(manifest_file: nil, package: nil, name: nil)
       unless manifest_file
         raise "Entity package not specified!" unless package
@@ -24,6 +24,7 @@ class IMICFPS
       # optional
       @collision = data["collision"] ? data["collision"] : nil
       @collision_mesh = data["collision_mesh"] ? data["collision_mesh"] : nil
+      @collision_resolution = data["collision_resolution"] ? data["collision_resolution"].to_sym : :static
       @physics = data["physics"] ? data["physics"] : false
       @scripts = data["scripts"] ? parse_scripts(data["scripts"]) : []
       @uses = data["uses"] ? parse_dependencies(data["uses"]) : [] # List of entities that this Entity uses

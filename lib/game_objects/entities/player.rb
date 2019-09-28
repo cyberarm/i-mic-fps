@@ -8,9 +8,6 @@ class IMICFPS
 
     def setup
       bind_model
-      @collision = :dynamic
-      @physics = true
-
       @speed = 2.5 # meter's per second
       @running_speed = 5.0 # meter's per second
       @turn_speed = 50.0

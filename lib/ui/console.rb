@@ -226,8 +226,8 @@ class IMICFPS
       @active_text_input = window.text_input
       window.text_input = @text_input
 
-      @showing_cursor = window.show_cursor
-      window.show_cursor = true
+      @showing_cursor = window.needs_cursor
+      window.needs_cursor = true
 
       @show_caret = true
       @caret_last_change = Gosu.milliseconds
@@ -235,7 +235,7 @@ class IMICFPS
 
     def blur
       window.text_input  = @active_text_input
-      window.show_cursor = @showing_cursor
+      window.needs_cursor = @showing_cursor
     end
   end
 end

@@ -2,3 +2,5 @@ name: "biped"
 model: "biped.obj"
 collision: "mesh"
 collision_mesh: null
+collision_resolution: "dynamic"
+physics: true

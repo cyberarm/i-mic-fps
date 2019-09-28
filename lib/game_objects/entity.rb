@@ -7,7 +7,7 @@ class IMICFPS
 
     attr_accessor :scale, :visible, :renderable, :backface_culling
     attr_accessor :position, :orientation, :velocity
-    attr_reader :name, :debug_color, :bounding_box, :collision, :physics, :mass, :drag, :camera
+    attr_reader :name, :debug_color, :bounding_box, :drag, :camera, :manifest
 
     def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: true, auto_manage: true)
       @manifest = manifest
@@ -26,14 +26,6 @@ class IMICFPS
       @drag       = 1.0
 
       @debug_color = Color.new(0.0, 1.0, 0.0)
-
-      @collidable = [:static, :dynamic]
-      # :dynamic => moves in response,
-      # :static => does not move ever,
-      # :none => no collision check, entities can pass through
-      @collision  = :static
-      @physics    = @manifest.physics # Entity affected by gravity and what not
-      @mass       = 100 # kg
 
       @last_position = Vector.new(@position.x, @position.y, @position.z)
 
@@ -61,7 +53,7 @@ class IMICFPS
     end
 
     def collidable?
-      @collidable.include?(@collision)
+      @manifest.collision
     end
 
     def bind_model

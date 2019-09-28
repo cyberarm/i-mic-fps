@@ -44,7 +44,7 @@ class IMICFPS
 
       @map.entities.each do |entity|
         next unless entity.collidable?
-        next if entity.collision == :static # Only dynamic entities can be resolved
+        next if entity.manifest.collision_resolution == :static # Only dynamic entities can be resolved
 
         search = @aabb_tree.search(entity.bounding_box)
         if search.size > 0

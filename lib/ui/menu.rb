@@ -6,6 +6,7 @@ class IMICFPS
       @slope = 250
       @color_step = 10
       @base_color = Gosu::Color.rgb(255, 127, 0)
+      window.needs_cursor = true
       super(*args)
     end
 
@@ -55,13 +56,15 @@ class IMICFPS
       end
 
       # Cursor
-      fill_quad(
-        mouse_x, mouse_y,
-        mouse_x+16, mouse_y,
-        mouse_x, mouse_y+16,
-        mouse_x, mouse_y+16,
-        Gosu::Color::WHITE, Float::INFINITY
-      )
+      if window.needs_cursor
+        fill_quad(
+          mouse_x, mouse_y,
+          mouse_x+16, mouse_y,
+          mouse_x, mouse_y+16,
+          mouse_x, mouse_y+16,
+          Gosu::Color::WHITE, Float::INFINITY
+        )
+      end
     end
 
     def update
