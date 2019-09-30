@@ -53,9 +53,7 @@ class IMICFPS
         hash = @assets[@asset_index]
         case hash[:type]
         when :model
-          manifest = Manifest.new(manifest_file: IMICFPS.assets_path + "/#{hash[:package]}/#{hash[:name]}/manifest.yaml")
-          add_required_assets(manifest)
-          ModelLoader.new(manifest: manifest, entity: @dummy_entity)
+          ModelLoader.new(manifest: hash[:manifest], entity: @dummy_entity)
         when :shader
           Shader.new(name: hash[:name], vertex: "shaders/vertex/#{hash[:name]}.glsl", fragment: "shaders/fragment/#{hash[:name]}.glsl")
         else
@@ -81,7 +79,9 @@ class IMICFPS
     end
 
     def add_asset(type, package, name)
-      @assets << {type: type, package: package, name: name}
+      manifest = Manifest.new(manifest_file: IMICFPS.assets_path + "/#{package}/#{name}/manifest.yaml")
+      add_required_assets(manifest)
+      @assets << {type: type, manifest: manifest, package: package, name: name}
     end
 
     def add_required_assets(manifest)
