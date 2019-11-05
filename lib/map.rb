@@ -26,7 +26,7 @@ class IMICFPS
         add_entity(Entity.new(map_entity: ent, manifest: Manifest.new(package: ent.package, name: ent.name)))
       end
 
-      add_entity(Player.new(spawnpoint: @map_loader.spawnpoints.sample, manifest: Manifest.new(package: "base", name: "biped")))
+      add_entity(Player.new(spawnpoint: @map_loader.spawnpoints.sample, manifest: Manifest.new(package: "base", name: "character")))
 
       # TODO: Load lights from MapLoader
       add_light(Light.new(id: available_light, x: 3, y: -6, z: 6))

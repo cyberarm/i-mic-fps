@@ -21,7 +21,7 @@ class IMICFPS
         add_asset(:model, entity.package, entity.name)
       end
 
-      add_asset(:model, "base", "biped")
+      add_asset(:model, "base", "character")
 
       @act = false
       @cycled = false

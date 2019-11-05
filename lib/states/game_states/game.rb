@@ -6,7 +6,7 @@ class IMICFPS
       @map = Map.new(map_loader: @options[:map_loader])
       @map.setup
 
-      @player = @map.find_entity_by(name: "biped")
+      @player = @map.find_entity_by(name: "character")
       @camera = Camera.new(position: @player.position.clone)
       @camera.attach_to(@player)
 
