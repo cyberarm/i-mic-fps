@@ -1,0 +1,6 @@
+name: "character"
+model: "character.obj"
+collision: "mesh"
+collision_mesh: null
+collision_resolution: "dynamic"
+physics: true
