@@ -13,7 +13,7 @@ class IMICFPS
       @dummy_entity = nil
       @assets = []
       @asset_index = 0
-      # add_asset(:shader, nil, "default")
+      add_asset(:shader, nil, "default")
 
       add_asset(:model, @map_loader.terrain.package, @map_loader.terrain.name)
       add_asset(:model, @map_loader.skydome.package, @map_loader.skydome.name)
@@ -55,7 +55,8 @@ class IMICFPS
         when :model
           ModelLoader.new(manifest: hash[:manifest], entity: @dummy_entity)
         when :shader
-          Shader.new(name: hash[:name], vertex: "shaders/vertex/#{hash[:name]}.glsl", fragment: "shaders/fragment/#{hash[:name]}.glsl")
+            shader = Shader.new(name: hash[:name], vertex: "shaders/vertex/#{hash[:name]}.glsl", fragment: "shaders/fragment/#{hash[:name]}.glsl")
+            Shader.add(hash[:name], shader) if shader.compiled?
         else
           warn "Unknown asset: #{hash}"
         end
@@ -79,9 +80,16 @@ class IMICFPS
     end
 
     def add_asset(type, package, name)
-      manifest = Manifest.new(manifest_file: IMICFPS.assets_path + "/#{package}/#{name}/manifest.yaml")
-      add_required_assets(manifest)
-      @assets << {type: type, manifest: manifest, package: package, name: name}
+      case type
+      when :model
+        manifest = Manifest.new(manifest_file: IMICFPS.assets_path + "/#{package}/#{name}/manifest.yaml")
+        add_required_assets(manifest)
+        @assets << {type: type, manifest: manifest, package: package, name: name}
+      when :shader
+        @assets << {type: type, manifest: manifest, package: package, name: name}
+      else
+        raise TypeError "Unable to load asset of type #{type}"
+      end
     end
 
     def add_required_assets(manifest)

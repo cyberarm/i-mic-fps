@@ -13,7 +13,7 @@ class IMICFPS
       @lights   = []
 
       @collision_manager = CollisionManager.new(map: self)
-      @renderer = Renderer.new(map: self)
+      @renderer = Renderer.new
       Publisher.new
     end
 
@@ -55,12 +55,7 @@ class IMICFPS
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
         glError?
 
-        @lights.each(&:draw)
-
-        camera.draw
-        glEnable(GL_DEPTH_TEST)
-
-        @renderer.draw
+        @renderer.draw(camera, @lights, @entities)
       end
     end
 

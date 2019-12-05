@@ -5,8 +5,8 @@ class IMICFPS
   class Entity
     include CommonMethods
 
-    attr_accessor :scale, :visible, :renderable, :backface_culling
-    attr_accessor :position, :orientation, :velocity
+    attr_accessor :visible, :renderable, :backface_culling
+    attr_accessor :position, :orientation, :scale, :velocity
     attr_reader :name, :debug_color, :bounding_box, :drag, :camera, :manifest
 
     def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: true, auto_manage: true)
@@ -116,6 +116,10 @@ class IMICFPS
 
     def normalize_bounding_box
       @bound_model.model.bounding_box.normalize(self)
+    end
+
+    def model_matrix
+      Transform.rotate_3d(@orientation) * Transform.translate_3d(@position)
     end
   end
 end

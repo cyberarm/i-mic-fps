@@ -7,10 +7,10 @@ when :OPENGL_PLATFORM_MACOSX
   GLU.load_lib("libGLU.dylib", "/System/Library/Frameworks/OpenGL.framework/Libraries")
 when :OPENGL_PLATFORM_LINUX
   # Black magic to get GLSL 3.30 support on older Intel hardware
-  # if `glxinfo | egrep "OpenGL vendor|OpenGL renderer"`.include?("Intel")
-  #   ENV["MESA_GL_VERSION_OVERRIDE"] = "3.3"
-  #   ENV["MESA_GLSL_VERSION_OVERRIDE"] = "330"
-  # end
+  if ARGV.join.include?("--mesa-override") && `glxinfo | egrep "OpenGL vendor|OpenGL renderer"`.include?("Intel")
+    ENV["MESA_GL_VERSION_OVERRIDE"] = "3.3"
+    ENV["MESA_GLSL_VERSION_OVERRIDE"] = "330"
+  end
 
   gl_library_path = nil
 

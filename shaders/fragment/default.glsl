@@ -1,4 +1,4 @@
-# version 330
+# version 330 core
 
 in vec3 outColor;
 in vec4 outNormal;

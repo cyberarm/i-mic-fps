@@ -2,37 +2,40 @@ class IMICFPS
   class OpenGLRenderer
     include CommonMethods
 
-    def draw_object(object)
-      handleGlError
-
-      glEnable(GL_NORMALIZE)
-      glPushMatrix
-
-      glTranslatef(object.position.x, object.position.y, object.position.z)
-      glScalef(object.scale.x, object.scale.y, object.scale.z)
-      glRotatef(object.orientation.x, 1.0, 0, 0)
-      glRotatef(object.orientation.y, 0, 1.0, 0)
-      glRotatef(object.orientation.z, 0, 0, 1.0)
-
-      handleGlError
-
+    def draw_object(camera, lights, object)
       if Shader.available?("ddefault")
         Shader.use("default") do |shader|
-          glUniform3f(shader.attribute_location("worldPosition"), object.position.x, object.position.y, object.position.z)
+          shader.set_uniform("projection", camera.projection_matrix)
+          shader.set_uniform("view", camera.view_matrix)
+          shader.set_uniform("model", object.model_matrix)
+
+          # TODO: Upload and use lights
 
           handleGlError
-          draw_mesh(object.model)
-          # draw_model(object.model)
+          draw_model(object.model)
           object.draw
         end
       else
         handleGlError
+        lights.each(&:draw)
+        camera.draw
+        glEnable(GL_DEPTH_TEST)
+
+        glEnable(GL_NORMALIZE)
+        glPushMatrix
+
+        glTranslatef(object.position.x, object.position.y, object.position.z)
+        glScalef(object.scale.x, object.scale.y, object.scale.z)
+        glRotatef(object.orientation.x, 1.0, 0, 0)
+        glRotatef(object.orientation.y, 0, 1.0, 0)
+        glRotatef(object.orientation.z, 0, 0, 1.0)
+
+        handleGlError
         draw_mesh(object.model)
         object.draw
+        glPopMatrix
       end
-      handleGlError
 
-      glPopMatrix
       handleGlError
     end
 

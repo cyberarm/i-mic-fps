@@ -4,11 +4,12 @@ class IMICFPS
 
     attr_accessor :field_of_view, :mouse_sensitivity
     attr_reader :entity, :position, :orientation, :mouse_captured
-    def initialize(position:, orientation: Vector.new(0, 0, 0), fov: 70.0, view_distance: 155.0)
+    def initialize(position:, orientation: Vector.new(0, 0, 0), fov: 70.0, min_view_distance: 0.1, max_view_distance: 155.0)
       @position = position
       @orientation = orientation
       @field_of_view = fov
-      @view_distance = view_distance
+      @min_view_distance = min_view_distance
+      @max_view_distance = max_view_distance
       @constant_pitch = 20.0
 
       @entity = nil
@@ -69,7 +70,7 @@ class IMICFPS
       glMatrixMode(GL_PROJECTION) # The projection matrix is responsible for adding perspective to our scene.
       glLoadIdentity # Resets current modelview matrix
       # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
-      gluPerspective(@field_of_view, window.width / window.height, 0.1, @view_distance)
+      gluPerspective(@field_of_view, window.width / window.height, 0.1, @max_view_distance)
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
       glRotatef(@orientation.z, 1, 0, 0)
       glRotatef(@orientation.y, 0, 1, 0)
@@ -158,14 +159,38 @@ class IMICFPS
       elsif InputMapper.is?(:increase_view_distance, id)
         # @field_of_view += 1
         # @field_of_view = @field_of_view.clamp(1, 100)
-        @view_distance += 1
-        @view_distance = @view_distance.clamp(1, 1000)
+        @max_view_distance += 1
+        @max_view_distance = @max_view_distance.clamp(1, 1000)
       elsif InputMapper.is?(:decrease_view_distance, id)
         # @field_of_view -= 1
         # @field_of_view = @field_of_view.clamp(1, 100)
-        @view_distance -= 1
-        @view_distance = @view_distance.clamp(1, 1000)
+        @max_view_distance -= 1
+        @max_view_distance = @max_view_distance.clamp(1, 1000)
       end
+    end
+
+    def aspect_ratio
+      window.width / window.height
+    end
+
+    def projection_matrix
+      fov = 1 / Math.tan(@field_of_view / 2) # field of view
+      zn = @max_view_distance - @min_view_distance # near plane
+      zf = @max_view_distance + @min_view_distance # far plane
+      z_num = -(2 * @max_view_distance * @min_view_distance) / zn # something
+
+      Transform.new(
+        [
+          fov / aspect_ratio, 0,          0, 0,
+          0,                  fov,        0, 0,
+          0,                  0,   -zf / zn, z_num,
+          0,                  0,         -1, 0
+        ]
+      )
+    end
+
+    def view_matrix
+      Transform.identity# Transform.rotate_3d(@orientation) * Transform.translate_3d(@position)
     end
   end
 end
