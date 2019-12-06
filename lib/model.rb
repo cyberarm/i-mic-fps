@@ -6,9 +6,7 @@ class IMICFPS
     attr_accessor :scale, :entity, :material_file, :current_material, :current_object, :vertex_count, :smoothing
     attr_reader :position, :bounding_box, :textured_material, :file_path
 
-    attr_reader :vertices_buffer_id
-    attr_reader :vertices_buffer_data
-    attr_reader :vertices_buffer_size
+    attr_reader :positions_buffer_id, :colors_buffer_id, :normals_buffer_id, :uvs_buffer_id, :textures_buffer_id
     attr_reader :vertex_array_id
     attr_reader :aabb_tree
 
@@ -90,22 +88,37 @@ class IMICFPS
       # Allocate arrays for future use
       @vertex_array_id = nil
       buffer = " " * 4
-
       glGenVertexArrays(1, buffer)
       @vertex_array_id = buffer.unpack('L2').first
 
       # Allocate buffers for future use
-      @vertices_buffer_id = nil
+      @positions_buffer_id = nil
       buffer = " " * 4
-
       glGenBuffers(1, buffer)
-      @vertices_buffer_id = buffer.unpack('L2').first
+      @positions_buffer_id = buffer.unpack('L2').first
+
+      @colors_buffer_id = nil
+      buffer = " " * 4
+      glGenBuffers(1, buffer)
+      @colors_buffer_id = buffer.unpack('L2').first
+
+      @normals_buffer_id = nil
+      buffer = " " * 4
+      glGenBuffers(1, buffer)
+      @normals_buffer_id = buffer.unpack('L2').first
+
+      @uvs_buffer_id = nil
+      buffer = " " * 4
+      glGenBuffers(1, buffer)
+      @uvs_buffer_id = buffer.unpack('L2').first
+
+      @textures_buffer_id = nil
+      buffer = " " * 4
+      glGenBuffers(1, buffer)
+      @textures_buffer_id = buffer.unpack('L2').first
     end
 
     def populate_vertex_buffer
-      @vertices_buffer_size = 0
-      @vertices_buffer_data = []
-
       verts   = []
       colors  = []
       norms   = []
@@ -117,44 +130,33 @@ class IMICFPS
         colors  << face.colors.map   { |vert| [vert.x, vert.y, vert.z] }
         norms   << face.normals.map  { |vert| [vert.x, vert.y, vert.z, vert.weight] }
 
-        if @has_texture
+        if has_texture?
           uvs     << face.uvs.map    { |vert| [vert.x, vert.y, vert.z] }
           tex_ids << face.material.texture_id ? face.material.texture_id.to_f : -1.0
         end
       end
 
-      verts.each_with_index do |vert, i|
-        @vertices_buffer_data << vert
-        @vertices_buffer_data << colors[i]
-        @vertices_buffer_data << norms[i]
+      glBindBuffer(GL_ARRAY_BUFFER, @positions_buffer_id)
+      glBufferData(GL_ARRAY_BUFFER, 3 * verts.size * Fiddle::SIZEOF_FLOAT, verts.flatten.pack("f*"), GL_STATIC_DRAW)
 
-        # if @has_texture
-          # @vertices_buffer_data << uvs[i] if uvs.size > 0
-          # @vertices_buffer_data << tex_ids[i] if tex_ids.size > 0
-        # end
+      glBindBuffer(GL_ARRAY_BUFFER, @colors_buffer_id)
+      glBufferData(GL_ARRAY_BUFFER, 3 * colors.size * Fiddle::SIZEOF_FLOAT, colors.flatten.pack("f*"), GL_STATIC_DRAW)
+
+      glBindBuffer(GL_ARRAY_BUFFER, @normals_buffer_id)
+      glBufferData(GL_ARRAY_BUFFER, 4 * norms.size * Fiddle::SIZEOF_FLOAT, norms.flatten.pack("f*"), GL_STATIC_DRAW)
+
+      if has_texture?
+        glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
+        glBufferData(GL_ARRAY_BUFFER, 3 * uvs.size * Fiddle::SIZEOF_FLOAT, uvs.flatten.pack("f*"), GL_STATIC_DRAW)
+
+        glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
+        glBufferData(GL_ARRAY_BUFFER, 1 * tex_ids.size * Fiddle::SIZEOF_FLOAT, tex_ids.flatten.pack("f*"), GL_STATIC_DRAW)
       end
 
-      data_size = 0
-      data_size += Fiddle::SIZEOF_FLOAT * 3 * verts.size
-      data_size += Fiddle::SIZEOF_FLOAT * 3 * colors.size
-      data_size += Fiddle::SIZEOF_FLOAT * 4 * norms.size
-
-      if @has_texture
-        data_size += Fiddle::SIZEOF_FLOAT * 3 * uvs.size
-        data_size += Fiddle::SIZEOF_FLOAT * 1 * tex_ids.size
-      end
-
-      @vertices_buffer_size = data_size
-
-      data = @vertices_buffer_data.flatten
-
-      glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer_id)
-      glBufferData(GL_ARRAY_BUFFER, @vertices_buffer_size, data.pack("f*"), GL_STATIC_DRAW)
       glBindBuffer(GL_ARRAY_BUFFER, 0)
     end
 
     def configure_vao
-      glBindBuffer(GL_ARRAY_BUFFER, @vertices_buffer_id)
       glBindVertexArray(@vertex_array_id)
 
       glEnableVertexAttribArray(0)
@@ -165,34 +167,26 @@ class IMICFPS
 
       program = Shader.get("default").program
 
-      stride = 0
-      position_stride   = Fiddle::SIZEOF_FLOAT * 3
-      color_stride      = Fiddle::SIZEOF_FLOAT * 3
-      normal_stride     = Fiddle::SIZEOF_FLOAT * 4
-      uv_stride         = Fiddle::SIZEOF_FLOAT * 3
-      texture_id_stride = Fiddle::SIZEOF_FLOAT
-
-      if @has_texture
-        stride = position_stride + color_stride + normal_stride + uv_stride + texture_id_stride
-      else
-        stride = position_stride + color_stride + normal_stride
-      end
-
       # index, size, type, normalized, stride, pointer
       # vertices (positions)
-      glVertexAttribPointer(glGetAttribLocation(program, "inPosition"), 3, GL_FLOAT, GL_FALSE, stride, nil)
+      glBindBuffer(GL_ARRAY_BUFFER, @positions_buffer_id)
+      glVertexAttribPointer(glGetAttribLocation(program, "inPosition"), 3, GL_FLOAT, GL_FALSE, 0, nil)
       handleGlError
       # colors
-      glVertexAttribPointer(glGetAttribLocation(program, "inColor"), 3, GL_FLOAT, GL_FALSE, stride + position_stride, nil)
+      glBindBuffer(GL_ARRAY_BUFFER, @colors_buffer_id)
+      glVertexAttribPointer(glGetAttribLocation(program, "inColor"), 3, GL_FLOAT, GL_FALSE, 0, nil)
       handleGlError
       # normals
-      glVertexAttribPointer(glGetAttribLocation(program, "inNormal"), 4, GL_FLOAT, GL_FALSE, stride + position_stride + color_stride, nil)
+      glBindBuffer(GL_ARRAY_BUFFER, @normals_buffer_id)
+      glVertexAttribPointer(glGetAttribLocation(program, "inNormal"), 4, GL_FLOAT, GL_FALSE, 0, nil)
       handleGlError
       # uvs
-      glVertexAttribPointer(glGetAttribLocation(program, "inUV"), 3, GL_FLOAT, GL_FALSE, stride + position_stride + color_stride + normal_stride, nil)
+      glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
+      glVertexAttribPointer(glGetAttribLocation(program, "inUV"), 3, GL_FLOAT, GL_FALSE, 0, nil)
       handleGlError
       # texture ids
-      glVertexAttribPointer(glGetAttribLocation(program, "inTextureID"), 1, GL_FLOAT, GL_FALSE, stride + position_stride + color_stride + normal_stride + uv_stride, nil)
+      glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
+      glVertexAttribPointer(glGetAttribLocation(program, "inTextureID"), 1, GL_FLOAT, GL_FALSE, 0, nil)
       handleGlError
 
       glDisableVertexAttribArray(4)

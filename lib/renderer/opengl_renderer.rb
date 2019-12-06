@@ -3,7 +3,7 @@ class IMICFPS
     include CommonMethods
 
     def draw_object(camera, lights, object)
-      if Shader.available?("ddefault")
+      if Shader.available?("default")
         Shader.use("default") do |shader|
           shader.set_uniform("projection", camera.projection_matrix)
           shader.set_uniform("view", camera.view_matrix)
@@ -41,7 +41,6 @@ class IMICFPS
 
     def draw_model(model)
       glBindVertexArray(model.vertex_array_id)
-      glBindBuffer(GL_ARRAY_BUFFER, model.vertices_buffer_id)
       glEnableVertexAttribArray(0)
       glEnableVertexAttribArray(1)
       glEnableVertexAttribArray(2)
