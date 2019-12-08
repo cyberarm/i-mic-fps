@@ -35,9 +35,11 @@ class IMICFPS
 
       puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if $debug.get(:stats)
 
-      allocate_gl_objects
-      populate_vertex_buffer
-      configure_vao
+      if Shader.available?("default")
+        allocate_gl_objects
+        populate_vertex_buffer
+        configure_vao
+      end
 
       @objects.each {|o| @vertex_count+=o.vertices.size}
       @objects.each_with_index do |o, i|
@@ -119,14 +121,14 @@ class IMICFPS
     end
 
     def populate_vertex_buffer
-      verts   = []
+      pos     = []
       colors  = []
       norms   = []
       uvs     = []
       tex_ids = []
 
       @faces.each do |face|
-        verts   << face.vertices.map { |vert| [vert.x, vert.y, vert.z] }
+        pos     << face.vertices.map { |vert| [vert.x, vert.y, vert.z] }
         colors  << face.colors.map   { |vert| [vert.x, vert.y, vert.z] }
         norms   << face.normals.map  { |vert| [vert.x, vert.y, vert.z, vert.weight] }
 
@@ -137,20 +139,20 @@ class IMICFPS
       end
 
       glBindBuffer(GL_ARRAY_BUFFER, @positions_buffer_id)
-      glBufferData(GL_ARRAY_BUFFER, 3 * verts.size * Fiddle::SIZEOF_FLOAT, verts.flatten.pack("f*"), GL_STATIC_DRAW)
+      glBufferData(GL_ARRAY_BUFFER, pos.flatten.size * Fiddle::SIZEOF_FLOAT, pos.flatten.pack("f*"), GL_STATIC_DRAW)
 
       glBindBuffer(GL_ARRAY_BUFFER, @colors_buffer_id)
-      glBufferData(GL_ARRAY_BUFFER, 3 * colors.size * Fiddle::SIZEOF_FLOAT, colors.flatten.pack("f*"), GL_STATIC_DRAW)
+      glBufferData(GL_ARRAY_BUFFER, colors.flatten.size * Fiddle::SIZEOF_FLOAT, colors.flatten.pack("f*"), GL_STATIC_DRAW)
 
       glBindBuffer(GL_ARRAY_BUFFER, @normals_buffer_id)
-      glBufferData(GL_ARRAY_BUFFER, 4 * norms.size * Fiddle::SIZEOF_FLOAT, norms.flatten.pack("f*"), GL_STATIC_DRAW)
+      glBufferData(GL_ARRAY_BUFFER, norms.flatten.size * Fiddle::SIZEOF_FLOAT, norms.flatten.pack("f*"), GL_STATIC_DRAW)
 
       if has_texture?
         glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
-        glBufferData(GL_ARRAY_BUFFER, 3 * uvs.size * Fiddle::SIZEOF_FLOAT, uvs.flatten.pack("f*"), GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, uvs.flatten.size * Fiddle::SIZEOF_FLOAT, uvs.flatten.pack("f*"), GL_STATIC_DRAW)
 
         glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
-        glBufferData(GL_ARRAY_BUFFER, 1 * tex_ids.size * Fiddle::SIZEOF_FLOAT, tex_ids.flatten.pack("f*"), GL_STATIC_DRAW)
+        glBufferData(GL_ARRAY_BUFFER, tex_ids.flatten.size * Fiddle::SIZEOF_FLOAT, tex_ids.flatten.pack("f*"), GL_STATIC_DRAW)
       end
 
       glBindBuffer(GL_ARRAY_BUFFER, 0)
@@ -158,12 +160,6 @@ class IMICFPS
 
     def configure_vao
       glBindVertexArray(@vertex_array_id)
-
-      glEnableVertexAttribArray(0)
-      glEnableVertexAttribArray(1)
-      glEnableVertexAttribArray(2)
-      glEnableVertexAttribArray(3)
-      glEnableVertexAttribArray(4)
 
       program = Shader.get("default").program
 
@@ -180,20 +176,17 @@ class IMICFPS
       glBindBuffer(GL_ARRAY_BUFFER, @normals_buffer_id)
       glVertexAttribPointer(glGetAttribLocation(program, "inNormal"), 4, GL_FLOAT, GL_FALSE, 0, nil)
       handleGlError
-      # uvs
-      glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
-      glVertexAttribPointer(glGetAttribLocation(program, "inUV"), 3, GL_FLOAT, GL_FALSE, 0, nil)
-      handleGlError
-      # texture ids
-      glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
-      glVertexAttribPointer(glGetAttribLocation(program, "inTextureID"), 1, GL_FLOAT, GL_FALSE, 0, nil)
-      handleGlError
 
-      glDisableVertexAttribArray(4)
-      glDisableVertexAttribArray(3)
-      glDisableVertexAttribArray(2)
-      glDisableVertexAttribArray(1)
-      glDisableVertexAttribArray(0)
+      if has_texture?
+        # uvs
+        glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
+        glVertexAttribPointer(glGetAttribLocation(program, "inUV"), 3, GL_FLOAT, GL_FALSE, 0, nil)
+        handleGlError
+        # texture ids
+        glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
+        glVertexAttribPointer(glGetAttribLocation(program, "inTextureID"), 1, GL_FLOAT, GL_FALSE, 0, nil)
+        handleGlError
+      end
 
       glBindBuffer(GL_ARRAY_BUFFER, 0)
       glBindVertexArray(0)
@@ -201,6 +194,7 @@ class IMICFPS
 
     def build_collision_tree
       @aabb_tree = AABBTree.new
+
       @faces.each do |face|
         box = BoundingBox.new
         box.min = face.vertices.first.dup
@@ -215,10 +209,11 @@ class IMICFPS
         end
 
         # FIXME: Handle negatives
-        box.min -= Vector.new(-0.1, -0.1, -0.1)
-        box.max += Vector.new( 0.1,  0.1,  0.1)
+        box.min *= 1.5
+        box.max *= 1.5
         @aabb_tree.insert(face, box)
       end
+
       puts @aabb_tree.inspect if $debug.get(:stats)
     end
 

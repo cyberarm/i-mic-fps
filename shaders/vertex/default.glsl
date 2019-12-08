@@ -6,21 +6,26 @@ layout(location = 2) in vec4  inNormal;
 layout(location = 3) in vec3  inUV;
 layout(location = 4) in float inTextureID;
 
+out vec3 outPosition;
 out vec3 outColor;
 out vec4 outNormal;
 out vec3 outUV;
 out float outTextureID;
+out float outHasTexture;
 
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
+uniform int hasTexture;
 
 void main() {
   // projection * view * model * position
+  outPosition = inPosition;
   outColor = inColor;
   outNormal= inNormal;
   outUV    = inUV;
   outTextureID = inTextureID;
+  outHasTexture = hasTexture;
 
   gl_Position = projection * view * model * vec4(inPosition, 1.0);
 }

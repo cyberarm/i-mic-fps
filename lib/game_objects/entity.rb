@@ -119,7 +119,7 @@ class IMICFPS
     end
 
     def model_matrix
-      Transform.rotate_3d(@orientation) * Transform.translate_3d(@position)
+      Transform.rotate_3d(@orientation) * Transform.scale_3d(@scale) * Transform.translate_3d(@position)
     end
   end
 end

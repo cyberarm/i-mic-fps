@@ -2,12 +2,17 @@ class IMICFPS
   class OpenGLRenderer
     include CommonMethods
 
+    def initialize
+      @immediate_mode_warning = false
+    end
+
     def draw_object(camera, lights, object)
       if Shader.available?("default")
         Shader.use("default") do |shader|
           shader.set_uniform("projection", camera.projection_matrix)
           shader.set_uniform("view", camera.view_matrix)
           shader.set_uniform("model", object.model_matrix)
+          shader.set_uniform("hasTexture", object.model.has_texture?)
 
           # TODO: Upload and use lights
 
@@ -16,10 +21,12 @@ class IMICFPS
           object.draw
         end
       else
+        puts "Shader 'default' failed to compile, using immediate mode for rendering..." unless @immediate_mode_warning
+        @immediate_mode_warning = true
+
         handleGlError
         lights.each(&:draw)
         camera.draw
-        glEnable(GL_DEPTH_TEST)
 
         glEnable(GL_NORMALIZE)
         glPushMatrix
@@ -44,14 +51,18 @@ class IMICFPS
       glEnableVertexAttribArray(0)
       glEnableVertexAttribArray(1)
       glEnableVertexAttribArray(2)
-      glEnableVertexAttribArray(3)
-      glEnableVertexAttribArray(4)
+      if model.has_texture?
+        glEnableVertexAttribArray(3)
+        glEnableVertexAttribArray(4)
+      end
 
-      glDrawArrays(GL_TRIANGLES, 0, model.vertices.count)
-      window.number_of_vertices+=model.vertices.size
+      glDrawArrays(GL_TRIANGLES, 0, model.faces.count * 3)
+      window.number_of_vertices += model.faces.count * 3
 
-      glDisableVertexAttribArray(4)
-      glDisableVertexAttribArray(3)
+      if model.has_texture?
+        glDisableVertexAttribArray(4)
+        glDisableVertexAttribArray(3)
+      end
       glDisableVertexAttribArray(2)
       glDisableVertexAttribArray(1)
       glDisableVertexAttribArray(0)
@@ -79,9 +90,6 @@ class IMICFPS
         glVertexPointer(4, GL_FLOAT, 0, o.flattened_vertices)
         glColorPointer(3, GL_FLOAT, 0, o.flattened_materials)
         glNormalPointer(GL_FLOAT, 0, o.flattened_normals)
-
-        # glBindBuffer(GL_ARRAY_BUFFER, model.vertices_buffer)
-        # glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0)
 
         if $debug.get(:wireframe) # This is kinda expensive
           glDisable(GL_LIGHTING)

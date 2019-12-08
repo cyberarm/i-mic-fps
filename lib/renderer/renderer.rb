@@ -10,6 +10,9 @@ class IMICFPS
     end
 
     def draw(camera, lights, entities)
+      glViewport(0, 0, window.width, window.height)
+      glEnable(GL_DEPTH_TEST)
+
       entities.each do |object|
         if object.visible && object.renderable
           # Render bounding boxes before transformation is applied

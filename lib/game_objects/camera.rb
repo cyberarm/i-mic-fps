@@ -72,7 +72,7 @@ class IMICFPS
       # Calculates aspect ratio of the window. Gets perspective  view. 45 is degree viewing angle, (0.1, 100) are ranges how deep can we draw into the screen
       gluPerspective(@field_of_view, window.width / window.height, 0.1, @max_view_distance)
       glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-      glRotatef(@orientation.z, 1, 0, 0)
+      glRotatef(@orientation.x, 1, 0, 0)
       glRotatef(@orientation.y, 0, 1, 0)
       glTranslatef(-@position.x, -@position.y, -@position.z)
       glMatrixMode(GL_MODELVIEW) # The modelview matrix is where object information is stored.
@@ -87,8 +87,8 @@ class IMICFPS
         @orientation.y -= delta
         @orientation.y %= 360.0
 
-        @orientation.z -= Float(@true_mouse.y - self.mouse_y) / (@mouse_sensitivity * @field_of_view) * 70
-        @orientation.z = @orientation.z.clamp(-90.0, 90.0)
+        @orientation.x -= Float(@true_mouse.y - self.mouse_y) / (@mouse_sensitivity * @field_of_view) * 70
+        @orientation.x = @orientation.x.clamp(-90.0, 90.0)
 
         if @entity
           @entity.orientation.y += delta
@@ -170,27 +170,15 @@ class IMICFPS
     end
 
     def aspect_ratio
-      window.width / window.height
+      window.width / window.height.to_f
     end
 
     def projection_matrix
-      fov = 1 / Math.tan(@field_of_view / 2) # field of view
-      zn = @max_view_distance - @min_view_distance # near plane
-      zf = @max_view_distance + @min_view_distance # far plane
-      z_num = -(2 * @max_view_distance * @min_view_distance) / zn # something
-
-      Transform.new(
-        [
-          fov / aspect_ratio, 0,          0, 0,
-          0,                  fov,        0, 0,
-          0,                  0,   -zf / zn, z_num,
-          0,                  0,         -1, 0
-        ]
-      )
+      Transform.perspective(@field_of_view, aspect_ratio, @min_view_distance, @max_view_distance)
     end
 
     def view_matrix
-      Transform.identity# Transform.rotate_3d(@orientation) * Transform.translate_3d(@position)
+      Transform.translate_3d(@position * -1) * Transform.rotate_3d(@orientation)
     end
   end
 end

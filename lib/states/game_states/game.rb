@@ -61,11 +61,12 @@ OpenGL Renderer: #{glGetString(GL_RENDERER)}
 OpenGL Version: #{glGetString(GL_VERSION)}
 OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}
 
-Camera pitch: #{@camera.orientation.z.round(2)} Yaw: #{@camera.orientation.y.round(2)} Roll #{@camera.orientation.x.round(2)}
-Camera X:#{@camera.position.x.round(2)} Y:#{@camera.position.y.round(2)} Z:#{@camera.position.z.round(2)}
-#{if @camera.entity then "Actor X:#{@camera.entity.position.x.round(2)} Y:#{@camera.entity.position.y.round(2)} Z:#{@camera.entity.position.z.round(2)}";end}
-Field Of View: #{@camera.field_of_view}
-Mouse Sesitivity: #{@camera.mouse_sensitivity}
+Camera Pitch: #{@camera.orientation.x.round(2)} Yaw: #{@camera.orientation.y.round(2)} Roll #{@camera.orientation.z.round(2)}
+Camera X: #{@camera.position.x.round(2)} Y: #{@camera.position.y.round(2)} Z: #{@camera.position.z.round(2)}
+Camera Field Of View: #{@camera.field_of_view}
+Camera Mouse Sesitivity: #{@camera.mouse_sensitivity}
+
+#{if @camera.entity then "Actor X: #{@camera.entity.position.x.round(2)} Y: #{@camera.entity.position.y.round(2)} Z: #{@camera.entity.position.z.round(2)}";end}
 Last Frame: #{Gosu.milliseconds - window.delta_time}ms (#{Gosu.fps} fps)
 
 Vertices: #{formatted_number(window.number_of_vertices)}
