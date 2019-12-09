@@ -225,5 +225,11 @@ class IMICFPS
     def has_texture?
       @has_texture
     end
+
+    def release_gl_resources
+      if @vertex_array_id
+
+      end
+    end
   end
 end

@@ -9,13 +9,23 @@ class IMICFPS
     def draw_object(camera, lights, object)
       if Shader.available?("default")
         Shader.use("default") do |shader|
-          shader.set_uniform("projection", camera.projection_matrix)
-          shader.set_uniform("view", camera.view_matrix)
-          shader.set_uniform("model", object.model_matrix)
-          shader.set_uniform("hasTexture", object.model.has_texture?)
+          shader.uniform_transform("projection", camera.projection_matrix)
+          shader.uniform_transform("view", camera.view_matrix)
+          shader.uniform_transform("model", object.model_matrix)
+          shader.uniform_boolean("hasTexture", object.model.has_texture?)
+          shader.uniform_vec3("cameraPosition", camera.position)
 
           # TODO: Upload and use lights
-          shader.set_uniform("lightPos", lights.first.position)
+          lights.each_with_index do |light, i|
+            shader.uniform_float("lights[#{i}.end", -1.0);
+            shader.uniform_float("lights[#{i}.type", light.type);
+            shader.uniform_vec3("lights[#{i}].position", light.position)
+            shader.uniform_vec3("lights[#{i}].ambient", light.ambient)
+            shader.uniform_vec3("lights[#{i}].diffuse", light.diffuse)
+            shader.uniform_vec3("lights[#{i}].specular", light.specular)
+          end
+
+          shader.uniform_float("totalLights", lights.size)
 
           handleGlError
           draw_model(object.model)

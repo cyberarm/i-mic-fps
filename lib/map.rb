@@ -30,7 +30,7 @@ class IMICFPS
 
       # TODO: Load lights from MapLoader
       add_light(Light.new(id: available_light, position: Vector.new(30, 10.0, 30)))
-      # add_light(Light.new(id: available_light, x: 0, y: 100, z: 0, diffuse: Color.new(1.0, 0.5, 0.1)))
+      add_light(Light.new(id: available_light, position: Vector.new(0, 100, 0), diffuse: Color.new(1.0, 0.5, 0.1)))
     end
 
     def data
