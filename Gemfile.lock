@@ -1,8 +1,13 @@
+GIT
+  remote: https://github.com/cyberarm/cyberarm_engine
+  revision: e59771e4127f51e3c6b3aa239dd2a5f8d2a4b7fe
+  specs:
+    cyberarm_engine (0.12.1)
+      gosu (~> 0.14.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
-    cyberarm_engine (0.10.2)
-      gosu (~> 0.14.0)
     gosu (0.14.5)
     gosu (0.14.5-x64-mingw32)
     gosu (0.14.5-x86-mingw32)
@@ -15,7 +20,7 @@ PLATFORMS
   x86-mingw32
 
 DEPENDENCIES
-  cyberarm_engine
+  cyberarm_engine!
   ocra
   opengl-bindings
 
