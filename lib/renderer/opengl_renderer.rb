@@ -15,6 +15,7 @@ class IMICFPS
           shader.set_uniform("hasTexture", object.model.has_texture?)
 
           # TODO: Upload and use lights
+          shader.set_uniform("lightPos", lights.first.position)
 
           handleGlError
           draw_model(object.model)

@@ -12,11 +12,15 @@ out vec4 outNormal;
 out vec3 outUV;
 out float outTextureID;
 out float outHasTexture;
+out vec3 outLightPos;
+out vec3 outFragPos;
 
 uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 uniform int hasTexture;
+uniform vec3 lightPos;
+
 
 void main() {
   // projection * view * model * position
@@ -26,6 +30,9 @@ void main() {
   outUV    = inUV;
   outTextureID = inTextureID;
   outHasTexture = hasTexture;
+  outLightPos = lightPos;
+
+  outFragPos = vec3(model * vec4(inPosition, 1.0));
 
   gl_Position = projection * view * model * vec4(inPosition, 1.0);
 }
