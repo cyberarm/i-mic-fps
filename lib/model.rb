@@ -55,7 +55,7 @@ class IMICFPS
       end
 
       start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
-      build_collision_tree
+      # build_collision_tree
       puts "    Building mesh collision tree took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds" if $debug.get(:stats)
     end
 
