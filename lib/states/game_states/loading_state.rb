@@ -43,10 +43,10 @@ class IMICFPS
     end
 
     def update
-      @percentage.text = "#{((@asset_index.to_f/@assets.count)*100.0).round}%"
+      @percentage.text = "#{((@asset_index.to_f / @assets.count) * 100.0).round}%"
       @act = true if @cycled
 
-      if @act && (@asset_index+1 <= @assets.count)
+      if @act && (@asset_index + 1 <= @assets.count)
         @act = false
         @cycled = false
 
@@ -55,13 +55,17 @@ class IMICFPS
         when :model
           ModelLoader.new(manifest: hash[:manifest], entity: @dummy_entity)
         when :shader
+          if $debug.get(:use_shaders)
             shader = Shader.new(name: hash[:name], vertex: "shaders/vertex/#{hash[:name]}.glsl", fragment: "shaders/fragment/#{hash[:name]}.glsl")
             Shader.add(hash[:name], shader) if shader.compiled?
+          else
+            warn "Skipping shader: #{hash[:name]}..."
+          end
         else
           warn "Unknown asset: #{hash}"
         end
 
-        @asset_index+=1
+        @asset_index += 1
       end
 
       unless @asset_index < @assets.count

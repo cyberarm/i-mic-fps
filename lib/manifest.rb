@@ -2,6 +2,7 @@ class IMICFPS
   class Manifest
     attr_reader :name, :model, :collision, :collision_mesh, :collision_resolution, :physics, :scripts, :uses
     def initialize(manifest_file: nil, package: nil, name: nil)
+
       unless manifest_file
         raise "Entity package not specified!" unless package
         raise "Entity name not specified!" unless name
@@ -9,6 +10,7 @@ class IMICFPS
       end
 
       raise "No manifest found at: #{manifest_file}" unless  File.exist?(manifest_file)
+
 
       @file = manifest_file
       parse(manifest_file)

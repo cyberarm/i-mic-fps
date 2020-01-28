@@ -43,12 +43,12 @@ class IMICFPS
       draw_rect(0, 0, window.width, window.height, color)
     end
 
-    def handleGlError
+    def gl_error?
       e = glGetError()
       if e != GL_NO_ERROR
         $stderr.puts "OpenGL error detected by handler at: #{caller[0]}"
         $stderr.puts "    #{gluErrorString(e)} (#{e})\n"
-        exit
+        exit if $debug && $debug.get(:opengl_error_panic)
       end
     end
   end

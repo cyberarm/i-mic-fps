@@ -27,7 +27,7 @@ class IMICFPS
 
           shader.uniform_float("totalLights", lights.size)
 
-          handleGlError
+          gl_error?
           draw_model(object.model)
           object.draw
         end
@@ -35,7 +35,7 @@ class IMICFPS
         puts "Shader 'default' failed to compile, using immediate mode for rendering..." unless @immediate_mode_warning
         @immediate_mode_warning = true
 
-        handleGlError
+        gl_error?
         lights.each(&:draw)
         camera.draw
 
@@ -48,13 +48,13 @@ class IMICFPS
         glRotatef(object.orientation.y, 0, 1.0, 0)
         glRotatef(object.orientation.z, 0, 0, 1.0)
 
-        handleGlError
+        gl_error?
         draw_mesh(object.model)
         object.draw
         glPopMatrix
       end
 
-      handleGlError
+      gl_error?
     end
 
     def draw_model(model)

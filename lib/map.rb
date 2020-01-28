@@ -2,6 +2,7 @@ class IMICFPS
   class Map
     include EntityManager
     include LightManager
+    include CommonMethods
 
     attr_reader :collision_manager
     attr_reader :gravity
@@ -37,23 +38,15 @@ class IMICFPS
       @map_loader
     end
 
-    def glError?
-      e = glGetError()
-      if e != GL_NO_ERROR
-        $stderr.puts "OpenGL error in: #{gluErrorString(e)} (#{e})\n"
-        exit
-      end
-    end
-
     def render(camera)
-      glError?
+      gl_error?
 
       Gosu.gl do
-        glError?
+        gl_error?
         glClearColor(0,0.2,0.5,1) # skyish blue
-        glError?
+        gl_error?
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) # clear the screen and the depth buffer
-        glError?
+        gl_error?
 
         @renderer.draw(camera, @lights, @entities)
       end

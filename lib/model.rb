@@ -167,25 +167,25 @@ class IMICFPS
       # vertices (positions)
       glBindBuffer(GL_ARRAY_BUFFER, @positions_buffer_id)
       glVertexAttribPointer(glGetAttribLocation(program, "inPosition"), 3, GL_FLOAT, GL_FALSE, 0, nil)
-      handleGlError
+      gl_error?
       # colors
       glBindBuffer(GL_ARRAY_BUFFER, @colors_buffer_id)
       glVertexAttribPointer(glGetAttribLocation(program, "inColor"), 3, GL_FLOAT, GL_FALSE, 0, nil)
-      handleGlError
+      gl_error?
       # normals
       glBindBuffer(GL_ARRAY_BUFFER, @normals_buffer_id)
       glVertexAttribPointer(glGetAttribLocation(program, "inNormal"), 4, GL_FLOAT, GL_FALSE, 0, nil)
-      handleGlError
+      gl_error?
 
       if has_texture?
         # uvs
         glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
         glVertexAttribPointer(glGetAttribLocation(program, "inUV"), 3, GL_FLOAT, GL_FALSE, 0, nil)
-        handleGlError
+        gl_error?
         # texture ids
         glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
         glVertexAttribPointer(glGetAttribLocation(program, "inTextureID"), 1, GL_FLOAT, GL_FALSE, 0, nil)
-        handleGlError
+        gl_error?
       end
 
       glBindBuffer(GL_ARRAY_BUFFER, 0)
