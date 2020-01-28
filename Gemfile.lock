@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/cyberarm/cyberarm_engine
-  revision: e59771e4127f51e3c6b3aa239dd2a5f8d2a4b7fe
+  revision: 9a3caabc7e36f572ef458dc473edd2961dad8f40
   specs:
     cyberarm_engine (0.12.1)
       gosu (~> 0.14.0)
