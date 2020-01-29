@@ -29,7 +29,7 @@ class IMICFPS
 
       add_entity(Player.new(spawnpoint: @map_loader.spawnpoints.sample, manifest: Manifest.new(package: "base", name: "character")))
 
-      # TODO: Load lights from MapLoader
+      # TODO: Load lights from MapParser
       add_light(Light.new(id: available_light, position: Vector.new(30, 10.0, 30)))
       add_light(Light.new(id: available_light, position: Vector.new(0, 100, 0), diffuse: Color.new(1.0, 0.5, 0.1)))
     end

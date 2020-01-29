@@ -1,11 +1,11 @@
 class IMICFPS
-  class MapLoader
+  class MapParser
     attr_reader :metadata, :terrain, :skydome, :entities, :spawnpoints
     attr_reader :assets, :missing_assets
     def initialize(map_file:)
-      @metadata    = MapLoader::MetaData.new
-      @terrain     = MapLoader::Entity.new
-      @skydome     = MapLoader::Entity.new
+      @metadata    = MapParser::MetaData.new
+      @terrain     = MapParser::Entity.new
+      @skydome     = MapParser::Entity.new
       @entities    = []
       @spawnpoints = []
 
@@ -78,7 +78,7 @@ class IMICFPS
 
       if section = data["entities"]
         section.each do |ent|
-          entity = MapLoader::Entity.new
+          entity = MapParser::Entity.new
           entity.package  = ent["package"]
           entity.name     = ent["name"]
           entity.position = Vector.new(

@@ -13,7 +13,7 @@ class IMICFPS
         push_state(SettingsMenu)
       end
 
-      link "Disconnect" do
+      link "Quit" do
         push_state(MainMenu)
       end
     end

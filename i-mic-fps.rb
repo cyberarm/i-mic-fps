@@ -53,6 +53,7 @@ end
 require_relative "lib/ui/console"
 require_relative "lib/ui/menus/main_menu"
 require_relative "lib/ui/menus/settings_menu"
+require_relative "lib/ui/menus/level_select_menu"
 require_relative "lib/ui/menus/game_pause_menu"
 
 require_relative "lib/states/game_states/game"
@@ -87,7 +88,7 @@ require_relative "lib/wavefront/parser"
 require_relative "lib/wavefront/object"
 require_relative "lib/wavefront/material"
 
-require_relative "lib/map_loader"
+require_relative "lib/map_parser"
 require_relative "lib/manifest"
 require_relative "lib/map"
 

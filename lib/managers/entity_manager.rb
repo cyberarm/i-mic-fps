@@ -7,7 +7,7 @@ class IMICFPS
     end
 
     def insert_entity(package, name, position, orientation, data = {})
-      ent = MapLoader::Entity.new(package, name, position, orientation, Vector.new(1,1,1))
+      ent = MapParser::Entity.new(package, name, position, orientation, Vector.new(1,1,1))
       add_entity(IMICFPS::Entity.new(map_entity: ent, manifest: Manifest.new(package: package, name: name)))
     end
 

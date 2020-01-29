@@ -3,7 +3,7 @@ class IMICFPS
 
     attr_reader :map
     def setup
-      @map = Map.new(map_loader: @options[:map_loader])
+      @map = Map.new(map_loader: @options[:map_parser])
       @map.setup
 
       @player = @map.find_entity_by(name: "character")
