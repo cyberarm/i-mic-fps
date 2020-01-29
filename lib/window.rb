@@ -13,6 +13,7 @@ class IMICFPS
       end
       $window = self
       @needs_cursor = false
+      @cursor = Gosu::Image.new(IMICFPS::GAME_ROOT_PATH + "/static/cursors/pointer.png")
       @number_of_vertices = 0
 
       self.caption = "#{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})"
@@ -37,14 +38,10 @@ class IMICFPS
     end
 
     def draw_cursor
+      size = 16
+      
       if needs_cursor
-        draw_quad(
-          mouse_x, mouse_y, Gosu::Color::WHITE,
-          mouse_x+16, mouse_y, Gosu::Color::WHITE,
-          mouse_x, mouse_y+16, Gosu::Color::WHITE,
-          mouse_x, mouse_y+16, Gosu::Color::WHITE,
-          Float::INFINITY
-        )
+        @cursor.draw(mouse_x, mouse_y, Float::INFINITY)
       end
     end
 

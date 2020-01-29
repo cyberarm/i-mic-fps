@@ -1,11 +1,16 @@
 class IMICFPS
   class GamePauseMenu < Menu
     def setup
+      @background_alpha = 50
       title "I-MIC FPS"
       subtitle "Paused"
 
       link "Resume" do
         pop_state
+      end
+
+      link "Settings" do
+        push_state(SettingsMenu)
       end
 
       link "Disconnect" do

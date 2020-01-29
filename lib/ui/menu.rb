@@ -6,6 +6,7 @@ class IMICFPS
       @slope = 250
       @color_step = 10
       @base_color = Gosu::Color.rgb(255, 127, 0)
+      @background_alpha = 200
       window.needs_cursor = true
       super(*args)
     end
@@ -40,14 +41,14 @@ class IMICFPS
             0, @slope+(i*@size),
             window.width/2, (-@slope)+(i*@size),
             window.width/2, i*@size,
-            Gosu::Color.rgba(@base_color.red-i*@color_step, @base_color.green-i*@color_step, @base_color.blue-i*@color_step, 200)
+            Gosu::Color.rgba(@base_color.red-i*@color_step, @base_color.green-i*@color_step, @base_color.blue-i*@color_step, @background_alpha)
           )
           fill_quad(
             window.width, i*@size,
             window.width, @slope+(i*@size),
             window.width/2, (-@slope)+(i*@size),
             window.width/2, i*@size,
-            Gosu::Color.rgba(@base_color.red-i*@color_step, @base_color.green-i*@color_step, @base_color.blue-i*@color_step, 200)
+            Gosu::Color.rgba(@base_color.red-i*@color_step, @base_color.green-i*@color_step, @base_color.blue-i*@color_step, @background_alpha)
           )
         end
 
