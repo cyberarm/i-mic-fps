@@ -50,7 +50,6 @@ class IMICFPS
 
       @demo.update if @demo
 
-      window.close if window.button_down?(Gosu::KbEscape)
       window.number_of_vertices = 0
     end
 
@@ -86,6 +85,11 @@ eos
     end
 
     def button_down(id)
+      if id == Gosu::KB_ESCAPE
+        push_state(GamePauseMenu)
+
+        return
+      end
       @demo.button_down(id) if @demo
 
       InputMapper.keydown(id)

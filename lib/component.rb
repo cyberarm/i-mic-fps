@@ -7,12 +7,13 @@ class IMICFPS
     end
 
     def self.inherited(subclass)
-      pp subclass
       COMPONENTS["__pending"] ||= []
       COMPONENTS["__pending"] << subclass
     end
 
     def self.initiate
+      return unless COMPONENTS.dig("__pending") # Already setup
+
       COMPONENTS["__pending"].each do |klass|
         component = klass.new
         COMPONENTS[component.name] = component

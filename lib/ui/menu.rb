@@ -12,14 +12,27 @@ class IMICFPS
 
     def title(text, color = @base_color)
       @elements << Text.new(text, color: color, size: 100, x: 0, y: 15, alignment: :center)
+      @_title = @elements.last
+    end
+
+    def subtitle(text, color = Gosu::Color::WHITE)
+      @elements << Text.new(text, color: color, size: 50, x: 0, y: 100, alignment: :center)
+      @_subtitle = @elements.last
     end
 
     def link(text, color = Gosu::Color.rgb(0,127,127), &block)
-      text = Text.new(text, color: color, size: 50, x: 0, y: 100+(60*@elements.count), alignment: :center)
+      text = Text.new(text, color: color, size: 50, x: 0, y: 100 + (60 * @elements.count), alignment: :center)
       @elements << Link.new(text, self, block)
     end
 
     def draw
+      draw_background
+      draw_menu_box
+      draw_menu
+      window.draw_cursor
+    end
+
+    def draw_background
       @background ||= Gosu.record(Gosu.screen_width, Gosu.screen_height) do
         ((Gosu.screen_height+@slope)/@size).times do |i|
           fill_quad(
@@ -41,29 +54,20 @@ class IMICFPS
       end
 
       @background.draw(0, 0, 0)
+    end
 
-      # Box
+    def draw_menu_box
       draw_rect(
         window.width/4, 0,
         window.width/2, window.height,
         Gosu::Color.rgba(0, 0, 0, 150)
         # Gosu::Color.rgba(@base_color.red+@color_step, @base_color.green+@color_step, @base_color.blue+@color_step, 200)
       )
+    end
 
-      # Texts
+    def draw_menu
       @elements.each do |e|
         e.draw
-      end
-
-      # Cursor
-      if window.needs_cursor
-        fill_quad(
-          mouse_x, mouse_y,
-          mouse_x+16, mouse_y,
-          mouse_x, mouse_y+16,
-          mouse_x, mouse_y+16,
-          Gosu::Color::WHITE, Float::INFINITY
-        )
       end
     end
 
@@ -84,7 +88,6 @@ class IMICFPS
     end
 
     def button_up(id)
-      window.close if id == Gosu::KbEscape
       if id == Gosu::MsLeft
         @elements.each do |e|
           next unless e.is_a?(Link)
@@ -126,7 +129,7 @@ class IMICFPS
       def width; text.width; end
       def height; text.height; end
       def draw; text.draw; end
-      def clicked; @block.call; end
+      def clicked; @block.call if @block; end
     end
   end
 end

@@ -36,6 +36,18 @@ class IMICFPS
       @console.draw if @show_console
     end
 
+    def draw_cursor
+      if needs_cursor
+        draw_quad(
+          mouse_x, mouse_y, Gosu::Color::WHITE,
+          mouse_x+16, mouse_y, Gosu::Color::WHITE,
+          mouse_x, mouse_y+16, Gosu::Color::WHITE,
+          mouse_x, mouse_y+16, Gosu::Color::WHITE,
+          Float::INFINITY
+        )
+      end
+    end
+
     def update
       super
 

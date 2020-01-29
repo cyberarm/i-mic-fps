@@ -10,5 +10,6 @@ Requires a Ruby runtime that supports the gosu and opengl-bindings C-extensions 
 ### Options
 * `--native` - Launch in fullscreen using primary displays resolution
 * `--profile` - Run ruby-prof profiler
+* `--mesa-override` - (Linux) Force MESA to use OpenGL/GLSL version 3.30
 * `--savedemo` - Record camera movement and key events to playback later *(alpha-quality feature)*
 * `--playdemo` - Plays the previously recorded demo *(alpha-quality feature)*

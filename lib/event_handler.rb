@@ -9,14 +9,16 @@ class IMICFPS
     end
 
     def self.initiate
+      preserve = @@handlers["__pending"]
+      @@handlers.clear
+      @@handlers["__pending"] = preserve
+
       @@handlers["__pending"].each do |handler|
         instance = handler.new
         instance.handles.each do |event|
           @@handlers[event] = instance
         end
       end
-
-      @@handlers.delete("__pending")
     end
 
     def self.get(event)

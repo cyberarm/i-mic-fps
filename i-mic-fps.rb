@@ -52,6 +52,8 @@ Dir.glob("#{IMICFPS::GAME_ROOT_PATH}/lib/ui/commands/*.rb").each do |cmd|
 end
 require_relative "lib/ui/console"
 require_relative "lib/ui/menus/main_menu"
+require_relative "lib/ui/menus/settings_menu"
+require_relative "lib/ui/menus/game_pause_menu"
 
 require_relative "lib/states/game_states/game"
 require_relative "lib/states/game_states/loading_state"
