@@ -55,7 +55,7 @@ class IMICFPS
         when :model
           ModelLoader.new(manifest: hash[:manifest], entity: @dummy_entity)
         when :shader
-          if $debug.get(:use_shaders)
+          if window.config.get(:debug_options, :use_shaders)
             shader = Shader.new(name: hash[:name], includes_dir: "shaders/include", vertex: "shaders/vertex/#{hash[:name]}.glsl", fragment: "shaders/fragment/#{hash[:name]}.glsl")
           else
             warn "Skipping shader: #{hash[:name]}..."

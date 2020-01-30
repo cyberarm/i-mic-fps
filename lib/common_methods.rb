@@ -48,7 +48,7 @@ class IMICFPS
       if e != GL_NO_ERROR
         $stderr.puts "OpenGL error detected by handler at: #{caller[0]}"
         $stderr.puts "    #{gluErrorString(e)} (#{e})\n"
-        exit if $debug && $debug.get(:opengl_error_panic)
+        exit if window.config.get(:debug_options, :opengl_error_panic)
       end
     end
   end

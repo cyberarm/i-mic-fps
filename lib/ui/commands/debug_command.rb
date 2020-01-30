@@ -9,16 +9,17 @@ class IMICFPS
         :debug
       end
 
-      def setup
-        $debug = self
+      def set(key, value)
+        $window.config[:debug_options, key] = value
+      end
 
-        set(:boundingboxes, false)
-        set(:wireframe, false)
-        set(:stats, false)
-        set(:fps, false)
-        set(:skydome, true)
-        set(:use_shaders, true)
-        set(:opengl_error_panic, false)
+      def setup
+        set(:boundingboxes, false) if $window.config.get(:debug_options, :boundingboxes).nil?
+        set(:wireframe, false) if $window.config.get(:debug_options, :wireframe).nil?
+        set(:stats, false) if $window.config.get(:debug_options, :stats).nil?
+        set(:skydome, true) if $window.config.get(:debug_options, :skydome).nil?
+        set(:use_shaders, true) if $window.config.get(:debug_options, :use_shaders).nil?
+        set(:opengl_error_panic, false) if $window.config.get(:debug_options, :opengl_error_panic).nil?
 
         subcommand(:boundingboxes, :boolean)
         subcommand(:wireframe, :boolean)

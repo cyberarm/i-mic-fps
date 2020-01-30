@@ -33,7 +33,7 @@ class IMICFPS
 
       parse(parser)
 
-      puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if $debug.get(:stats)
+      puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if window.config.get(:debug_options, :stats)
 
       if Shader.available?("default")
         allocate_gl_objects
@@ -43,7 +43,7 @@ class IMICFPS
 
       @objects.each {|o| @vertex_count+=o.vertices.size}
       @objects.each_with_index do |o, i|
-        puts "    Model::Object Name: #{o.name}, Vertices: #{o.vertices.size}" if $debug.get(:stats)
+        puts "    Model::Object Name: #{o.name}, Vertices: #{o.vertices.size}" if window.config.get(:debug_options, :stats)
       end
       window.number_of_vertices+=@vertex_count
       @has_texture = false
@@ -56,7 +56,7 @@ class IMICFPS
 
       start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
       # build_collision_tree
-      puts "    Building mesh collision tree took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds" if $debug.get(:stats)
+      puts "    Building mesh collision tree took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds" if window.config.get(:debug_options, :stats)
     end
 
     def parse(parser)
@@ -214,7 +214,7 @@ class IMICFPS
         @aabb_tree.insert(face, box)
       end
 
-      puts @aabb_tree.inspect if $debug.get(:stats)
+      puts @aabb_tree.inspect if window.config.get(:debug_options, :stats)
     end
 
     def update

@@ -38,7 +38,7 @@ class IMICFPS
       if CACHE[@type].is_a?(Hash)
         if CACHE[@type][@model_file]
           @model = CACHE[@type][@model_file]#.dup # Don't know why, but adding .dup improves performance with Sponza (1 fps -> 20 fps)
-          puts "Used cached model for: #{@model_file.split('/').last}" if $debug.get(:stats)
+          puts "Used cached model for: #{@model_file.split('/').last}" if $window.config.get(:debug_options, :stats)
           found = true
         end
       end

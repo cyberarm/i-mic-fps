@@ -102,7 +102,7 @@ class IMICFPS
         glColorPointer(3, GL_FLOAT, 0, o.flattened_materials)
         glNormalPointer(GL_FLOAT, 0, o.flattened_normals)
 
-        if $debug.get(:wireframe) # This is kinda expensive
+        if window.config.get(:debug_options, :wireframe) # This is kinda expensive
           glDisable(GL_LIGHTING)
           glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
           glPolygonOffset(2, 0.5)

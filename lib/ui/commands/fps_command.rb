@@ -17,12 +17,12 @@ class IMICFPS
 
         case arguments.last
         when "", nil
-          console.stdin("#{Style.highlight("fps")}: #{$debug.get(:fps)}")
+          console.stdin("#{Style.highlight("fps")}: #{$window.config.get(:options, :fps)}")
         when "on"
-          var = $debug.set(:fps, true)
+          var = $window.config[:options, :fps] = true
           console.stdin("fps => #{Style.highlight(var)}")
         when "off"
-          var = $debug.set(:fps, false)
+          var = $window.config[:options, :fps] = false
           console.stdin("fps => #{Style.highlight(var)}")
         else
           console.stdin("Invalid argument for #{Style.highlight("#{command}")}, got #{Style.error(arguments.last)} expected #{Style.notice("on")}, or #{Style.notice("off")}.")

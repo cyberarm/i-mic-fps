@@ -1,7 +1,7 @@
 class IMICFPS
   class Window < CyberarmEngine::Engine
     attr_accessor :number_of_vertices, :needs_cursor
-    attr_reader :camera
+    attr_reader :camera, :config
 
     attr_reader :console, :delta_time
     def initialize(window_width = 1280, window_height = 720, fullscreen = false)
@@ -18,9 +18,14 @@ class IMICFPS
 
       self.caption = "#{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})"
 
+      @config = CyberarmEngine::ConfigFile.new(file: IMICFPS::GAME_ROOT_PATH + "/data/config.json")
       @show_console = false
       @console = Console.new
       Commands::Command.setup
+
+      at_exit do
+        @config.save!
+      end
 
       push_state(MainMenu)
 
@@ -39,7 +44,7 @@ class IMICFPS
 
     def draw_cursor
       size = 16
-      
+
       if needs_cursor
         @cursor.draw(mouse_x, mouse_y, Float::INFINITY)
       end

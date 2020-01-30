@@ -72,7 +72,7 @@ class IMICFPS
           end
         end
 
-        puts "Total Lines: #{lines}" if $debug.get(:stats)
+        puts "Total Lines: #{lines}" if $window.config.get(:debug_options, :stats)
         @model.calculate_bounding_box(@model.vertices, @model.bounding_box)
         @model.objects.each do |o|
           @model.calculate_bounding_box(o.vertices, o.bounding_box)

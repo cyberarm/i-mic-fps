@@ -40,9 +40,9 @@ class IMICFPS
 
       @camera.update
 
-      if $debug.get(:stats)
+      if window.config.get(:debug_options, :stats)
         @text.text = update_text
-      elsif $debug.get(:fps)
+      elsif window.config.get(:options, :fps)
         @text.text = "FPS: #{Gosu.fps}"
       else
         @text.text = ""
