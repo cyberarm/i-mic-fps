@@ -40,7 +40,7 @@ class IMICFPS
       geometry_id = geometry.attributes["id"].value
       geometry_name = geometry.attributes["name"].value
 
-      change_object(geometry_name)
+      change_object(geometry_id, geometry_name)
 
       mesh = geometry.at_css("mesh")
 
@@ -80,10 +80,20 @@ class IMICFPS
 
     def build_faces(id, mesh)
       material_name = mesh.at_css("triangles").attributes["material"].value
+      set_material(material_name)
+
+      positions_index = []
+      normals_index = []
+      uvs_index = []
 
       mesh.at_css("triangles p").children.first.to_s.split(" ").map { |i| Integer(i) }.each_slice(3).each do |slice|
-        set_material(material_name)
+        positions_index << slice[0]
+        normals_index << slice[1]
+        uvs_index << slice[2]
+      end
 
+      norm_index = 0
+      positions_index.each_slice(3) do |slice|
         face = Face.new
         face.vertices = []
         face.uvs      = []
@@ -95,8 +105,10 @@ class IMICFPS
         slice.each do |index|
           face.vertices << @model.vertices[index]
           # face.uvs << @model.uvs[index]
-          face.normals << @model.normals[index]
+          face.normals << @model.normals[normals_index[norm_index]]
           face.colors << current_material.diffuse
+
+          norm_index += 1
         end
 
         @model.current_object.faces << face

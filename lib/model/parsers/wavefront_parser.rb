@@ -23,7 +23,7 @@ class IMICFPS
         when 'usemtl'
           set_material(array[1])
         when 'o'
-          change_object(array[1])
+          change_object(nil, array[1])
         when 's'
           set_smoothing(array[1])
         when 'v'

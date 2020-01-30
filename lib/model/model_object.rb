@@ -1,10 +1,11 @@
 class IMICFPS
   class Model
     class ModelObject
-      attr_reader :name, :vertices, :textures, :normals, :bounding_box, :debug_color
+      attr_reader :id, :name, :vertices, :textures, :normals, :bounding_box, :debug_color
       attr_accessor :faces, :scale
 
-      def initialize(name)
+      def initialize(id, name)
+        @id = id
         @name = name
         @vertices = []
         @textures = []

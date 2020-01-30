@@ -30,8 +30,26 @@ class IMICFPS
       def parse
       end
 
-      def change_object(name)
-        @model.objects << Model::ModelObject.new(name)
+      def set_object(id: nil, name: nil)
+        _model = nil
+
+        if id
+          _model = @model.objects.find { |o| o.id == id }
+        elsif name
+          _model = @model.objects.find { |o| o.id == id }
+        else
+          raise "Must provide either an id: or name:"
+        end
+
+        if _model
+          @model.current_object = _model
+        else
+          raise "Couldn't find ModelObject!"
+        end
+      end
+
+      def change_object(id, name)
+        @model.objects << Model::ModelObject.new(id, name)
         @model.current_object = @model.objects.last
       end
 
