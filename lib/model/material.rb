@@ -1,5 +1,5 @@
 class IMICFPS
-  class Wavefront
+  class Model
     class Material
       attr_accessor :name, :ambient, :diffuse, :specular
       attr_reader :texture_id

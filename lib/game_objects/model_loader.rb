@@ -21,7 +21,7 @@ class IMICFPS
       unless load_model_from_cache
         case @type
         when :obj
-          @model = IMICFPS::Model.new(file_path: @model_file, parser: Wavefront::Parser)
+          @model = IMICFPS::Model.new(file_path: @model_file)
         else
           raise "Unsupported model type, supported models are: #{@supported_models.join(', ')}"
         end

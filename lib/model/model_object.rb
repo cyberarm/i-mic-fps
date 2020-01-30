@@ -1,6 +1,6 @@
 class IMICFPS
-  class Wavefront
-    class Object
+  class Model
+    class ModelObject
       attr_reader :name, :vertices, :textures, :normals, :bounding_box, :debug_color
       attr_accessor :faces, :scale
 

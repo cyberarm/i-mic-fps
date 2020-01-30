@@ -10,14 +10,16 @@ class IMICFPS
     attr_reader :vertex_array_id
     attr_reader :aabb_tree
 
-    def initialize(file_path:, entity: nil, parser:)
+    def initialize(file_path:, entity: nil)
+      @file_path = file_path
       @entity = entity
       update if @entity
-      @file_path = file_path
+
       @material_file  = nil
       @current_object = nil
       @current_material=nil
       @vertex_count  = 0
+
       @objects  = []
       @materials= {}
       @vertices = []
@@ -31,7 +33,7 @@ class IMICFPS
       @bounding_box = BoundingBox.new
       start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
 
-      parse(parser)
+      parse( Model::Parser.find(File.basename(file_path).split(".").last.to_sym) )
 
       puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if window.config.get(:debug_options, :stats)
 
