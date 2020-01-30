@@ -111,26 +111,29 @@ class IMICFPS
 
     def free_move
       relative_y_rotation = (@orientation.y + 180)
-      relative_speed = 0.25
+      relative_speed = 2.5
+      relative_speed = 1.5 if InputMapper.down?(:sneak)
+      relative_speed = 10.0 if InputMapper.down?(:sprint)
+      relative_speed *= window.dt
 
       if InputMapper.down?( :forward)
-        @position.z+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
-        @position.x-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.z+=Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+        @position.x-=Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
       end
 
       if InputMapper.down?(:backward)
-        @position.z-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
-        @position.x+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.z-=Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+        @position.x+=Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
       end
 
       if InputMapper.down?(:strife_left)
-        @position.z+=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
-        @position.x+=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.z+=Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
+        @position.x+=Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
       end
 
       if InputMapper.down?(:strife_right)
-        @position.z-=Math.sin(relative_y_rotation * Math::PI / 180)*relative_speed
-        @position.x-=Math.cos(relative_y_rotation * Math::PI / 180)*relative_speed
+        @position.z-=Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
+        @position.x-=Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
       end
 
       if InputMapper.down?(:ascend)

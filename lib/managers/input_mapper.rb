@@ -112,6 +112,7 @@ IMICFPS::InputMapper.set(:strife_right, Gosu::KbD)
 IMICFPS::InputMapper.set(:turn_left,    Gosu::KbLeft)
 IMICFPS::InputMapper.set(:turn_right,   Gosu::KbRight)
 IMICFPS::InputMapper.set(:jump,         Gosu::KbSpace)
+IMICFPS::InputMapper.set(:sneak,        [Gosu::KbLeftShift])
 IMICFPS::InputMapper.set(:sprint,       [Gosu::KbLeftControl])
 IMICFPS::InputMapper.set(:turn_180,     Gosu::KbX)
 

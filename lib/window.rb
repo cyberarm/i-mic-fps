@@ -40,14 +40,13 @@ class IMICFPS
       super
 
       @console.draw if @show_console
+      draw_cursor if needs_cursor
     end
 
     def draw_cursor
       size = 16
 
-      if needs_cursor
-        @cursor.draw(mouse_x, mouse_y, Float::INFINITY)
-      end
+      @cursor.draw(mouse_x, mouse_y, Float::INFINITY)
     end
 
     def update

@@ -30,7 +30,6 @@ class IMICFPS
       draw_background
       draw_menu_box
       draw_menu
-      window.draw_cursor
     end
 
     def draw_background

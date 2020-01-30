@@ -101,6 +101,25 @@ require_relative "lib/demo"
 
 require_relative "lib/window"
 
+if ARGV[0] == "tool"
+  case ARGV[1]
+  when "viewer" # Turn Table
+    require_relative "lib/tools/asset_viewer/asset_viewer"
+  when "editor" # Level Editor
+    raise NotImplementedError
+  else
+    if ARGV[1].nil?
+      puts "### I-MIC FPS Tools ###"
+      puts "viewer - 3D Turn Table"
+      puts "editor - Level Editor"
+    else
+      raise "No such tool: #{ARGV[1]}"
+    end
+  end
+
+  return # Don't launch game, but load all required files
+end
+
 if ARGV.join.include?("--profile")
   begin
     require "ruby-prof"
