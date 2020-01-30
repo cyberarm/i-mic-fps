@@ -23,7 +23,7 @@
   "entities":[
     {
       "package":"base",
-      "name":"tree",
+      "name":"evergreen_tree",
       "position": {
         "x":0,
         "y":0.6,

@@ -1,0 +1,4 @@
+---
+name: "evergreen_tree"
+model: "evergreen_tree.dae"
+collision: "boundingbox"

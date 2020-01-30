@@ -6,6 +6,7 @@ require "time"
 
 require "opengl"
 require "glu"
+require "nokogiri"
 
 begin
   require_relative "../cyberarm_engine/lib/cyberarm_engine"
@@ -75,7 +76,6 @@ require_relative "lib/component"
 require_relative "lib/components/building"
 
 require_relative "lib/game_objects/entity"
-require_relative "lib/game_objects/model_loader"
 require_relative "lib/game_objects/light"
 
 require_relative "lib/game_objects/camera"
@@ -84,11 +84,13 @@ require_relative "lib/game_objects/entities/skydome"
 require_relative "lib/game_objects/entities/terrain"
 
 require_relative "lib/model"
+require_relative "lib/model_cache"
 require_relative "lib/model/parser"
 require_relative "lib/model/model_object"
 require_relative "lib/model/material"
 
 require_relative "lib/model/parsers/wavefront_parser"
+require_relative "lib/model/parsers/collada_parser"
 
 require_relative "lib/map_parser"
 require_relative "lib/manifest"

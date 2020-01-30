@@ -57,9 +57,9 @@ class IMICFPS
     end
 
     def bind_model
-      model = ModelLoader.new(manifest: @manifest, entity: @dummy_entity)
+      model = ModelCache.new(manifest: @manifest, entity: @dummy_entity)
 
-      raise "model isn't a model!" unless model.is_a?(ModelLoader)
+      raise "model isn't a model!" unless model.is_a?(ModelCache)
       @bound_model = model
       @bound_model.model.entity = self
       @bounding_box = normalize_bounding_box_with_offset

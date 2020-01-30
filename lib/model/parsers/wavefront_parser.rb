@@ -49,11 +49,11 @@ class IMICFPS
           face.uvs      = []
           face.normals  = []
           face.colors   = []
-          face.material = material
+          face.material = current_material
           face.smoothing= @model.smoothing
 
           mat   = face.material.diffuse
-          color = Vector.new(mat.red, mat.green, mat.blue)
+          color = mat
 
           verts.each_with_index do |v, index|
 
@@ -110,31 +110,12 @@ class IMICFPS
       end
     end
 
-    def change_object(name)
-      @model.objects << Model::ModelObject.new(name)
-      @model.current_object = @model.objects.last
-    end
-
     def set_smoothing(value)
       if value == "1"
         @model.smoothing = true
       else
         @model.smoothing = false
       end
-    end
-
-    def set_material(name)
-      @model.current_material = name
-    end
-
-    def material
-      @model.materials[@model.current_material]
-    end
-
-    def faces_count
-      count = 0
-      @model.objects.each {|o| count+=o.faces.count}
-      return count
     end
 
     def add_vertex(array)

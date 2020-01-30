@@ -1,9 +1,5 @@
 class IMICFPS
-  class ModelLoader
-    def self.supported_models
-      ["Wavefront OBJ"]
-    end
-
+  class ModelCache
     CACHE = {}
 
     attr_reader :model, :name, :debug_color
@@ -16,19 +12,12 @@ class IMICFPS
       @debug_color = Color.new(0.0, 1.0, 0.0)
 
       @model = nil
-      @supported_models = ["OBJ"]
 
       unless load_model_from_cache
-        case @type
-        when :obj
-          @model = IMICFPS::Model.new(file_path: @model_file)
-        else
-          raise "Unsupported model type, supported models are: #{@supported_models.join(', ')}"
-        end
+        @model = IMICFPS::Model.new(file_path: @model_file)
 
         cache_model
       end
-
 
       return self
     end

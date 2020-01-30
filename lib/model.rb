@@ -33,7 +33,14 @@ class IMICFPS
       @bounding_box = BoundingBox.new
       start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
 
-      parse( Model::Parser.find(File.basename(file_path).split(".").last.to_sym) )
+      type = File.basename(file_path).split(".").last.to_sym
+      parser = Model::Parser.find(type)
+      unless parser
+        raise "Unsupported model type '.#{type}', supported models are: #{Model::Parser.supported_formats}"
+      end
+
+      parse(parser)
+
 
       puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if window.config.get(:debug_options, :stats)
 
@@ -131,7 +138,7 @@ class IMICFPS
 
       @faces.each do |face|
         pos     << face.vertices.map { |vert| [vert.x, vert.y, vert.z] }
-        colors  << face.colors.map   { |vert| [vert.x, vert.y, vert.z] }
+        colors  << face.colors.map   { |color| [color.red, color.green, color.blue] }
         norms   << face.normals.map  { |vert| [vert.x, vert.y, vert.z, vert.weight] }
 
         if has_texture?
