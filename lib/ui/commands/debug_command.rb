@@ -13,6 +13,10 @@ class IMICFPS
         $window.config[:debug_options, key] = value
       end
 
+      def get(key)
+        $window.config.get(:debug_options, key)
+      end
+
       def setup
         set(:boundingboxes, false) if $window.config.get(:debug_options, :boundingboxes).nil?
         set(:wireframe, false) if $window.config.get(:debug_options, :wireframe).nil?

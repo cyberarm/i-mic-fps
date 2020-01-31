@@ -16,6 +16,8 @@ class IMICFPS
           end
         end
 
+        @manifests.sort_by! { |m| m.name.downcase }
+
         flow(margin: 10) do
           @manifests.each do |manifest|
             button manifest.name do

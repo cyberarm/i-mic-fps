@@ -8,7 +8,7 @@ class IMICFPS
         window.needs_cursor = false
         @manifest = @options[:manifest]
 
-        if window.config.get(:debug, :use_shaders)
+        if window.config.get(:debug_options, :use_shaders) && !Shader.available?("default")
           Shader.new(
             name: "default",
             includes_dir: "shaders/include",
