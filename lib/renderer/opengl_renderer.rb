@@ -67,6 +67,17 @@ class IMICFPS
         glEnableVertexAttribArray(4)
       end
 
+      if window.config.get(:debug_options, :wireframe)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+        Shader.active_shader.uniform_boolean("disableLighting", true)
+
+        glDrawArrays(GL_TRIANGLES, 0, model.faces.count * 3)
+        window.number_of_vertices += model.faces.count * 3
+
+        Shader.active_shader.uniform_boolean("disableLighting", false)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+      end
+
       glDrawArrays(GL_TRIANGLES, 0, model.faces.count * 3)
       window.number_of_vertices += model.faces.count * 3
 

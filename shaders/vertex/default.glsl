@@ -20,6 +20,7 @@ out vec3 outFragPos;
 out vec3 outViewPos;
 out vec3 outCameraPos;
 out vec3 outInverseNormal;
+out float outDisableLighting;
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -28,6 +29,7 @@ uniform int hasTexture;
 uniform float totalLights;
 uniform Light lights[MAX_LIGHTS];
 uniform vec3 cameraPos;
+uniform int disableLighting;
 
 
 void main() {
@@ -41,6 +43,7 @@ void main() {
   outLights = lights;
   outTotalLights = totalLights;
   outCameraPos = cameraPos;
+  outDisableLighting = disableLighting;
   outInverseNormal = mat3(transpose(inverse(model))) * vec3(inNormal);
 
   outFragPos = vec3(model * vec4(inPosition, 1.0));

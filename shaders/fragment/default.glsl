@@ -12,6 +12,7 @@ in float outTotalLights;
 in vec3 outFragPos;
 in vec3 outCameraPos;
 in vec3 outInverseNormal;
+in float outDisableLighting;
 
 // optimizing compilers are annoying at this stage of my understanding of GLSL
 vec4 lokiVar;
@@ -76,7 +77,12 @@ void main() {
   lokiVar = vec4(outColor, 1.0) + outNormal + vec4(outUV, 1.0) + vec4(outTextureID, 1.0, 1.0, 1.0);
   lokiVar = normalize(lokiVar);
 
-  vec3 result = calculateLighting() * outColor;
+  vec3 result;
+  if (outDisableLighting == 1.0) {
+    result = outColor + 0.25;
+  } else {
+    result = calculateLighting() * outColor;
+  }
 
   gl_FragColor = vec4(result, 1.0);
 }
