@@ -116,6 +116,8 @@ class IMICFPS
       relative_speed = 10.0 if InputMapper.down?(:sprint)
       relative_speed *= window.dt
 
+      turn_speed = 50.0 * window.dt
+
       if InputMapper.down?( :forward)
         @position.z+=Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
         @position.x-=Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
@@ -134,6 +136,14 @@ class IMICFPS
       if InputMapper.down?(:strife_right)
         @position.z-=Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
         @position.x-=Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+      end
+
+      if InputMapper.down?(:turn_left)
+        @orientation.y -= turn_speed
+      end
+
+      if InputMapper.down?(:turn_right)
+        @orientation.y += turn_speed
       end
 
       if InputMapper.down?(:ascend)

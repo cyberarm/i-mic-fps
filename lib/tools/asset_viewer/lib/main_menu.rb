@@ -28,6 +28,12 @@ class IMICFPS
           window.close
         end
       end
+
+      def update
+        super
+
+        window.needs_cursor = true
+      end
     end
   end
 end

@@ -5,6 +5,7 @@ class IMICFPS
 
       attr_reader :map
       def setup
+        window.needs_cursor = false
         @manifest = @options[:manifest]
 
         if window.config.get(:debug, :use_shaders)
@@ -23,6 +24,7 @@ class IMICFPS
         @entity.bind_model
         @map.add_entity(@entity)
         @map.entities.each { |e| e.backface_culling = false }
+        @crosshair = Crosshair.new(color: Gosu::Color.rgba(100, 200, 255, 100))
 
         @lights = []
         @light = Light.new(id: available_light, position: Vector.new, diffuse: Vector.new(1, 1, 1, 1))
@@ -42,8 +44,6 @@ class IMICFPS
       end
 
       def draw
-        window.show_cursor = true
-
         color_top = Gosu::Color::GRAY
         color_bottom = Gosu::Color::BLACK
 
@@ -57,6 +57,8 @@ class IMICFPS
         Gosu.gl do
           @renderer.draw(@camera, [@light], @map.entities)
         end
+
+        @crosshair.draw
 
         super
       end
