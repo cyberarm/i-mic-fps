@@ -40,6 +40,7 @@ require_relative "lib/managers/collision_manager"
 require_relative "lib/managers/physics_manager"
 
 require_relative "lib/renderer/renderer"
+require_relative "lib/renderer/g_buffer"
 require_relative "lib/renderer/opengl_renderer"
 require_relative "lib/renderer/bounding_box_renderer"
 

@@ -2,8 +2,10 @@ class IMICFPS
   class OpenGLRenderer
     include CommonMethods
 
+    @@immediate_mode_warning = false
+
     def initialize
-      @immediate_mode_warning = false
+      @g_buffer = GBuffer.new
     end
 
     def draw_object(camera, lights, object)
@@ -32,8 +34,8 @@ class IMICFPS
           object.draw
         end
       else
-        puts "Shader 'default' failed to compile, using immediate mode for rendering..." unless @immediate_mode_warning
-        @immediate_mode_warning = true
+        puts "Shader 'default' failed to compile, using immediate mode for rendering..." unless @@immediate_mode_warning
+        @@immediate_mode_warning = true
 
         gl_error?
         lights.each(&:draw)
