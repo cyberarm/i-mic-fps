@@ -16,6 +16,17 @@ class IMICFPS
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         Shader.use("default") do |shader|
+          lights.each_with_index do |light, i|
+            shader.uniform_float("lights[#{i}.end", -1.0);
+            shader.uniform_float("lights[#{i}.type", light.type);
+            shader.uniform_vec3("lights[#{i}].position", light.position)
+            shader.uniform_vec3("lights[#{i}].ambient", light.ambient)
+            shader.uniform_vec3("lights[#{i}].diffuse", light.diffuse)
+            shader.uniform_vec3("lights[#{i}].specular", light.specular)
+          end
+
+          shader.uniform_float("totalLights", lights.size)
+
           entities.each do |entity|
             next unless entity.visible && entity.renderable
 
@@ -24,18 +35,6 @@ class IMICFPS
             shader.uniform_transform("model", entity.model_matrix)
             shader.uniform_boolean("hasTexture", entity.model.has_texture?)
             shader.uniform_vec3("cameraPosition", camera.position)
-
-            # TODO: Upload and use lights
-            lights.each_with_index do |light, i|
-              shader.uniform_float("lights[#{i}.end", -1.0);
-              shader.uniform_float("lights[#{i}.type", light.type);
-              shader.uniform_vec3("lights[#{i}].position", light.position)
-              shader.uniform_vec3("lights[#{i}].ambient", light.ambient)
-              shader.uniform_vec3("lights[#{i}].diffuse", light.diffuse)
-              shader.uniform_vec3("lights[#{i}].specular", light.specular)
-            end
-
-            shader.uniform_float("totalLights", lights.size)
 
             gl_error?
             draw_model(entity.model, shader)
