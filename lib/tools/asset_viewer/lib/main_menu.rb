@@ -18,16 +18,16 @@ class IMICFPS
 
         @manifests.sort_by! { |m| m.name.downcase }
 
+        button "Back", margin_bottom: 25 do
+          pop_state
+        end
+
         flow(margin: 10) do
           @manifests.each do |manifest|
             button manifest.name do
               push_state(TurnTable, manifest: manifest)
             end
           end
-        end
-
-        button "Exit", margin_top: 25 do
-          window.close
         end
       end
 

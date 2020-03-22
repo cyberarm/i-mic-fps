@@ -12,6 +12,10 @@ class IMICFPS
         push_state(SettingsMenu)
       end
 
+      link "Extras" do
+        push_state(ExtrasMenu)
+      end
+
       link "Exit" do
         window.close
       end
