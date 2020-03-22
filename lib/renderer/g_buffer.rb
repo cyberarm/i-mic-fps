@@ -72,6 +72,22 @@ class IMICFPS
       glDrawBuffers(draw_buffers.size, draw_buffers.pack("I*"))
     end
 
+    def bind_for_writing
+      glBindFramebuffer(GL_DRAW_FRAMEBUFFER, @framebuffer)
+    end
+
+    def bind_for_reading
+      glBindFramebuffer(GL_READ_FRAMEBUFFER, @framebuffer)
+    end
+
+    def set_read_buffer(buffer)
+      glReadBuffer(GL_COLOR_ATTACHMENT0 + @textures.keys.index(buffer))
+    end
+
+    def unbind_framebuffer
+      glBindFramebuffer(GL_FRAMEBUFFER, 0)
+    end
+
     def clean_up
       glDeleteFramebuffers(@framebuffer)
 

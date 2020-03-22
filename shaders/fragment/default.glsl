@@ -7,12 +7,15 @@ in vec3 outColor;
 in vec4 outNormal;
 in vec3 outUV;
 in float outTextureID;
+in float outHasTexture;
 in Light outLights[MAX_LIGHTS];
 in float outTotalLights;
 in vec3 outFragPos;
 in vec3 outCameraPos;
 in vec3 outInverseNormal;
 in float outDisableLighting;
+
+uniform sampler2D diffuse_texture;
 
 // optimizing compilers are annoying at this stage of my understanding of GLSL
 vec4 lokiVar;
@@ -78,10 +81,20 @@ void main() {
   lokiVar = normalize(lokiVar);
 
   vec3 result;
-  if (outDisableLighting == 1.0) {
-    result = outColor + 0.25;
+
+  if (outHasTexture == 0) {
+    if (outDisableLighting == 1.0) {
+      result = outColor + 0.25;
+    } else {
+      result = calculateLighting() * outColor;
+    }
+
   } else {
-    result = calculateLighting() * outColor;
+    if (outDisableLighting == 1.0) {
+      result = texture(diffuse_texture, outUV.xy).xyz + 0.25;
+    } else {
+      result = calculateLighting() * texture(diffuse_texture, outUV.xy).xyz;
+    }
   }
 
   gl_FragColor = vec4(result, 1.0);

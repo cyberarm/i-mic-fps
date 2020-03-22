@@ -8,31 +8,43 @@ class IMICFPS
       @g_buffer = GBuffer.new
     end
 
-    def draw_object(camera, lights, object)
+    def render(camera, lights, entities)
       if Shader.available?("default")
+        # @g_buffer.bind_for_writing
+        gl_error?
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
         Shader.use("default") do |shader|
-          shader.uniform_transform("projection", camera.projection_matrix)
-          shader.uniform_transform("view", camera.view_matrix)
-          shader.uniform_transform("model", object.model_matrix)
-          shader.uniform_boolean("hasTexture", object.model.has_texture?)
-          shader.uniform_vec3("cameraPosition", camera.position)
+          entities.each do |entity|
+            next unless entity.visible && entity.renderable
 
-          # TODO: Upload and use lights
-          lights.each_with_index do |light, i|
-            shader.uniform_float("lights[#{i}.end", -1.0);
-            shader.uniform_float("lights[#{i}.type", light.type);
-            shader.uniform_vec3("lights[#{i}].position", light.position)
-            shader.uniform_vec3("lights[#{i}].ambient", light.ambient)
-            shader.uniform_vec3("lights[#{i}].diffuse", light.diffuse)
-            shader.uniform_vec3("lights[#{i}].specular", light.specular)
+            shader.uniform_transform("projection", camera.projection_matrix)
+            shader.uniform_transform("view", camera.view_matrix)
+            shader.uniform_transform("model", entity.model_matrix)
+            shader.uniform_boolean("hasTexture", entity.model.has_texture?)
+            shader.uniform_vec3("cameraPosition", camera.position)
+
+            # TODO: Upload and use lights
+            lights.each_with_index do |light, i|
+              shader.uniform_float("lights[#{i}.end", -1.0);
+              shader.uniform_float("lights[#{i}.type", light.type);
+              shader.uniform_vec3("lights[#{i}].position", light.position)
+              shader.uniform_vec3("lights[#{i}].ambient", light.ambient)
+              shader.uniform_vec3("lights[#{i}].diffuse", light.diffuse)
+              shader.uniform_vec3("lights[#{i}].specular", light.specular)
+            end
+
+            shader.uniform_float("totalLights", lights.size)
+
+            gl_error?
+            draw_model(entity.model, shader)
+            entity.draw
           end
-
-          shader.uniform_float("totalLights", lights.size)
-
-          gl_error?
-          draw_model(object.model)
-          object.draw
         end
+
+        # @g_buffer.unbind_framebuffer
+        gl_error?
       else
         puts "Shader 'default' failed to compile, using immediate mode for rendering..." unless @@immediate_mode_warning
         @@immediate_mode_warning = true
@@ -42,29 +54,35 @@ class IMICFPS
         camera.draw
 
         glEnable(GL_NORMALIZE)
-        glPushMatrix
+        entities.each do |entity|
+          next unless entity.visible && entity.renderable
 
-        glTranslatef(object.position.x, object.position.y, object.position.z)
-        glScalef(object.scale.x, object.scale.y, object.scale.z)
-        glRotatef(object.orientation.x, 1.0, 0, 0)
-        glRotatef(object.orientation.y, 0, 1.0, 0)
-        glRotatef(object.orientation.z, 0, 0, 1.0)
+          glPushMatrix
 
-        gl_error?
-        draw_mesh(object.model)
-        object.draw
-        glPopMatrix
+          glTranslatef(entity.position.x, entity.position.y, entity.position.z)
+          glScalef(entity.scale.x, entity.scale.y, entity.scale.z)
+          glRotatef(entity.orientation.x, 1.0, 0, 0)
+          glRotatef(entity.orientation.y, 0, 1.0, 0)
+          glRotatef(entity.orientation.z, 0, 0, 1.0)
+
+          gl_error?
+          draw_mesh(entity.model)
+          entity.draw
+          glPopMatrix
+        end
       end
 
       gl_error?
     end
 
-    def draw_model(model)
+    def draw_model(model, shader)
       glBindVertexArray(model.vertex_array_id)
       glEnableVertexAttribArray(0)
       glEnableVertexAttribArray(1)
       glEnableVertexAttribArray(2)
       if model.has_texture?
+        glBindTexture(GL_TEXTURE_2D, model.materials[model.textured_material].texture_id)
+
         glEnableVertexAttribArray(3)
         glEnableVertexAttribArray(4)
       end
@@ -86,6 +104,8 @@ class IMICFPS
       if model.has_texture?
         glDisableVertexAttribArray(4)
         glDisableVertexAttribArray(3)
+
+        glBindTexture(GL_TEXTURE_2D, 0)
       end
       glDisableVertexAttribArray(2)
       glDisableVertexAttribArray(1)

@@ -44,6 +44,15 @@ class IMICFPS
 
       puts "#{@file_path.split('/').last} took #{((Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)-start_time)/1000.0).round(2)} seconds to parse" if window.config.get(:debug_options, :stats)
 
+      @has_texture = false
+
+      @materials.each do |key, material|
+        if material.texture_id
+          @has_texture = true
+          @textured_material = key
+        end
+      end
+
       if Shader.available?("default")
         allocate_gl_objects
         populate_vertex_buffer
@@ -55,13 +64,6 @@ class IMICFPS
         puts "    Model::Object Name: #{o.name}, Vertices: #{o.vertices.size}" if window.config.get(:debug_options, :stats)
       end
       window.number_of_vertices+=@vertex_count
-      @has_texture = false
-      @materials.each do |key, material|
-        if material.texture_id
-          @has_texture = true
-          @textured_material = key
-        end
-      end
 
       start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC, :float_millisecond)
       # build_collision_tree
@@ -160,8 +162,8 @@ class IMICFPS
         glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
         glBufferData(GL_ARRAY_BUFFER, uvs.flatten.size * Fiddle::SIZEOF_FLOAT, uvs.flatten.pack("f*"), GL_STATIC_DRAW)
 
-        glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
-        glBufferData(GL_ARRAY_BUFFER, tex_ids.flatten.size * Fiddle::SIZEOF_FLOAT, tex_ids.flatten.pack("f*"), GL_STATIC_DRAW)
+        # glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
+        # glBufferData(GL_ARRAY_BUFFER, tex_ids.flatten.size * Fiddle::SIZEOF_FLOAT, tex_ids.flatten.pack("f*"), GL_STATIC_DRAW)
       end
 
       glBindBuffer(GL_ARRAY_BUFFER, 0)
