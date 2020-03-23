@@ -79,12 +79,14 @@ require_relative "lib/components/building"
 
 require_relative "lib/game_objects/entity"
 require_relative "lib/game_objects/light"
+require_relative "lib/game_objects/particle_emitter"
 
 require_relative "lib/game_objects/camera"
 require_relative "lib/game_objects/entities/player"
 require_relative "lib/game_objects/entities/skydome"
 require_relative "lib/game_objects/entities/terrain"
 
+require_relative "lib/texture"
 require_relative "lib/model"
 require_relative "lib/model_cache"
 require_relative "lib/model/parser"

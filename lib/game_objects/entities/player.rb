@@ -19,21 +19,7 @@ class IMICFPS
 
       @devisor = 500.0
       @name_image = Gosu::Image.from_text("#{Etc.getlogin}", 100, font: "Consolas", align: :center)
-      # @name_image.save("temp.png")
-      # @name_tex = @name_image.gl_tex_info
-      array_of_pixels = @name_image.to_blob
-
-      tex_names_buf = ' ' * 8
-      glGenTextures(1, tex_names_buf)
-      @name_texture_id = tex_names_buf.unpack('L2').first
-
-      glBindTexture(GL_TEXTURE_2D, @name_texture_id)
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, @name_image.width, @name_image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, array_of_pixels)
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
-      glGenerateMipmap(GL_TEXTURE_2D)
+      @name_texture_id = Texture.new(@name_image).id
     end
 
     def draw_nameplate

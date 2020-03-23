@@ -31,5 +31,8 @@ class IMICFPS
     def entities
       @entities
     end
+
+    def insert_particle_emitter(position, texture)
+    end
   end
 end
