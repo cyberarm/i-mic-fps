@@ -9,6 +9,18 @@ class IMICFPS
       @opengl_renderer = OpenGLRenderer.new
     end
 
+    def preload_default_shaders
+      shaders = ["default"]
+      shaders.each do |shader|
+        Shader.new(
+          name: shader,
+          includes_dir: "shaders/include",
+          vertex: "shaders/vertex/#{shader}.glsl",
+          fragment: "shaders/fragment/#{shader}.glsl"
+        )
+      end
+    end
+
     def draw(camera, lights, entities)
       glViewport(0, 0, window.width, window.height)
       glEnable(GL_DEPTH_TEST)

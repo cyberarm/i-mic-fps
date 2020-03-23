@@ -9,7 +9,7 @@ class IMICFPS
     attr_accessor :position, :orientation, :scale, :velocity
     attr_reader :name, :debug_color, :bounding_box, :drag, :camera, :manifest
 
-    def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: true, auto_manage: true)
+    def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: true, run_scripts: true)
       @manifest = manifest
 
       if map_entity
@@ -41,7 +41,7 @@ class IMICFPS
       @last_position = Vector.new(@position.x, @position.y, @position.z)
 
       @sandboxes = []
-      load_scripts
+      load_scripts if run_scripts
 
       setup
 

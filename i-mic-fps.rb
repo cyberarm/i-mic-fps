@@ -100,6 +100,9 @@ require_relative "lib/map_parser"
 require_relative "lib/manifest"
 require_relative "lib/map"
 
+require_relative "lib/scene"
+require_relative "lib/scenes/turn_table"
+
 require_relative "lib/crosshair"
 require_relative "lib/demo"
 

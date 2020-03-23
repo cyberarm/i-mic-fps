@@ -37,8 +37,6 @@ as a commandline argument to override reported version."
         message += linux_mesa_message if RUBY_PLATFORM =~ /linux/ && gl_version.downcase.include?(" mesa ")
         @old_gl_warning = Gosu::Image.from_markup(message, 24, align: :center)
       end
-
-      @text = CyberarmEngine::Text.new("<b>#{IMICFPS::NAME}</b> v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})")
     end
 
     def draw
@@ -47,10 +45,6 @@ as a commandline argument to override reported version."
       if @old_gl_warning
         @old_gl_warning.draw(window.width / 2 - @old_gl_warning.width / 2, window.height - (@old_gl_warning.height + 10), Float::INFINITY)
       end
-
-      @text.draw
-      @text.x = window.width - (@text.width + 10)
-      @text.y = window.height - (@text.height + 10)
     end
   end
 end

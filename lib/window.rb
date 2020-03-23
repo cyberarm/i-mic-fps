@@ -1,7 +1,7 @@
 class IMICFPS
   class Window < CyberarmEngine::Engine
     attr_accessor :number_of_vertices, :needs_cursor
-    attr_reader :camera, :config
+    attr_reader :renderer, :scene, :config
 
     attr_reader :console, :delta_time
     def initialize(window_width = 1280, window_height = 720, fullscreen = false)
@@ -22,6 +22,10 @@ class IMICFPS
       @show_console = false
       @console = Console.new
       Commands::Command.setup
+
+      @renderer = Renderer.new
+      @renderer.preload_default_shaders
+      @scene = TurnTableScene.new
 
       at_exit do
         @config.save!

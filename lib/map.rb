@@ -14,7 +14,7 @@ class IMICFPS
       @lights   = []
 
       @collision_manager = CollisionManager.new(map: self)
-      @renderer = Renderer.new
+      @renderer = window.renderer
       Publisher.new
     end
 

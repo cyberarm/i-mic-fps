@@ -4,13 +4,13 @@
 
 layout(location = 0) in vec3  inPosition;
 layout(location = 1) in vec3  inColor;
-layout(location = 2) in vec4  inNormal;
+layout(location = 2) in vec3  inNormal;
 layout(location = 3) in vec3  inUV;
 layout(location = 4) in float inTextureID;
 
 out vec3 outPosition;
 out vec3 outColor;
-out vec4 outNormal;
+out vec3 outNormal;
 out vec3 outUV;
 out float outTextureID;
 out float outHasTexture;
@@ -19,7 +19,6 @@ out float outTotalLights;
 out vec3 outFragPos;
 out vec3 outViewPos;
 out vec3 outCameraPos;
-out vec3 outInverseNormal;
 out float outDisableLighting;
 
 uniform mat4 projection;
@@ -36,7 +35,7 @@ void main() {
   // projection * view * model * position
   outPosition = inPosition;
   outColor = inColor;
-  outNormal= inNormal;
+  outNormal= normalize(transpose(inverse(mat3(model))) * inNormal);
   outUV    = inUV;
   outTextureID = inTextureID;
   outHasTexture = hasTexture;
@@ -44,7 +43,6 @@ void main() {
   outTotalLights = totalLights;
   outCameraPos = cameraPos;
   outDisableLighting = disableLighting;
-  outInverseNormal = mat3(transpose(inverse(model))) * vec3(inNormal);
 
   outFragPos = vec3(model * vec4(inPosition, 1.0));
 

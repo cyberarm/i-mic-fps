@@ -13,7 +13,6 @@ class IMICFPS
       @dummy_entity = nil
       @assets = []
       @asset_index = 0
-      add_asset(:shader, nil, "default")
 
       add_asset(:model, @map_parser.terrain.package, @map_parser.terrain.name)
       add_asset(:model, @map_parser.skydome.package, @map_parser.skydome.name)
@@ -43,6 +42,7 @@ class IMICFPS
     end
 
     def update
+      super
       @percentage.text = "#{((@asset_index.to_f / @assets.count) * 100.0).round}%"
       @act = true if @cycled
 

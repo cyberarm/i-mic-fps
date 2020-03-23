@@ -13,7 +13,7 @@ class IMICFPS
         # @g_buffer.bind_for_writing
         gl_error?
 
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         Shader.use("default") do |shader|
           lights.each_with_index do |light, i|
@@ -42,7 +42,7 @@ class IMICFPS
           end
         end
 
-        # @g_buffer.unbind_framebuffer
+        @g_buffer.unbind_framebuffer
         gl_error?
       else
         puts "Shader 'default' failed to compile, using immediate mode for rendering..." unless @@immediate_mode_warning

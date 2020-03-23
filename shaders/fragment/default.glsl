@@ -4,7 +4,7 @@
 
 in vec3 outPosition;
 in vec3 outColor;
-in vec4 outNormal;
+in vec3 outNormal;
 in vec3 outUV;
 in float outTextureID;
 in float outHasTexture;
@@ -12,7 +12,6 @@ in Light outLights[MAX_LIGHTS];
 in float outTotalLights;
 in vec3 outFragPos;
 in vec3 outCameraPos;
-in vec3 outInverseNormal;
 in float outDisableLighting;
 
 uniform sampler2D diffuse_texture;
@@ -55,7 +54,7 @@ vec3 calculateBasicLight(Light light) {
 
   float specularStrength = 0.5;
   vec3 viewDir = normalize(outCameraPos - outFragPos);
-  vec3 reflectDir = reflect(-lightDir, outInverseNormal);
+  vec3 reflectDir = reflect(-lightDir, outNormal);
   float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
   vec3 specular = specularStrength * spec * light.specular;
 
@@ -77,7 +76,7 @@ vec3 calculateLighting() {
 }
 
 void main() {
-  lokiVar = vec4(outColor, 1.0) + outNormal + vec4(outUV, 1.0) + vec4(outTextureID, 1.0, 1.0, 1.0);
+  lokiVar = vec4(outColor, 1.0) + vec4(outNormal, 1.0) + vec4(outUV, 1.0) + vec4(outTextureID, 1.0, 1.0, 1.0);
   lokiVar = normalize(lokiVar);
 
   vec3 result;
