@@ -2,17 +2,19 @@
 
 @include "light_struct"
 
+layout(location = 0) out vec4 fragColor;
+
 in vec3 outPosition;
 in vec3 outColor;
 in vec3 outNormal;
 in vec3 outUV;
 in float outTextureID;
-in float outHasTexture;
 in Light outLights[MAX_LIGHTS];
-in float outTotalLights;
+flat in int outTotalLights;
 in vec3 outFragPos;
 in vec3 outCameraPos;
-in float outDisableLighting;
+flat in int outHasTexture;
+flat in int outDisableLighting;
 
 uniform sampler2D diffuse_texture;
 
@@ -64,7 +66,7 @@ vec3 calculateBasicLight(Light light) {
 vec3 calculateLighting() {
   vec3 result = vec3(0.0, 0.0, 0.0);
 
-  for (int i = 0; i < min(int(outTotalLights), MAX_LIGHTS); i++) {
+  for (int i = 0; i < min(outTotalLights, MAX_LIGHTS); i++) {
     if (int(outLights[i].type) == 0) {
       result += calculateBasicLight(outLights[i]);
     } else if (int(outLights[i].type) == 1) {
@@ -96,5 +98,5 @@ void main() {
     }
   }
 
-  gl_FragColor = vec4(result, 1.0);
+  fragColor = vec4(result, 1.0);
 }

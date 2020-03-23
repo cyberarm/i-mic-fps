@@ -25,7 +25,7 @@ class IMICFPS
             shader.uniform_vec3("lights[#{i}].specular", light.specular)
           end
 
-          shader.uniform_float("totalLights", lights.size)
+          shader.uniform_integer("totalLights", lights.size)
 
           entities.each do |entity|
             next unless entity.visible && entity.renderable
