@@ -1,26 +1,26 @@
 GIT
   remote: https://github.com/cyberarm/cyberarm_engine
-  revision: 9a3caabc7e36f572ef458dc473edd2961dad8f40
+  revision: 8cedb402833b7c81c30108ebc7bcd2e2849b6fa5
   specs:
-    cyberarm_engine (0.12.1)
-      gosu (~> 0.14.0)
+    cyberarm_engine (0.13.0)
+      gosu (~> 0.15.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    gosu (0.14.5)
-    gosu (0.14.5-x64-mingw32)
-    gosu (0.14.5-x86-mingw32)
-    ocra (1.3.10)
+    gosu (0.15.1-x64-mingw32)
+    mini_portile2 (2.4.0)
+    nokogiri (1.11.0.rc1-x64-mingw32)
+      mini_portile2 (~> 2.4.0)
+    ocra (1.3.11)
     opengl-bindings (1.6.9)
 
 PLATFORMS
-  ruby
   x64-mingw32
-  x86-mingw32
 
 DEPENDENCIES
   cyberarm_engine!
+  nokogiri (>= 1.11.0.rc1)
   ocra
   opengl-bindings
 

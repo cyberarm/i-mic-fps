@@ -20,7 +20,7 @@ class IMICFPS
         @map = ProtoMap.new
         Publisher.new
 
-        @entity = Entity.new(manifest: @manifest, auto_manage: false)
+        @entity = Entity.new(manifest: @manifest)
         @entity.bind_model
         @map.add_entity(@entity)
         @map.entities.each { |e| e.backface_culling = false }

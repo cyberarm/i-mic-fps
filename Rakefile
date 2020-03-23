@@ -7,7 +7,7 @@ Releasy::Project.new do
   version "#{IMICFPS::VERSION}"
 
   executable "i-mic-fps.rb"
-  files ["lib/**/*.*", "assets/**/*.*", "blends/**/*.*", "shaders/**/*.*"]
+  files ["lib/**/*.*", "assets/**/*.*", "blends/**/*.*", "shaders/**/*.*", "static/**/*.*", "maps/**/*.*", "data/**/*.*"]
   exclude_encoding # Applications that don't use advanced encoding (e.g. Japanese characters) can save build size with this.
   verbose
 

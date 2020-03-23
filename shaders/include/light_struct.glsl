@@ -1,4 +1,4 @@
-const int MAX_LIGHTS = 4;
+const int MAX_LIGHTS = 2;
 
 struct Light {
   float end;
