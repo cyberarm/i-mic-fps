@@ -25,6 +25,8 @@ class IMICFPS
           return
         when 1
           name = arguments.first
+          Shader.delete(name)
+
           shader = Shader.new(
             name: name,
             includes_dir: "shaders/include",
@@ -34,6 +36,8 @@ class IMICFPS
         when 2
           vertex = arguments.first
           fragment = arguments.last
+          Shader.remove(vertex)
+
           shader = Shader.new(
             name: vertex,
             includes_dir: "shaders/include",
@@ -52,6 +56,7 @@ class IMICFPS
         end
       ensure
         $stdout = stdout
+        puts string if string
       end
 
       def usage

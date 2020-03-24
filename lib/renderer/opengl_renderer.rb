@@ -24,6 +24,8 @@ class IMICFPS
             shader.uniform_vec3("lights[#{i}].diffuse", light.diffuse)
             shader.uniform_vec3("lights[#{i}].specular", light.specular)
           end
+          gl_error?
+
 
           shader.uniform_integer("totalLights", lights.size)
 

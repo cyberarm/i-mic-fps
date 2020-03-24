@@ -53,11 +53,9 @@ class IMICFPS
         end
       end
 
-      if Shader.available?("default")
-        allocate_gl_objects
-        populate_vertex_buffer
-        configure_vao
-      end
+      allocate_gl_objects
+      populate_vertex_buffer
+      configure_vao
 
       @objects.each {|o| @vertex_count+=o.vertices.size}
       @objects.each_with_index do |o, i|
@@ -172,30 +170,33 @@ class IMICFPS
     def configure_vao
       glBindVertexArray(@vertex_array_id)
 
-      program = Shader.get("default").program
-
       # index, size, type, normalized, stride, pointer
       # vertices (positions)
       glBindBuffer(GL_ARRAY_BUFFER, @positions_buffer_id)
-      glVertexAttribPointer(glGetAttribLocation(program, "inPosition"), 3, GL_FLOAT, GL_FALSE, 0, nil)
+      #                     inPosition
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nil)
       gl_error?
       # colors
       glBindBuffer(GL_ARRAY_BUFFER, @colors_buffer_id)
-      glVertexAttribPointer(glGetAttribLocation(program, "inColor"), 3, GL_FLOAT, GL_FALSE, 0, nil)
+      #                     inColor
+      glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nil)
       gl_error?
       # normals
       glBindBuffer(GL_ARRAY_BUFFER, @normals_buffer_id)
-      glVertexAttribPointer(glGetAttribLocation(program, "inNormal"), 4, GL_FLOAT, GL_FALSE, 0, nil)
+      #                     inNormal
+      glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, nil)
       gl_error?
 
       if has_texture?
         # uvs
         glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
-        glVertexAttribPointer(glGetAttribLocation(program, "inUV"), 3, GL_FLOAT, GL_FALSE, 0, nil)
+        #                     inUV
+        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, nil)
         gl_error?
         # texture ids
         glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
-        glVertexAttribPointer(glGetAttribLocation(program, "inTextureID"), 1, GL_FLOAT, GL_FALSE, 0, nil)
+        #                     inTextureID
+        glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 0, nil)
         gl_error?
       end
 
