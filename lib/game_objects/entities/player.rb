@@ -19,7 +19,7 @@ class IMICFPS
 
       @devisor = 500.0
       @name_image = Gosu::Image.from_text("#{Etc.getlogin}", 100, font: "Consolas", align: :center)
-      @name_texture_id = Texture.new(@name_image).id
+      @name_texture_id = Texture.new(image: @name_image).id
     end
 
     def draw_nameplate

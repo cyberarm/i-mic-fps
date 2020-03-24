@@ -1,11 +1,12 @@
 class IMICFPS
   class MapParser
-    attr_reader :metadata, :terrain, :skydome, :entities, :spawnpoints
+    attr_reader :metadata, :terrain, :skydome, :lights, :entities, :spawnpoints
     attr_reader :assets, :missing_assets
     def initialize(map_file:)
       @metadata    = MapParser::MetaData.new
       @terrain     = MapParser::Entity.new
       @skydome     = MapParser::Entity.new
+      @lights      = []
       @entities    = []
       @spawnpoints = []
 
@@ -76,6 +77,36 @@ class IMICFPS
         raise "Map skydome data is missing!"
       end
 
+      if section = data["lights"]
+        section.each do |l|
+          light = MapParser::Light.new
+          light.type = IMICFPS::Light::POINT # TODO: fix me
+          light.position = Vector.new(
+            l["position"]["x"],
+            l["position"]["y"],
+            l["position"]["z"]
+          )
+          light.diffuse = Color.new(
+            l["diffuse"]["red"],
+            l["diffuse"]["green"],
+            l["diffuse"]["blue"]
+          )
+          light.ambient = Color.new(
+            l["ambient"]["red"],
+            l["ambient"]["green"],
+            l["ambient"]["blue"]
+          )
+          light.specular = Color.new(
+            l["specular"]["red"],
+            l["specular"]["green"],
+            l["specular"]["blue"]
+          )
+          light.intensity = l["intensity"]
+
+          @lights << light
+        end
+      end
+
       if section = data["entities"]
         section.each do |ent|
           entity = MapParser::Entity.new
@@ -132,6 +163,7 @@ class IMICFPS
     end
 
     MetaData   = Struct.new(:name, :gamemode, :authors, :datetime, :thumbnail, :description)
+    Light      = Struct.new(:type, :position, :diffuse, :ambient, :specular, :intensity)
     Entity     = Struct.new(:package, :name, :position, :orientation, :scale, :water_level, :scripts)
     SpawnPoint = Struct.new(:team, :position, :orientation)
   end

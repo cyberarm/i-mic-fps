@@ -6,8 +6,8 @@ class IMICFPS
 
     attr_reader :collision_manager
     attr_reader :gravity
-    def initialize(map_loader:, gravity: IMICFPS::EARTH_GRAVITY)
-      @map_loader = map_loader
+    def initialize(map_parser:, gravity: IMICFPS::EARTH_GRAVITY)
+      @map_parser = map_parser
       @gravity = gravity
 
       @entities = []
@@ -19,23 +19,26 @@ class IMICFPS
     end
 
     def setup
-      add_entity(Terrain.new(map_entity: @map_loader.terrain, manifest: Manifest.new(package: @map_loader.terrain.package, name: @map_loader.terrain.name)))
+      add_entity(Terrain.new(map_entity: @map_parser.terrain, manifest: Manifest.new(package: @map_parser.terrain.package, name: @map_parser.terrain.name)))
 
-      add_entity(Skydome.new(map_entity: @map_loader.skydome, manifest: Manifest.new(package: @map_loader.skydome.package, name: @map_loader.skydome.name), backface_culling: false))
+      add_entity(Skydome.new(map_entity: @map_parser.skydome, manifest: Manifest.new(package: @map_parser.skydome.package, name: @map_parser.skydome.name), backface_culling: false))
 
-      @map_loader.entities.each do |ent|
+      @map_parser.lights.each do |l|
+        add_light(Light.new(id: available_light, position: l.position, diffuse: l.diffuse, ambient: l.ambient, specular: l.specular, intensity: l.intensity))
+      end
+
+      @map_parser.entities.each do |ent|
         add_entity(Entity.new(map_entity: ent, manifest: Manifest.new(package: ent.package, name: ent.name)))
       end
 
-      add_entity(Player.new(spawnpoint: @map_loader.spawnpoints.sample, manifest: Manifest.new(package: "base", name: "character")))
+      add_entity(Player.new(spawnpoint: @map_parser.spawnpoints.sample, manifest: Manifest.new(package: "base", name: "character")))
 
-      # TODO: Load lights from MapParser
-      add_light(Light.new(id: available_light, position: Vector.new(30, 10.0, 30)))
-      add_light(Light.new(id: available_light, position: Vector.new(0, 100, 0), diffuse: Color.new(1.0, 0.5, 0.1)))
+      # add_light(Light.new(id: available_light, position: Vector.new(30, 10.0, 30)))
+      # add_light(Light.new(id: available_light, position: Vector.new(0, 100, 0), diffuse: Color.new(1.0, 0.5, 0.1)))
     end
 
     def data
-      @map_loader
+      @map_parser
     end
 
     def render(camera)

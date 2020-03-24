@@ -11,18 +11,19 @@ class IMICFPS
     end
 
     attr_reader :id
-    def initialize(*path)
-      if path.size > 1
-        path = "#{GAME_ROOT_PATH}/assets/#{path.join("/")}"
-      else
-        path = path.first
+    def initialize(path: nil, image: nil, retro: false)
+      raise "keyword :path or :image must be provided!" if path.nil? && image.nil?
+      @retro = retro
+
+      if path.is_a?(Array)
+        if path.size > 1
+          path = "#{GAME_ROOT_PATH}/assets/#{path.join("/")}"
+        else
+          path = path.first
+        end
       end
 
-      unless path.is_a?(String)
-        @id = create_from_image(path)
-      else
-        @id = from_cache(path)
-      end
+      @id = create_from_image(path ? path : image)
     end
 
     def from_cache(path)
@@ -51,7 +52,8 @@ class IMICFPS
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, array_of_pixels)
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST) if @retro
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR) unless @retro
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR)
       glGenerateMipmap(GL_TEXTURE_2D)
       gl_error?

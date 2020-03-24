@@ -21,8 +21,10 @@ collision: "mesh"
 # Path to collision model or null to use `model`
 collision_mesh: null
 # Array of scripts to load, relative to package/name/scripts/
+# Optionally shared scripts can be loaded from package/shared/scripts/ if prefixed with an exclaimation mark "!"
 scripts: [
-  "script"
+  "script",
+  "!shared_script"
 ]
 # Array of assets to preload that this asset uses/requires
 uses: [

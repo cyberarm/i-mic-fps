@@ -36,7 +36,7 @@ class IMICFPS
         if id
           _model = @model.objects.find { |o| o.id == id }
         elsif name
-          _model = @model.objects.find { |o| o.id == id }
+          _model = @model.objects.find { |o| o.name == name }
         else
           raise "Must provide either an id: or name:"
         end

@@ -124,12 +124,14 @@ class IMICFPS
         glEnableClientState(GL_VERTEX_ARRAY)
         glEnableClientState(GL_COLOR_ARRAY)
         glEnableClientState(GL_NORMAL_ARRAY)
+
         if model.has_texture?
           glEnable(GL_TEXTURE_2D)
           glBindTexture(GL_TEXTURE_2D, model.materials[model.textured_material].texture_id)
           glEnableClientState(GL_TEXTURE_COORD_ARRAY)
           glTexCoordPointer(3, GL_FLOAT, 0, o.flattened_textures)
         end
+
         glVertexPointer(4, GL_FLOAT, 0, o.flattened_vertices)
         glColorPointer(3, GL_FLOAT, 0, o.flattened_materials)
         glNormalPointer(GL_FLOAT, 0, o.flattened_normals)
@@ -160,10 +162,12 @@ class IMICFPS
         glDisableClientState(GL_VERTEX_ARRAY)
         glDisableClientState(GL_COLOR_ARRAY)
         glDisableClientState(GL_NORMAL_ARRAY)
+
         if model.has_texture?
           glDisableClientState(GL_TEXTURE_COORD_ARRAY)
           glDisable(GL_TEXTURE_2D)
         end
+
         glDisable(GL_CULL_FACE) if model.entity.backface_culling
         glDisable(GL_COLOR_MATERIAL)
       end

@@ -35,7 +35,16 @@ class IMICFPS
     def parse_scripts(scripts)
       list = []
       scripts.each do |script|
-        list << Script.new(script, File.read("#{file_path}/scripts/#{script}.rb"))
+        path = ""
+
+        if script.start_with?("!")
+          script = script.sub("!", "")
+          path = File.expand_path("../shared/", file_path) + "/scripts/" + script
+        else
+          path = "#{file_path}/scripts/#{script}"
+        end
+
+        list << Script.new(script, File.read("#{path}.rb"))
       end
 
       return list

@@ -20,6 +20,57 @@
     "scale":0.08
   },
 
+  "lights":[
+    {
+      "type":"directional",
+      "intensity": 1,
+      "position": {
+        "x":30,
+        "y":10,
+        "z":30
+      },
+      "diffuse": {
+        "red":1,
+        "green":1,
+        "blue":1
+      },
+      "ambient": {
+        "red":0.5,
+        "green":0.5,
+        "blue":0.5
+      },
+      "specular": {
+        "red":0.2,
+        "green":0.2,
+        "blue":0.2
+      }
+    },
+    {
+      "type":"directional",
+      "intensity": 1,
+      "position": {
+        "x":0,
+        "y":100,
+        "z":0
+      },
+      "diffuse": {
+        "red":1,
+        "green":0.5,
+        "blue":0.1
+      },
+      "ambient": {
+        "red":0.5,
+        "green":0.5,
+        "blue":0.5
+      },
+      "specular": {
+        "red":0.2,
+        "green":0.2,
+        "blue":0.2
+      }
+    }
+  ],
+
   "entities":[
     {
       "package":"base",

@@ -4,10 +4,6 @@ class IMICFPS
       [:obj]
     end
 
-    def initialize(model)
-      @model = model
-    end
-
     def parse
       lines = 0
       list = File.read(@model.file_path).split("\n")

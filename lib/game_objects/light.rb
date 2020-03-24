@@ -8,10 +8,10 @@ class IMICFPS
     def initialize(
                     id:,
                     type: Light::POINT,
-                    ambient: Vector.new(0.5, 0.5, 0.5, 1),
-                    diffuse: Vector.new(1, 1, 1, 1),
-                    specular: Vector.new(0.2, 0.2, 0.2, 1),
-                    position: Vector.new(0, 0, 0, 0),
+                    ambient: Vector.new(0.5, 0.5, 0.5),
+                    diffuse: Vector.new(1, 1, 1),
+                    specular: Vector.new(0.2, 0.2, 0.2),
+                    position: Vector.new(0, 0, 0),
                     intensity: 1
                   )
       @light_id = id

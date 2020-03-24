@@ -6,6 +6,7 @@ class IMICFPS
       lights << (Light.new(id: OpenGL::GL_LIGHT2, position: Vector.new(0, 10, 5), diffuse: Color.new(1.0, 1.0, 1.0), specular: Color.new(0, 0, 0)))
 
       options = {
+        # entity: scale
         "character": 0.25,
         "information_panel": 0.25,
         "purchase_terminal": 0.35,

@@ -13,7 +13,7 @@ class IMICFPS
       end
 
       def set_texture(texture_path)
-        @texture_id = Texture.new(texture_path).id
+        @texture_id = Texture.new(path: texture_path).id
       end
     end
   end
