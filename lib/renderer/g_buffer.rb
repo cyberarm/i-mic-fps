@@ -151,15 +151,13 @@ class IMICFPS
     end
 
     def clean_up
-      glDeleteFramebuffers(@framebuffer)
+      glDeleteFramebuffers(1, [@framebuffer].pack("L"))
 
-      @textures.values.each do |id|
-        glDeleteTextures(id)
-      end
+      glDeleteTextures(@textures.values.size, @textures.values.pack("L*"))
 
-      glDeleteBuffers(@positions_buffer_id)
-      glDeleteBuffers(@uvs_buffer_id)
-      glDeleteVertexArrays(@screen_vbo)
+      glDeleteBuffers(2, [@positions_buffer_id, @uvs_buffer_id].pack("L*"))
+      glDeleteVertexArrays(1, [@screen_vbo].pack("L"))
+      gl_error?
     end
   end
 end

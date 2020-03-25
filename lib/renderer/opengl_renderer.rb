@@ -8,8 +8,15 @@ class IMICFPS
       @g_buffer = GBuffer.new
     end
 
+    def canvas_size_changed
+      @g_buffer.unbind_framebuffer
+      @g_buffer.clean_up
+
+      @g_buffer = GBuffer.new
+    end
+
     def render(camera, lights, entities)
-      if Shader.available?("default")
+      if Shader.available?("default") && Shader.available?("render_screen")
         @g_buffer.bind_for_writing
         gl_error?
 

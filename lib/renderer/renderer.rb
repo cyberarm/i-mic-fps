@@ -28,6 +28,10 @@ class IMICFPS
       @opengl_renderer.render(camera, lights, entities)
     end
 
+    def canvas_size_changed
+      @opengl_renderer.canvas_size_changed
+    end
+
     def finalize # cleanup
     end
   end

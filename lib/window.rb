@@ -27,6 +27,8 @@ class IMICFPS
       @renderer.preload_default_shaders
       @scene = TurnTableScene.new
 
+      @canvas_size = Vector.new(self.width, self.height)
+
       at_exit do
         @config.save!
       end
@@ -45,6 +47,12 @@ class IMICFPS
 
       @console.draw if @show_console
       draw_cursor if needs_cursor
+
+      _canvas_size = Vector.new(self.width, self.height)
+      if @canvas_size != _canvas_size
+        @renderer.canvas_size_changed
+        @canvas_size = _canvas_size
+      end
     end
 
     def draw_cursor
