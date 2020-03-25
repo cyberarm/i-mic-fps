@@ -5,7 +5,7 @@ class IMICFPS
     attr_reader :screen_vbo, :vertices, :uvs
     def initialize
       @framebuffer = nil
-      @buffers = [:position, :diffuse, :normal, :texcoord]
+      @buffers = [:position, :diffuse, :normal, :texcoord, :scene]
       @textures = {}
       @screen_vbo = nil
       @ready = false
@@ -86,9 +86,9 @@ class IMICFPS
         @textures[@buffers[i]] = texture_id
 
         glBindTexture(GL_TEXTURE_2D, texture_id)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, nil)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_FLOAT, nil)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture_id, 0)
       end
 
@@ -101,7 +101,7 @@ class IMICFPS
       glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nil)
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture_id, 0)
 
-      draw_buffers = [ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 ]
+      draw_buffers = @buffers.each_with_index.map { |b ,i| Object.const_get("GL_COLOR_ATTACHMENT#{i}") }
       glDrawBuffers(draw_buffers.size, draw_buffers.pack("I*"))
     end
 

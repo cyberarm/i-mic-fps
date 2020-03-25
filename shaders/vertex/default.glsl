@@ -39,8 +39,6 @@ void main() {
   outUV    = inUV;
   outTextureID = inTextureID;
   outHasTexture = hasTexture;
-  outLights = lights;
-  outTotalLights = totalLights;
   outCameraPos = cameraPos;
   outDisableLighting = disableLighting;
 

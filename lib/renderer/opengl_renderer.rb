@@ -16,7 +16,7 @@ class IMICFPS
     end
 
     def render(camera, lights, entities)
-      if Shader.available?("default") && Shader.available?("render_screen")
+      if Shader.available?("default") && Shader.available?("render_screen") && Shader.available?("lighting")
         @g_buffer.bind_for_writing
         gl_error?
 
@@ -24,19 +24,6 @@ class IMICFPS
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         Shader.use("default") do |shader|
-          lights.each_with_index do |light, i|
-            shader.uniform_float("lights[#{i}.end", -1.0);
-            shader.uniform_float("lights[#{i}.type", light.type);
-            shader.uniform_vec3("lights[#{i}].position", light.position)
-            shader.uniform_vec3("lights[#{i}].ambient", light.ambient)
-            shader.uniform_vec3("lights[#{i}].diffuse", light.diffuse)
-            shader.uniform_vec3("lights[#{i}].specular", light.specular)
-          end
-          gl_error?
-
-
-          shader.uniform_integer("totalLights", lights.size)
-
           entities.each do |entity|
             next unless entity.visible && entity.renderable
 
@@ -52,6 +39,9 @@ class IMICFPS
           end
         end
 
+        lighting(lights)
+        post_processing
+
         @g_buffer.unbind_framebuffer
         gl_error?
 
@@ -59,8 +49,6 @@ class IMICFPS
         @g_buffer.bind_for_reading
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0)
 
-        # lighting(lights)
-        post_processing
         render_framebuffer
 
         @g_buffer.unbind_framebuffer
@@ -96,25 +84,32 @@ class IMICFPS
     end
 
     def lighting(lights)
-      @g_buffer.set_read_buffer(:position)
-      glBlitFramebuffer(0, 0, @g_buffer.width, @g_buffer.height,
-                        0, 0, @g_buffer.width / 2, @g_buffer.height / 2,
-                        GL_COLOR_BUFFER_BIT, GL_LINEAR)
+      if Shader.available?("lighting")
+        Shader.use("lighting") do |shader|
+          lights.each do |light|
+            shader.uniform_integer("inLightType", light.type);
+            shader.uniform_vec3("inLightPosition", light.position)
+            shader.uniform_vec3("inLightAmbient", light.ambient)
+            shader.uniform_vec3("inLightDiffuse", light.diffuse)
+            shader.uniform_vec3("inLightSpecular", light.specular)
 
-      @g_buffer.set_read_buffer(:diffuse)
-      glBlitFramebuffer(0, 0, @g_buffer.width, @g_buffer.height,
-                        0, @g_buffer.height / 2, @g_buffer.width / 2, @g_buffer.height,
-                        GL_COLOR_BUFFER_BIT, GL_LINEAR)
+            glBindVertexArray(@g_buffer.screen_vbo)
+            glEnableVertexAttribArray(0)
+            glEnableVertexAttribArray(1)
 
-      @g_buffer.set_read_buffer(:normal)
-      glBlitFramebuffer(0, 0, @g_buffer.width, @g_buffer.height,
-                        @g_buffer.width / 2, @g_buffer.height / 2, @g_buffer.width, @g_buffer.height,
-                        GL_COLOR_BUFFER_BIT, GL_LINEAR)
+            glDisable(GL_DEPTH_TEST)
+            glEnable(GL_BLEND)
 
-      @g_buffer.set_read_buffer(:texcoord)
-      glBlitFramebuffer(0, 0, @g_buffer.width, @g_buffer.height,
-                        @g_buffer.width / 2, 0, @g_buffer.width, @g_buffer.height / 2,
-                        GL_COLOR_BUFFER_BIT, GL_LINEAR)
+            glDrawArrays(GL_TRIANGLES, 0, @g_buffer.vertices.size)
+
+            glDisableVertexAttribArray(1)
+            glDisableVertexAttribArray(0)
+            glBindVertexArray(0)
+          end
+
+          gl_error?
+        end
+      end
     end
 
     def post_processing
@@ -131,7 +126,7 @@ class IMICFPS
           glEnable(GL_BLEND)
 
           glActiveTexture(GL_TEXTURE0)
-          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:diffuse))
+          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:scene))
 
           glDrawArrays(GL_TRIANGLES, 0, @g_buffer.vertices.size)
 
