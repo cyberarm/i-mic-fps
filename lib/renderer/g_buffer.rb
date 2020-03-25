@@ -2,13 +2,36 @@ class IMICFPS
   class GBuffer
     include CommonMethods
 
+    attr_reader :screen_vbo, :vertices, :uvs
     def initialize
       @framebuffer = nil
       @buffers = [:position, :diffuse, :normal, :texcoord]
       @textures = {}
+      @screen_vbo = nil
       @ready = false
 
+      @vertices = [
+        -1.0, -1.0, 0,
+        1.0,  -1.0, 0,
+        -1.0,  1.0, 0,
+        
+        -1.0,  1.0, 0,
+        1.0,  -1.0, 0,
+        1.0,   1.0, 0,
+    ].freeze
+
+      @uvs = [
+        0, 1,
+        1, 1,
+        0, 0,
+
+        0, 0,
+        1, 1,
+        1, 0
+      ].freeze
+
       create_framebuffer
+      create_screen_vbo
     end
 
     def create_framebuffer
@@ -72,6 +95,30 @@ class IMICFPS
       glDrawBuffers(draw_buffers.size, draw_buffers.pack("I*"))
     end
 
+    def create_screen_vbo
+      buffer = ' ' * 8
+      glGenVertexArrays(1, buffer)
+      @screen_vbo = buffer.unpack('L2').first
+
+      buffer = " " * 4
+      glGenBuffers(1, buffer)
+      @positions_buffer_id = buffer.unpack('L2').first
+
+      buffer = " " * 4
+      glGenBuffers(1, buffer)
+      @uvs_buffer_id = buffer.unpack('L2').first
+
+      glBindVertexArray(@screen_vbo)
+      glBindBuffer(GL_ARRAY_BUFFER, @positions_buffer_id)
+      glBufferData(GL_ARRAY_BUFFER, @vertices.size * Fiddle::SIZEOF_FLOAT, @vertices.pack("f*"), GL_STATIC_DRAW);
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nil)
+
+      glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
+      glBufferData(GL_ARRAY_BUFFER, @uvs.size * Fiddle::SIZEOF_FLOAT, @uvs.pack("f*"), GL_STATIC_DRAW);
+      glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nil)
+
+    end
+
     def bind_for_writing
       glBindFramebuffer(GL_DRAW_FRAMEBUFFER, @framebuffer)
     end
@@ -88,12 +135,20 @@ class IMICFPS
       glBindFramebuffer(GL_FRAMEBUFFER, 0)
     end
 
+    def texture(type)
+      @textures[type]
+    end
+
     def clean_up
       glDeleteFramebuffers(@framebuffer)
 
       @textures.values.each do |id|
         glDeleteTextures(id)
       end
+
+      glDeleteBuffers(@positions_buffer_id)
+      glDeleteBuffers(@uvs_buffer_id)
+      glDeleteVertexArrays(@screen_vbo)
     end
   end
 end

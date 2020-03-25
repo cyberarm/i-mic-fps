@@ -10,7 +10,7 @@ class IMICFPS
     end
 
     def preload_default_shaders
-      shaders = ["default"]
+      shaders = ["default", "render_screen"]
       shaders.each do |shader|
         Shader.new(
           name: shader,

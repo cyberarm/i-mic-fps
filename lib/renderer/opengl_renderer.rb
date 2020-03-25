@@ -10,10 +10,10 @@ class IMICFPS
 
     def render(camera, lights, entities)
       if Shader.available?("default")
-        # @g_buffer.bind_for_writing
+        @g_buffer.bind_for_writing
         gl_error?
 
-        # glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         Shader.use("default") do |shader|
           lights.each_with_index do |light, i|
@@ -46,6 +46,11 @@ class IMICFPS
 
         @g_buffer.unbind_framebuffer
         gl_error?
+
+        lighting(lights)
+        post_processing
+        render_framebuffer
+        gl_error?
       else
         puts "Shader 'default' failed to compile, using immediate mode for rendering..." unless @@immediate_mode_warning
         @@immediate_mode_warning = true
@@ -74,6 +79,26 @@ class IMICFPS
       end
 
       gl_error?
+    end
+
+    def lighting(lights)
+    end
+
+    def post_processing
+    end
+
+    def render_framebuffer
+      if Shader.available?("render_screen")
+        Shader.use("render_screen") do |shader|
+          glBindVertexArray(@g_buffer.screen_vbo)
+          glEnableVertexAttribArray(0)
+          glEnableVertexAttribArray(1)
+          
+          glDisable(GL_DEPTH_TEST)
+          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:diffuse))
+          glDrawArrays(GL_TRIANGLES, 0, @g_buffer.vertices.size)
+        end
+      end
     end
 
     def draw_model(model, shader)
