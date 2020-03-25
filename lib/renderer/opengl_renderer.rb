@@ -82,6 +82,12 @@ class IMICFPS
     end
 
     def lighting(lights)
+      @g_buffer.bind_for_reading
+
+      @g_buffer.set_read_buffer(:diffuse)
+      glBlitFramebuffer(0, 0, @g_buffer.width, @g_buffer.height,
+                        0, 0, @g_buffer.width / 2, @g_buffer.height / 2, 
+                        GL_COLOR_BUFFER_BIT, GL_LINEAR)
     end
 
     def post_processing

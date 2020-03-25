@@ -34,6 +34,14 @@ class IMICFPS
       create_screen_vbo
     end
 
+    def width
+      window.width
+    end
+
+    def height
+      window.height
+    end
+
     def create_framebuffer
       buffer = ' ' * 8
       glGenFramebuffers(1, buffer)
@@ -78,7 +86,7 @@ class IMICFPS
         @textures[@buffers[i]] = texture_id
 
         glBindTexture(GL_TEXTURE_2D, texture_id)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, window.width, window.height, 0, GL_RGB, GL_FLOAT, nil)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, nil)
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture_id, 0)
       end
 
@@ -88,7 +96,7 @@ class IMICFPS
       @textures[:depth] = texture_id
 
       glBindTexture(GL_TEXTURE_2D, texture_id)
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, window.width, window.height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nil)
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nil)
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture_id, 0)
 
       draw_buffers = [ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 ]
