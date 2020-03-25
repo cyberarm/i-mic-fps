@@ -2,8 +2,10 @@
 
 @include "light_struct"
 
-// layout(location = 0) out vec4 fragColor;
-layout (location = 1) out vec3 fragColor;
+layout(location  = 0) out vec3 fragPosition;
+layout (location = 1) out vec4 fragColor;
+layout (location = 2) out vec3 fragNormal;
+layout (location = 3) out vec3 fragUV;
 
 in vec3 outPosition;
 in vec3 outColor;
@@ -99,5 +101,8 @@ void main() {
     }
   }
 
-  fragColor = vec3(1,1,1);//result;
+  fragPosition = outPosition;
+  fragColor = vec4(result, 1.0);
+  fragNormal = outNormal;
+  fragUV = outUV;
 }

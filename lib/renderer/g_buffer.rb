@@ -14,20 +14,20 @@ class IMICFPS
         -1.0, -1.0, 0,
         1.0,  -1.0, 0,
         -1.0,  1.0, 0,
-        
+
         -1.0,  1.0, 0,
         1.0,  -1.0, 0,
         1.0,   1.0, 0,
     ].freeze
 
       @uvs = [
+        0, 0,
+        1, 0,
         0, 1,
-        1, 1,
-        0, 0,
 
-        0, 0,
-        1, 1,
-        1, 0
+        0, 1,
+        1, 0,
+        1, 1
       ].freeze
 
       create_framebuffer
@@ -43,7 +43,7 @@ class IMICFPS
     end
 
     def create_framebuffer
-      buffer = ' ' * 8
+      buffer = ' ' * 4
       glGenFramebuffers(1, buffer)
       @framebuffer = buffer.unpack('L2').first
 
@@ -80,17 +80,19 @@ class IMICFPS
 
     def create_textures
       @buffers.size.times do |i|
-        buffer = ' ' * 8
+        buffer = ' ' * 4
         glGenTextures(1, buffer)
         texture_id = buffer.unpack('L2').first
         @textures[@buffers[i]] = texture_id
 
         glBindTexture(GL_TEXTURE_2D, texture_id)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, nil)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0, GL_RGBA, GL_FLOAT, nil)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture_id, 0)
       end
 
-      buffer = ' ' * 8
+      buffer = ' ' * 4
       glGenTextures(1, buffer)
       texture_id = buffer.unpack('L2').first
       @textures[:depth] = texture_id
@@ -104,7 +106,7 @@ class IMICFPS
     end
 
     def create_screen_vbo
-      buffer = ' ' * 8
+      buffer = ' ' * 4
       glGenVertexArrays(1, buffer)
       @screen_vbo = buffer.unpack('L2').first
 
@@ -125,6 +127,7 @@ class IMICFPS
       glBufferData(GL_ARRAY_BUFFER, @uvs.size * Fiddle::SIZEOF_FLOAT, @uvs.pack("f*"), GL_STATIC_DRAW);
       glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nil)
 
+      glBindVertexArray(0)
     end
 
     def bind_for_writing

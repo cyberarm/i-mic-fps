@@ -169,10 +169,13 @@ class IMICFPS
 
     def configure_vao
       glBindVertexArray(@vertex_array_id)
+      gl_error?
 
       # index, size, type, normalized, stride, pointer
       # vertices (positions)
       glBindBuffer(GL_ARRAY_BUFFER, @positions_buffer_id)
+      gl_error?
+
       #                     inPosition
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nil)
       gl_error?

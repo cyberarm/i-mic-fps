@@ -13,6 +13,7 @@ class IMICFPS
         @g_buffer.bind_for_writing
         gl_error?
 
+        glClearColor(0.0, 0.0, 0.0, 0.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
         Shader.use("default") do |shader|
@@ -47,9 +48,15 @@ class IMICFPS
         @g_buffer.unbind_framebuffer
         gl_error?
 
-        lighting(lights)
+
+        @g_buffer.bind_for_reading
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0)
+
+        # lighting(lights)
         post_processing
         render_framebuffer
+
+        @g_buffer.unbind_framebuffer
         gl_error?
       else
         puts "Shader 'default' failed to compile, using immediate mode for rendering..." unless @@immediate_mode_warning
@@ -82,11 +89,24 @@ class IMICFPS
     end
 
     def lighting(lights)
-      @g_buffer.bind_for_reading
+      @g_buffer.set_read_buffer(:position)
+      glBlitFramebuffer(0, 0, @g_buffer.width, @g_buffer.height,
+                        0, 0, @g_buffer.width / 2, @g_buffer.height / 2,
+                        GL_COLOR_BUFFER_BIT, GL_LINEAR)
 
       @g_buffer.set_read_buffer(:diffuse)
       glBlitFramebuffer(0, 0, @g_buffer.width, @g_buffer.height,
-                        0, 0, @g_buffer.width / 2, @g_buffer.height / 2, 
+                        0, @g_buffer.height / 2, @g_buffer.width / 2, @g_buffer.height,
+                        GL_COLOR_BUFFER_BIT, GL_LINEAR)
+
+      @g_buffer.set_read_buffer(:normal)
+      glBlitFramebuffer(0, 0, @g_buffer.width, @g_buffer.height,
+                        @g_buffer.width / 2, @g_buffer.height / 2, @g_buffer.width, @g_buffer.height,
+                        GL_COLOR_BUFFER_BIT, GL_LINEAR)
+
+      @g_buffer.set_read_buffer(:texcoord)
+      glBlitFramebuffer(0, 0, @g_buffer.width, @g_buffer.height,
+                        @g_buffer.width / 2, 0, @g_buffer.width, @g_buffer.height / 2,
                         GL_COLOR_BUFFER_BIT, GL_LINEAR)
     end
 
@@ -99,10 +119,18 @@ class IMICFPS
           glBindVertexArray(@g_buffer.screen_vbo)
           glEnableVertexAttribArray(0)
           glEnableVertexAttribArray(1)
-          
+
           glDisable(GL_DEPTH_TEST)
+          glEnable(GL_BLEND)
+
+          glActiveTexture(GL_TEXTURE0)
           glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:diffuse))
+
           glDrawArrays(GL_TRIANGLES, 0, @g_buffer.vertices.size)
+
+          glDisableVertexAttribArray(1)
+          glDisableVertexAttribArray(0)
+          glBindVertexArray(0)
         end
       end
     end

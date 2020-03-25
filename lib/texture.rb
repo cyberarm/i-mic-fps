@@ -44,7 +44,7 @@ class IMICFPS
 
       array_of_pixels = texture.to_blob
 
-      tex_names_buf = ' ' * 8
+      tex_names_buf = ' ' * 4
       glGenTextures(1, tex_names_buf)
       texture_id = tex_names_buf.unpack('L2').first
 
