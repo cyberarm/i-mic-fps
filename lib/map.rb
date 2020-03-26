@@ -61,7 +61,6 @@ class IMICFPS
       @collision_manager.update
 
       @entities.each(&:update)
-      # @lights.each(&:update)
     end
   end
 end
