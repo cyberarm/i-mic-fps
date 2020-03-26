@@ -32,9 +32,6 @@ class IMICFPS
       end
 
       add_entity(Player.new(spawnpoint: @map_parser.spawnpoints.sample, manifest: Manifest.new(package: "base", name: "character")))
-
-      # add_light(Light.new(id: available_light, position: Vector.new(30, 10.0, 30)))
-      # add_light(Light.new(id: available_light, position: Vector.new(0, 100, 0), diffuse: Color.new(1.0, 0.5, 0.1)))
     end
 
     def data
@@ -59,7 +56,6 @@ class IMICFPS
       @collision_manager.update
 
       @entities.each(&:update)
-      # @lights.each(&:update)
     end
   end
 end

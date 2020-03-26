@@ -9,6 +9,7 @@ class IMICFPS
       @player = @map.find_entity_by(name: "character")
       @camera = Camera.new(position: @player.position.clone)
       @camera.attach_to(@player)
+      @director = Networking::Director.new(mode: :memory, hostname: "i-mic.rubyclan.org", port: 56789, interface: { server: Networking::MemoryServer, connection: Networking::MemoryConnection }, state: self)
 
       @crosshair = Crosshair.new
 
@@ -39,6 +40,7 @@ class IMICFPS
       control_player
 
       @camera.update
+      @director.tick(window.dt)
 
       if window.config.get(:debug_options, :stats)
         @text.text = update_text
