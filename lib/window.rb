@@ -26,6 +26,7 @@ class IMICFPS
       @renderer = Renderer.new
       @renderer.preload_default_shaders
       @scene = TurnTableScene.new
+      @overlay = Overlay.new
 
       @canvas_size = Vector.new(self.width, self.height)
 
@@ -46,6 +47,7 @@ class IMICFPS
       super
 
       @console.draw if @show_console
+      @overlay.draw
       draw_cursor if needs_cursor
 
       _canvas_size = Vector.new(self.width, self.height)

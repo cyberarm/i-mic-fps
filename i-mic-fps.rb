@@ -106,6 +106,7 @@ require_relative "lib/scenes/turn_table"
 require_relative "lib/crosshair"
 require_relative "lib/demo"
 
+require_relative "lib/overlay"
 require_relative "lib/window"
 
 require_relative "lib/tools/asset_viewer"

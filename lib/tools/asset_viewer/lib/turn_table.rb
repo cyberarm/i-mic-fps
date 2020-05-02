@@ -31,7 +31,6 @@ class IMICFPS
         @lights << @light
 
         @camera = Camera.new(position: Vector.new(0, 1.5, 5), orientation: Vector.forward)
-        @renderer = Renderer.new
 
         label @manifest.name, text_size: 50
         label @manifest.model
@@ -55,7 +54,7 @@ class IMICFPS
         )
 
         Gosu.gl do
-          @renderer.draw(@camera, [@light], @map.entities)
+          window.renderer.draw(@camera, [@light], @map.entities)
         end
 
         @crosshair.draw

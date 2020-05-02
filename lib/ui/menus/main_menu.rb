@@ -16,7 +16,7 @@ class IMICFPS
         push_state(ExtrasMenu)
       end
 
-      link "Exit" do
+      link "Exit Game" do
         window.close
       end
 
