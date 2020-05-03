@@ -12,7 +12,7 @@ class IMICFPS
 
       @crosshair = Crosshair.new
 
-      @text = Text.new("Pending...", x: 10, y: 10, z: 1, size: 18, font: "DejaVu Sans", shadow_color: Gosu::Color::BLACK)
+      @text = Text.new("Pending...", x: 10, y: 22, z: 1, size: 18, font: "DejaVu Sans", shadow_color: Gosu::Color::BLACK)
 
       if ARGV.join.include?("--playdemo")
         @demo = Demo.new(camera: @camera, player: @player, demo: "./demo.dat", mode: :play) if File.exist?("./demo.dat")
@@ -42,15 +42,11 @@ class IMICFPS
 
       if window.config.get(:debug_options, :stats)
         @text.text = update_text
-      elsif window.config.get(:options, :fps)
-        @text.text = "FPS: #{Gosu.fps}"
       else
         @text.text = ""
       end
 
       @demo.update if @demo
-
-      window.number_of_vertices = 0
     end
 
     def update_text
@@ -66,10 +62,6 @@ Camera Field Of View: #{@camera.field_of_view}
 Camera Mouse Sesitivity: #{@camera.mouse_sensitivity}
 
 #{if @camera.entity then "Actor X: #{@camera.entity.position.x.round(2)} Y: #{@camera.entity.position.y.round(2)} Z: #{@camera.entity.position.z.round(2)}";end}
-Last Frame: #{Gosu.milliseconds - window.delta_time}ms (#{Gosu.fps} fps)
-
-Vertices: #{formatted_number(window.number_of_vertices)}
-Faces: #{formatted_number(window.number_of_vertices/3)}
 eos
     end
 

@@ -67,6 +67,9 @@ class IMICFPS
       super
 
       @console.update if @show_console
+      @overlay.update
+
+      @number_of_vertices = 0
       @delta_time = Gosu.milliseconds
     end
 

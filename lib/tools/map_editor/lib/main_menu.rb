@@ -30,7 +30,6 @@ class IMICFPS
           @maps.each do |map|
             button map.metadata.name do
               push_state(Editor, map_parser: map)
-              # push_state(TurnTable, manifest: manifest)
             end
           end
         end
