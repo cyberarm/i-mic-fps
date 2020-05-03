@@ -5,7 +5,7 @@ class IMICFPS
       attr_reader :map
       def setup
         # TODO: Move everything required for a playable game map
-        #       in a Scene or Scene3D container object
+        #       in to a Scene or Scene3D container object
         #       and refactor Game to use it.
         Publisher.new
         @map = Map.new( map_parser: @options[:map_parser] )

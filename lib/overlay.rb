@@ -47,7 +47,7 @@ class IMICFPS
 
       @text.text = ""
       @slots.each_with_index do |slot, i|
-        @text.text += "#{slot.value} <c=ff000000>|</c> " unless i == @slots.size - 1
+        @text.text += "#{slot.value} <c=ff000000>•</c> " unless i == @slots.size - 1
         @text.text += "#{slot.value}" if i == @slots.size - 1
       end
     end
