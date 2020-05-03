@@ -155,6 +155,7 @@ class IMICFPS
       end
 
       if window.config.get(:debug_options, :wireframe)
+        glLineWidth(2)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
         Shader.active_shader.uniform_boolean("disableLighting", true)
 
@@ -163,6 +164,7 @@ class IMICFPS
 
         Shader.active_shader.uniform_boolean("disableLighting", false)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+        glLineWidth(1)
       end
 
       glDrawArrays(GL_TRIANGLES, 0, model.faces.count * 3)

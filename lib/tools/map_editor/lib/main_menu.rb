@@ -29,7 +29,7 @@ class IMICFPS
         flow(margin: 10) do
           @maps.each do |map|
             button map.metadata.name do
-              push_state(Editor, map_parser: map)
+              push_state(LoadingState, map_parser: map, forward: Editor)
             end
           end
         end

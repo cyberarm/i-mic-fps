@@ -2,7 +2,13 @@ class IMICFPS
   class LoadingState < Menu
     def setup
       window.needs_cursor = false
-      @map_parser = MapParser.new(map_file: @options[:map_file])
+      if @options[:map_file]
+        @map_parser = MapParser.new(map_file: @options[:map_file])
+      elsif @options[:map_parser]
+        @map_parser = @options[:map_parser]
+      else
+        raise "Unable to load map, missing :map_file or :map_parser"
+      end
 
       title "I-MIC FPS"
       @subheading = Text.new("Loading Map: #{@map_parser.metadata.name}", y: 100, size: 50, alignment: :center)
