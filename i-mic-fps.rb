@@ -131,8 +131,9 @@ require_relative "lib/window"
 require_relative "lib/tools/asset_viewer"
 require_relative "lib/tools/map_editor"
 
-# Don't launch game if __FILE__ != launching command
-if __FILE__ == $0
+# Don't launch game if IMICFPS_SERVER_MODE is defined
+# or if game is being packaged
+unless defined?(IMICFPS_SERVER_MODE) or defined?(Ocra)
   if ARGV.join.include?("--profile")
     begin
       require "ruby-prof"

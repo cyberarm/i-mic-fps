@@ -1,3 +1,4 @@
+IMICFPS_SERVER_MODE = true
 require_relative "i-mic-fps"
 
 director = IMICFPS::Networking::Director.new(mode: :server, hostname: "0.0.0.0", port: 56789, interface: IMICFPS::Networking::MemoryServer)
