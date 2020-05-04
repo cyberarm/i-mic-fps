@@ -1,5 +1,8 @@
-require "gosu"
-require_relative "lib/objects/text"
+begin
+  require_relative "../cyberarm_engine/lib/cyberarm_engine"
+rescue LoadError
+  require "cyberarm_engine"
+end
 
 class Window < Gosu::Window
   def initialize
@@ -9,8 +12,8 @@ class Window < Gosu::Window
     @slope = 250
     @color_step = 10
     @base_color = Gosu::Color.rgb(255, 127, 0)
-    @title = Text.new("I-MIC FPS", color: Gosu::Color.rgb(255,127,0), size: 100, x: 0, y: 15, alignment: :center)
-    @singleplayer = Text.new("Singleplayer", color: Gosu::Color.rgb(0,127,127), size: 50, x: 0, y: 150, alignment: :center)
+    @title = CyberarmEngine::Text.new("I-MIC FPS", color: Gosu::Color.rgb(255,127,0), size: 100, x: 0, y: 15, alignment: :center)
+    @singleplayer = CyberarmEngine::Text.new("Singleplayer", color: Gosu::Color.rgb(0,127,127), size: 50, x: 0, y: 150, alignment: :center)
   end
 
   def draw

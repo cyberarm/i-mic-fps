@@ -3,10 +3,12 @@ require "yaml"
 require "json"
 require "abbrev"
 require "time"
+require "socket"
 
 require "opengl"
 require "glu"
 require "nokogiri"
+require "async/websocket"
 
 begin
   require_relative "../cyberarm_engine/lib/cyberarm_engine"
