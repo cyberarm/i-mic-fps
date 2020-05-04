@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="232"
+   height="232"
+   viewBox="0 0 61.383334 61.383334"
+   version="1.1"
+   id="svg8"
+   sodipodi:docname="logo.svg"
+   inkscape:export-filename="/home/cyberarm/Code/i-mic-fps/static/logo.png"
+   inkscape:export-xdpi="211.86208"
+   inkscape:export-ydpi="211.86208"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="28.822764"
+     inkscape:cy="101.19387"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     units="px"
+     borderlayer="true"
+     inkscape:showpageshadow="false"
+     inkscape:snap-bbox="true"
+     inkscape:snap-intersection-paths="true"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1010"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid10"
+       empspacing="8"
+       originx="0"
+       originy="2.2411203e-09"
+       dotted="false" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-33.940008,-296.21455)">
+    <path
+       style="opacity:1;fill:#e9b96e;fill-opacity:1;stroke:#000000;stroke-width:0.52916664;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke markers fill"
+       d="m 69.448977,318.17079 h -9.524999 l 4.7625,4.7625 z"
+       id="path42"
+       inkscape:connector-curvature="0" />
+    <path
+       style="opacity:1;fill:#8f5902;fill-opacity:1;stroke:#000000;stroke-width:0.52916664;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke markers fill"
+       d="m 51.986478,310.23329 7.9375,7.9375 h 9.524999 l 7.9375,-7.9375 z"
+       id="path30"
+       inkscape:connector-curvature="0" />
+    <path
+       style="opacity:1;fill:#ce5c00;fill-opacity:1;stroke:#000000;stroke-width:0.52916664;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke markers fill"
+       d="m 69.448977,318.17079 16.485815,16.48581 7.9375,-7.9375 -16.485815,-16.48581 z"
+       id="path47"
+       inkscape:connector-curvature="0" />
+    <path
+       style="opacity:1;fill:#ce5c00;fill-opacity:1;stroke:#000000;stroke-width:0.52916664;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke markers fill"
+       d="m 64.686478,322.93329 v 32.97163 L 85.934792,334.6566 69.448977,318.17079 Z"
+       id="path50"
+       inkscape:connector-curvature="0" />
+    <path
+       style="opacity:1;fill:#f57900;fill-opacity:1;stroke:#000000;stroke-width:0.52916664;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke markers fill"
+       d="M 59.923978,318.17079 43.438163,334.6566 64.686478,355.90492 V 322.93329 Z"
+       id="path45"
+       inkscape:connector-curvature="0" />
+    <path
+       style="opacity:1;fill:#f57900;fill-opacity:1;stroke:#000000;stroke-width:0.52916664;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke markers fill"
+       d="m 51.986478,310.23329 -16.485815,16.48581 7.9375,7.9375 16.485815,-16.48581 z"
+       id="path28"
+       inkscape:connector-curvature="0" />
+    <path
+       style="opacity:1;fill:#f57900;fill-opacity:1;stroke:#000000;stroke-width:0.52916664;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke markers fill"
+       d="m 64.686478,297.53329 -12.7,12.7 h 12.7 z"
+       id="path53"
+       inkscape:connector-curvature="0" />
+    <path
+       style="opacity:1;fill:#ce5c00;fill-opacity:1;stroke:#000000;stroke-width:0.52916664;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:stroke markers fill"
+       d="m 64.686478,297.53329 v 12.7 h 12.699999 z"
+       id="rect22"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.58333302px;line-height:1.25;font-family:'Droid Serif';-inkscape-font-specification:'Droid Serif';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="99.88446"
+       y="329.00253"
+       id="text14"><tspan
+         sodipodi:role="line"
+         id="tspan12"
+         x="99.88446"
+         y="329.00253"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Droid Serif';-inkscape-font-specification:'Droid Serif';fill:#000000;stroke-width:0.26458332">I-MIC FPS</tspan></text>
+  </g>
+</svg>

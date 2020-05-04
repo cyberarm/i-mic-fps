@@ -42,6 +42,46 @@ class IMICFPS
     def fill(color = Gosu::Color::WHITE)
       draw_rect(0, 0, window.width, window.height, color)
     end
+    def fill_quad(x1, y1, x2, y2, x3, y3, x4, y4, color = Gosu::Color::WHITE, z = 0, mode = :default)
+      draw_quad(
+        x1,y1, color,
+        x2,y2, color,
+        x3,y3, color,
+        x4,y4, color,
+        z, mode
+        )
+    end
+
+    def menu_background(color, color_step, transparency, bar_size, slope)
+      ((Gosu.screen_height + slope) / bar_size).times do |i|
+        fill_quad(
+          0, i * bar_size,
+          0, slope + (i * bar_size),
+          window.width / 2, (-slope) + (i * bar_size),
+          window.width / 2, i * bar_size,
+          Gosu::Color.rgba(
+            color.red - i * color_step,
+            color.green - i * color_step,
+            color.blue - i * color_step,
+            transparency
+          ),
+          -2
+        )
+        fill_quad(
+          window.width, i * bar_size,
+          window.width, slope + (i * bar_size),
+          window.width / 2, (-slope) + (i * bar_size),
+          window.width / 2, i * bar_size,
+          Gosu::Color.rgba(
+            color.red - i * color_step,
+            color.green - i * color_step,
+            color.blue - i * color_step,
+            transparency
+          ),
+          -2
+        )
+      end
+    end
 
     def gl_error?
       e = glGetError()

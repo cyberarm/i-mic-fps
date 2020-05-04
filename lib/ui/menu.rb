@@ -31,7 +31,7 @@ class IMICFPS
     end
 
     def draw
-      draw_background
+      menu_background(@base_color, @color_step, @background_alpha, @size, @slope)
       draw_menu_box
       draw_menu
 
@@ -43,27 +43,6 @@ class IMICFPS
         end
 
         window.scene.draw
-      end
-    end
-
-    def draw_background
-      ((Gosu.screen_height+@slope)/@size).times do |i|
-        fill_quad(
-          0, i*@size,
-          0, @slope+(i*@size),
-          window.width/2, (-@slope)+(i*@size),
-          window.width/2, i*@size,
-          Gosu::Color.rgba(@base_color.red-i*@color_step, @base_color.green-i*@color_step, @base_color.blue-i*@color_step, @background_alpha),
-          -2
-        )
-        fill_quad(
-          window.width, i*@size,
-          window.width, @slope+(i*@size),
-          window.width/2, (-@slope)+(i*@size),
-          window.width/2, i*@size,
-          Gosu::Color.rgba(@base_color.red-i*@color_step, @base_color.green-i*@color_step, @base_color.blue-i*@color_step, @background_alpha),
-          -2
-        )
       end
     end
 
@@ -93,16 +72,6 @@ class IMICFPS
 
       @__version_text.x = window.width - (@__version_text.width + 10)
       @__version_text.y = window.height - (@__version_text.height + 10)
-    end
-
-    def fill_quad(x1, y1, x2, y2, x3, y3, x4, y4, color = Gosu::Color::WHITE, z = 0, mode = :default)
-      draw_quad(
-        x1,y1, color,
-        x2,y2, color,
-        x3,y3, color,
-        x4,y4, color,
-        z, mode
-        )
     end
 
     def button_up(id)

@@ -34,7 +34,7 @@ class IMICFPS
         @config.save!
       end
 
-      push_state(MainMenu)
+      push_state(Boot)
 
       @delta_time = Gosu.milliseconds
     end

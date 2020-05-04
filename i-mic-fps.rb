@@ -59,6 +59,8 @@ require_relative "lib/ui/menus/extras_menu"
 require_relative "lib/ui/menus/level_select_menu"
 require_relative "lib/ui/menus/game_pause_menu"
 
+require_relative "lib/states/game_states/boot"
+# require_relative "lib/states/game_states/close"
 require_relative "lib/states/game_states/game"
 require_relative "lib/states/game_states/loading_state"
 
