@@ -1,5 +1,5 @@
 class IMICFPS
-  class Window < CyberarmEngine::Engine
+  class Window < CyberarmEngine::Window
     attr_accessor :number_of_vertices, :needs_cursor
     attr_reader :renderer, :scene, :config
 

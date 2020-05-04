@@ -52,19 +52,21 @@ class IMICFPS
         )
     end
 
-    def menu_background(color, color_step, transparency, bar_size, slope)
+    def menu_background(primary_color, accent_color, color_step, transparency, bar_size, slope)
       ((Gosu.screen_height + slope) / bar_size).times do |i|
+        color = Gosu::Color.rgba(
+          primary_color.red - i * color_step,
+          primary_color.green - i * color_step,
+          primary_color.blue - i * color_step,
+          transparency
+        )
+
         fill_quad(
           0, i * bar_size,
           0, slope + (i * bar_size),
           window.width / 2, (-slope) + (i * bar_size),
           window.width / 2, i * bar_size,
-          Gosu::Color.rgba(
-            color.red - i * color_step,
-            color.green - i * color_step,
-            color.blue - i * color_step,
-            transparency
-          ),
+          color,
           -2
         )
         fill_quad(
@@ -72,15 +74,18 @@ class IMICFPS
           window.width, slope + (i * bar_size),
           window.width / 2, (-slope) + (i * bar_size),
           window.width / 2, i * bar_size,
-          Gosu::Color.rgba(
-            color.red - i * color_step,
-            color.green - i * color_step,
-            color.blue - i * color_step,
-            transparency
-          ),
+          color,
           -2
         )
       end
+
+      Gosu.draw_quad(
+        0, 0, primary_color,
+        window.width, 0, primary_color,
+        window.width, window.height, accent_color,
+        0, window.height, accent_color,
+        -2
+      )
     end
 
     def gl_error?

@@ -19,16 +19,9 @@ class IMICFPS
     end
 
     def draw
-      menu_background(@primary_color, @color_step, @transparency, @bar_size, @slope)
+      menu_background(@primary_color, @accent_color, @color_step, @transparency, @bar_size, @slope)
 
       fraction_left = ((Gosu.milliseconds - @start_time) / (@time_to_live - 200).to_f)
-
-      Gosu.draw_quad(
-        0, 0, @primary_color,
-        window.width, 0, @primary_color,
-        window.width, window.height, @accent_color,
-        0, window.height, @accent_color
-      )
 
       if fraction_left <= 1.0
         Gosu.draw_circle(

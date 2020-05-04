@@ -34,7 +34,8 @@ class IMICFPS
       @completed_for_ms = 0
       @lock = false
 
-      @base_color = Gosu::Color.rgb(0, 180, 180)
+      @primary_color = Gosu::Color.rgba(0, 180, 180, 200)
+      @accent_color = Gosu::Color.rgba(0, 90, 90, 200)
     end
 
     def draw
@@ -115,9 +116,9 @@ class IMICFPS
       progress = (@asset_index.to_f/@assets.count)*window.width/2
       height = 100
 
-      dark_color= Gosu::Color.rgb(@base_color.red - 100, @base_color.green - 100, @base_color.blue - 100)#Gosu::Color.rgb(64, 127, 255)
-      color     = Gosu::Color.rgb(@base_color.red - 50, @base_color.green - 50, @base_color.blue - 50)#Gosu::Color.rgb(0,127,127)
-      color_two = Gosu::Color.rgb(@base_color.red + 50, @base_color.green + 50, @base_color.blue + 50)#Gosu::Color.rgb(64, 127, 255)
+      dark_color= Gosu::Color.rgb(@primary_color.red - 100, @primary_color.green - 100, @primary_color.blue - 100)#Gosu::Color.rgb(64, 127, 255)
+      color     = Gosu::Color.rgb(@primary_color.red - 50, @primary_color.green - 50, @primary_color.blue - 50)#Gosu::Color.rgb(0,127,127)
+      color_two = Gosu::Color.rgb(@primary_color.red + 50, @primary_color.green + 50, @primary_color.blue + 50)#Gosu::Color.rgb(64, 127, 255)
 
       draw_rect(x, y-2, x + window.width/4, height+4, dark_color)
 
