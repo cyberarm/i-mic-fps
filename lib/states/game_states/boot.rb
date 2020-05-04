@@ -1,20 +1,25 @@
 class IMICFPS
   class Boot < GameState
-    require_relative "../../../../gosu_more_drawables/lib/gosu_more_drawables/draw_circle"
-
     def setup
       @primary_color = Gosu::Color.rgba(255, 127, 0, 200)
       @accent_color = Gosu::Color.rgba(155, 27, 0, 200)
+
+      @color_step = 10
+      @transparency = 200
+      @bar_size = 50
+      @slope = 250
 
       @title = Text.new(IMICFPS::NAME, size: 100, z: 0, color: Gosu::Color.new(0xff000000), shadow: false, font: "Droid Serif")
       @logo = get_image(IMICFPS::GAME_ROOT_PATH + "/static/logo.png")
 
       @start_time = Gosu.milliseconds
       @time_to_live = 3_000
+
+      window.needs_cursor = false
     end
 
     def draw
-      menu_background(@primary_color, 10, 200, 50, 250)
+      menu_background(@primary_color, @color_step, @transparency, @bar_size, @slope)
 
       fraction_left = ((Gosu.milliseconds - @start_time) / (@time_to_live - 200).to_f)
 
@@ -52,8 +57,12 @@ class IMICFPS
       push_state(MainMenu) if Gosu.milliseconds - @start_time >= @time_to_live
     end
 
-    def button_up(id)
-      push_state(MainMenu)
+    def button_down(id)
+      if id == Gosu::KbEscape or
+        (id >= Gosu::GP_LEFT and id >= Gosu::GP_BUTTON_15) or
+        id == Gosu::MsLeft
+        push_state(MainMenu)
+      end
     end
   end
 end

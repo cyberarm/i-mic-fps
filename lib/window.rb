@@ -73,6 +73,10 @@ class IMICFPS
       @delta_time = Gosu.milliseconds
     end
 
+    def close
+      push_state(Close)
+    end
+
     def button_down(id)
       if @show_console
         @console.button_down(id)
