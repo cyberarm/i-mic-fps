@@ -57,7 +57,7 @@ class IMICFPS
       push_state(MainMenu) if Gosu.milliseconds - @start_time >= @time_to_live
     end
 
-    def button_down(id)
+    def button_up(id)
       if id == Gosu::KbEscape or
         (id >= Gosu::GP_LEFT and id >= Gosu::GP_BUTTON_15) or
         id == Gosu::MsLeft

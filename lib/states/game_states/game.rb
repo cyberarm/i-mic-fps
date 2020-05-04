@@ -12,6 +12,7 @@ class IMICFPS
       @director = Networking::Director.new(mode: :memory, hostname: "i-mic.rubyclan.org", port: 56789, interface: { server: Networking::MemoryServer, connection: Networking::MemoryConnection }, state: self)
 
       @crosshair = Crosshair.new
+      @hud = HUD.new(@player)
 
       @text = Text.new("Pending...", x: 10, y: 22, z: 1, size: 18, font: "DejaVu Sans", shadow_color: Gosu::Color::BLACK)
 
@@ -27,6 +28,7 @@ class IMICFPS
       @map.render(@camera)
 
       @crosshair.draw
+      @hud.draw
       @text.draw
     end
 
@@ -38,6 +40,7 @@ class IMICFPS
       @map.update
 
       control_player
+      @hud.update
 
       @camera.update
       @director.tick(window.dt)

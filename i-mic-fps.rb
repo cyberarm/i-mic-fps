@@ -64,6 +64,12 @@ require_relative "lib/states/game_states/close"
 require_relative "lib/states/game_states/game"
 require_relative "lib/states/game_states/loading_state"
 
+require_relative "lib/hud"
+require_relative "lib/hud/widget"
+require_relative "lib/hud/widgets/ammo"
+require_relative "lib/hud/widgets/radar"
+require_relative "lib/hud/widgets/health"
+
 require_relative "lib/subscription"
 require_relative "lib/publisher"
 require_relative "lib/event"

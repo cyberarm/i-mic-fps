@@ -51,7 +51,7 @@ class IMICFPS
       @slope -= 25 * window.dt
     end
 
-    def button_down(id)
+    def button_up(id)
       if id == Gosu::KbEscape or
         (id >= Gosu::GP_LEFT and id >= Gosu::GP_BUTTON_15) or
         id == Gosu::MsLeft
