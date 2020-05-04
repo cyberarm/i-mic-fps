@@ -129,17 +129,20 @@ require_relative "lib/window"
 require_relative "lib/tools/asset_viewer"
 require_relative "lib/tools/map_editor"
 
-if ARGV.join.include?("--profile")
-  begin
-    require "ruby-prof"
-    RubyProf.start
-      IMICFPS::Window.new.show
-    result  = RubyProf.stop
-    printer = RubyProf::MultiPrinter.new(result)
-    printer.print(path: ".", profile: "profile", min_percent: 2)
-  rescue LoadError
-    puts "ruby-prof not installed!"
+# Don't launch game if __FILE__ != launching command
+if __FILE__ == $0
+  if ARGV.join.include?("--profile")
+    begin
+      require "ruby-prof"
+      RubyProf.start
+        IMICFPS::Window.new.show
+      result  = RubyProf.stop
+      printer = RubyProf::MultiPrinter.new(result)
+      printer.print(path: ".", profile: "profile", min_percent: 2)
+    rescue LoadError
+      puts "ruby-prof not installed!"
+    end
+  else
+    IMICFPS::Window.new.show
   end
-else
-  IMICFPS::Window.new.show
 end

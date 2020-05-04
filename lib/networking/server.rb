@@ -19,6 +19,9 @@ class IMICFPS
       def broadcast(packet)
       end
 
+      def update
+      end
+
       def close
       end
     end

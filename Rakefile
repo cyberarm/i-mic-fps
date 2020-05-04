@@ -3,8 +3,8 @@ require 'bundler/setup' # Releasy requires that your application uses bundler.
 require_relative "lib/version"
 
 Releasy::Project.new do
-  name "I-MIC FPS"
-  version "#{IMICFPS::VERSION}"
+  name IMICFPS::NAME
+  version IMICFPS::VERSION
 
   executable "i-mic-fps.rb"
   files ["lib/**/*.*", "assets/**/*.*", "blends/**/*.*", "shaders/**/*.*", "static/**/*.*", "maps/**/*.*", "data/**/*.*"]

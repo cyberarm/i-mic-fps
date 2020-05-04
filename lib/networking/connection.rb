@@ -7,6 +7,9 @@ class IMICFPS
       def connect
       end
 
+      def update
+      end
+
       def close
       end
     end
