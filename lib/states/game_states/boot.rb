@@ -1,14 +1,6 @@
 class IMICFPS
   class Boot < GameState
     def setup
-      @primary_color = Gosu::Color.rgba(255, 127, 0, 200)
-      @accent_color = Gosu::Color.rgba(155, 27, 0, 200)
-
-      @color_step = 10
-      @transparency = 200
-      @bar_size = 50
-      @slope = 250
-
       @title = Text.new(IMICFPS::NAME, size: 100, z: 0, color: Gosu::Color.new(0xff000000), shadow: false, font: "Droid Serif")
       @logo = get_image(IMICFPS::GAME_ROOT_PATH + "/static/logo.png")
 
@@ -19,9 +11,9 @@ class IMICFPS
     end
 
     def draw
-      menu_background(@primary_color, @accent_color, @color_step, @transparency, @bar_size, @slope)
-
       fraction_left = ((Gosu.milliseconds - @start_time) / (@time_to_live - 200).to_f)
+
+      menu_background(Menu::PRIMARY_COLOR, Menu::ACCENT_COLOR, Menu::BAR_COLOR_STEP, Menu::BAR_ALPHA, Menu::BAR_SIZE, Menu::BAR_SLOPE)
 
       if fraction_left <= 1.0
         Gosu.draw_circle(

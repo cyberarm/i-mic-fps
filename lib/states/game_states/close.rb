@@ -1,13 +1,7 @@
 class IMICFPS
   class Close < GameState
     def setup
-      @primary_color = Gosu::Color.rgba(255, 127, 0, 200)
-      @accent_color = Gosu::Color.rgba(155, 27, 0, 200)
-
-      @color_step = 10
-      @transparency = 200
-      @bar_size = 50
-      @slope = 250
+      @slope = Menu::BAR_SLOPE
 
       @logo = get_image(IMICFPS::GAME_ROOT_PATH + "/static/logo.png")
 
@@ -18,16 +12,9 @@ class IMICFPS
     end
 
     def draw
-      menu_background(@primary_color, @color_step, @transparency, @bar_size, @slope.round)
-
       fraction_left = 1 - ((Gosu.milliseconds - @start_time) / (@time_to_live - 200).to_f)
 
-      Gosu.draw_quad(
-        0, 0, @primary_color,
-        window.width, 0, @primary_color,
-        window.width, window.height, @accent_color,
-        0, window.height, @accent_color
-      )
+      menu_background(Menu::PRIMARY_COLOR, Menu::ACCENT_COLOR, Menu::BAR_COLOR_STEP, Menu::BAR_ALPHA, Menu::BAR_SIZE, @slope.round)
 
       Gosu.draw_circle(
         window.width / 2,
