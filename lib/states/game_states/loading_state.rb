@@ -10,7 +10,7 @@ class IMICFPS
         raise "Unable to load map, missing :map_file or :map_parser"
       end
 
-      title "I-MIC FPS"
+      title IMICFPS::NAME
       @subheading = Text.new("Loading Map: #{@map_parser.metadata.name}", y: 100, size: 50, alignment: :center)
       @description = Text.new("Map created by: #{@map_parser.metadata.authors.join(", ")}\n#{@map_parser.metadata.description}", y: 180, size: 24, alignment: :center)
       @state = Text.new("Preparing...", y: window.height/2-40, size: 40, alignment: :center)

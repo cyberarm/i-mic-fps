@@ -1,5 +1,7 @@
 class IMICFPS
-  class Menu < IMICFPS::GameState
+  class Menu < IMICFPS::GuiState
+    include CommonMethods
+
     PRIMARY_COLOR = Gosu::Color.rgba(255, 127, 0, 200)
     ACCENT_COLOR = Gosu::Color.rgba(155, 27, 0, 200)
 
@@ -53,13 +55,15 @@ class IMICFPS
 
         window.scene.draw
       end
+
+      super
     end
 
     def draw_menu_box
       draw_rect(
-        window.width/4, 0,
-        window.width/2, window.height,
-        Gosu::Color.new(0x22222222),
+        window.width / 4, 0,
+        window.width / 2, window.height,
+        Gosu::Color.new(0x11ffffff),
       )
     end
 
@@ -79,6 +83,8 @@ class IMICFPS
         window.scene.update(window.dt)
       end
 
+      super
+
       @__version_text.x = window.width - (@__version_text.width + 10)
       @__version_text.y = window.height - (@__version_text.height + 10)
     end
@@ -92,6 +98,8 @@ class IMICFPS
           end
         end
       end
+
+      super
     end
 
     def mouse_over?(object)

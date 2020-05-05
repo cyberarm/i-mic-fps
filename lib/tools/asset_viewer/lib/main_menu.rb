@@ -1,12 +1,8 @@
 class IMICFPS
   class AssetViewerTool
-    class MainMenu < CyberarmEngine::GuiState
-      include CommonMethods
+    class MainMenu < Menu
       def setup
         window.needs_cursor = true
-
-        label "#{IMICFPS::NAME}", text_size: 50
-        label "Asset Viewer", text_size: 28
 
         @manifests = []
         Dir.glob(GAME_ROOT_PATH + "/assets/**/manifest.yaml").each do |manifest|
@@ -19,22 +15,29 @@ class IMICFPS
 
         @manifests.sort_by! { |m| m.name.downcase }
 
-        button "Back", margin_bottom: 25 do
-          pop_state
-        end
+        label "#{IMICFPS::NAME}", text_size: 100, color: Gosu::Color::BLACK
+        label "Asset Viewer", text_size: 50
 
-        flow(margin: 10) do
-          @manifests.each do |manifest|
-            button manifest.name do
-              push_state(TurnTable, manifest: manifest)
+        flow(width: 1.0, height: 1.0) do
+          stack(width: 0.25, height: 1.0) do
+            button "Refresh" do
+              request_recalculate
+            end
+            button "Back", margin_bottom: 25 do
+              pop_state
+            end
+          end
+
+          stack(width: 0.5, height: 1.0) do
+            flow(width: 1.0, height: 1.0) do
+              @manifests.each do |manifest|
+                button manifest.name do
+                  push_state(TurnTable, manifest: manifest)
+                end
+              end
             end
           end
         end
-      end
-
-      def draw
-        menu_background(Menu::PRIMARY_COLOR, Menu::ACCENT_COLOR, Menu::BAR_COLOR_STEP, Menu::BAR_ALPHA, Menu::BAR_SIZE, Menu::BAR_SLOPE)
-        super
       end
 
       def update

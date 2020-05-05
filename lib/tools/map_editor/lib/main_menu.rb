@@ -1,8 +1,6 @@
 class IMICFPS
   class MapEditorTool
-    class MainMenu < CyberarmEngine::GuiState
-      include CommonMethods
-
+    class MainMenu < Menu
       def setup
         window.needs_cursor = true
 
@@ -35,11 +33,6 @@ class IMICFPS
             end
           end
         end
-      end
-
-      def draw
-        menu_background(Menu::PRIMARY_COLOR, Menu::ACCENT_COLOR, Menu::BAR_COLOR_STEP, Menu::BAR_ALPHA, Menu::BAR_SIZE, Menu::BAR_SLOPE)
-        super
       end
 
       def update

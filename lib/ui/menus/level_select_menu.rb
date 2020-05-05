@@ -1,7 +1,7 @@
 class IMICFPS
   class LevelSelectMenu < Menu
     def setup
-      title "I-MIC FPS"
+      title IMICFPS::NAME
       subtitle "Choose a Map"
 
       Dir.glob(GAME_ROOT_PATH + "/maps/*.json").map { |file| [file, MapParser.new(map_file: file)]}.each do |file, map|

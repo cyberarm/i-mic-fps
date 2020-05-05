@@ -1,7 +1,7 @@
 class IMICFPS
   class ExtrasMenu < Menu
     def setup
-      title "I-MIC FPS"
+      title IMICFPS::NAME
       subtitle "Extras"
 
       link "Asset Viewer" do
