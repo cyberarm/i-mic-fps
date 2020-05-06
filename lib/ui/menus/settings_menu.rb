@@ -66,9 +66,7 @@ class IMICFPS
         end
       end
 
-      label ""
-      check_box "Fullscreen"
-      label ""
+      check_box "Fullscreen", padding_top: 25, padding_top: 25
 
       flow do
         stack do
