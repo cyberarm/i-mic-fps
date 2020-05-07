@@ -7,7 +7,7 @@ def sh_with_status(command)
   outbuf = IO.popen(command, :err => [:child, :out], &:read)
   status = $?
 
-  return status
+  return [outbuf, status]
 end
 
 def version
@@ -23,11 +23,11 @@ def release_name
 end
 
 def clean?
-  sh_with_status(%w[git diff --exit-code]).success?
+  sh_with_status("git diff --exit-code")[1].success?
 end
 
 def committed?
-  sh_with_status(%w[git diff-index --quiet --cached HEAD]).success?
+  sh_with_status("git diff-index --quiet --cached HEAD")[1].success?
 end
 
 def guard_clean
@@ -35,16 +35,16 @@ def guard_clean
 end
 
 def tag_version
-  sh %W[git tag -m Version\ #{version} #{version_tag}]
-  puts "   #{version_tag}."
+  sh "git tag -m \"Version #{version}\" #{version_tag}"
+  puts "   Tagged #{version_tag}."
 rescue RuntimeError
   puts "  Untagging #{version_tag} due to error."
-  sh_with_status %W[git tag -d #{version_tag}]
+  sh_with_status "git tag -d #{version_tag}"
   abort
 end
 
 def already_tagged?
-  return false unless sh(%w[git tag]).split(/\n/).include?(version_tag)
+  return false unless sh_with_status("git tag")[0].split(/\n/).include?(version_tag)
   abort "  Tag #{version_tag} has already been created."
 end
 
