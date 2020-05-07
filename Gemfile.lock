@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/cyberarm/cyberarm_engine
-  revision: da5d740c6e8767c9351a44c4b9cca43535ff8536
+  revision: 0850336e55891f1f10dcb10e3b4b42e5f7379b33
   specs:
-    cyberarm_engine (0.13.1)
+    cyberarm_engine (0.14.0)
       gosu (~> 0.15.0)
       gosu_more_drawables (~> 0.3)
 
@@ -19,16 +19,16 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    async (1.25.2)
+    async (1.26.0)
       console (~> 1.0)
       nio4r (~> 2.3)
       timers (~> 4.1)
-    async-http (0.52.0)
+    async-http (0.52.2)
       async (~> 1.25)
       async-io (~> 1.28)
       async-pool (~> 0.2)
-      protocol-http (~> 0.18.0)
-      protocol-http1 (~> 0.12.0)
+      protocol-http (~> 0.19.0)
+      protocol-http1 (~> 0.13.0)
       protocol-http2 (~> 0.14.0)
     async-io (1.29.0)
       async (~> 1.14)
@@ -51,9 +51,9 @@ GEM
     ocra (1.3.11)
     opengl-bindings (1.6.10)
     protocol-hpack (1.4.2)
-    protocol-http (0.18.0)
-    protocol-http1 (0.12.0)
-      protocol-http (~> 0.18)
+    protocol-http (0.19.0)
+    protocol-http1 (0.13.0)
+      protocol-http (~> 0.19)
     protocol-http2 (0.14.0)
       protocol-hpack (~> 1.4)
       protocol-http (~> 0.18)
