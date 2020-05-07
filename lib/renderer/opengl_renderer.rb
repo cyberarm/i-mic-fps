@@ -16,7 +16,7 @@ class IMICFPS
     end
 
     def render(camera, lights, entities)
-      if Shader.available?("default") && Shader.available?("render_screen")
+      if window.config.get(:debug_options, :use_shaders) && Shader.available?("default") && Shader.available?("render_screen")
         @g_buffer.bind_for_writing
         gl_error?
 
