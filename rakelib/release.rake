@@ -19,7 +19,7 @@ def version_tag
 end
 
 def release_name
-  "#{IMICFPS::NAME.gsub(" ", "-").downcase}_#{version_tag}"
+  "#{IMICFPS::NAME}_#{version}".downcase.gsub(/[\ |\-|\.]/, "_")
 end
 
 def clean?
@@ -117,9 +117,23 @@ end
 
 namespace "game" do
   desc "Create git tag, build, and release package"
-  task :release do
+  task release: [
+    "release:check_diff",
+    "release:tag",
+    "release:package",
+    "release:patch",
+    "release:create_archive",
+    "release:deploy"] do
+  end
+
+  desc "Check working directory for uncommited changes"
+  task "release:check_diff" do
     puts "Checking for uncommited changes..."
     guard_clean
+  end
+
+  desc "Create release version tag"
+  task "release:tag" do
     puts "Checking git tag for #{version_tag}..."
     already_tagged?
     puts "Committing git tag #{version_tag}..."
@@ -127,21 +141,41 @@ namespace "game" do
     puts "Pushing changes..."
     sh "git push origin master"
     sh "git push origin master --tags"
+  end
 
-    path = File.expand_path("../pkg/#{release_name}_WIN32", __dir__)
+  path = File.expand_path("../pkg/#{release_name}_WIN32", __dir__)
 
+  desc "Create package"
+  task "release:package" do
     puts "Building release package '#{release_name}', this may take a while..."
     create_lockfile
     build_package(path)
+    remove_lockfile
+  end
+
+  desc "Apply patches"
+  task "release:patch" do
     puts "Patching..."
     patch_windows_package(path)
+  end
+
+  desc "Create compressed zip file for deployment"
+  task "release:create_archive" do
     puts "Creating archive..."
     create_archive(path, "#{path}.zip")
-    remove_lockfile
+  end
 
+  desc "Publish archive to github releases"
+  task "release:deploy" do
     puts "Pushing package to github..."
     upload_asset("#{path}.zip")
     puts "Done."
+  end
+
+  desc "Remove lockfile"
+  task "release:remove_lockfile" do
+    puts "Removing #{PACKAGING_LOCKFILE}..."
+    remove_lockfile
   end
 
   desc "Remove packaging assets"
