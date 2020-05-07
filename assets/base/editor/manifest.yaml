@@ -1,0 +1,3 @@
+name: "editor"
+model: "editor.obj"
+collision: "mesh"
