@@ -1,3 +1,9 @@
+require "json"
+require "tmpdir"
+require "fileutils"
+
+require "zip"
+require "excon"
 require "releasy"
 require 'bundler/setup' # Releasy requires that your application uses bundler.
 require_relative "lib/version"

@@ -40,6 +40,7 @@ GEM
       protocol-websocket (~> 0.7.0)
     console (1.8.2)
     cri (2.1.0)
+    excon (0.73.0)
     gosu (0.15.1)
     gosu (0.15.1-x64-mingw32)
     gosu_more_drawables (0.3.0)
@@ -61,6 +62,7 @@ GEM
       protocol-http (~> 0.2)
       protocol-http1 (~> 0.2)
     rake (13.0.1)
+    rubyzip (2.3.0)
     timers (4.3.0)
 
 PLATFORMS
@@ -70,11 +72,13 @@ PLATFORMS
 DEPENDENCIES
   async-websocket
   cyberarm_engine!
+  excon
   nokogiri (>= 1.11.0.rc1)
   ocra
   opengl-bindings
   rake
   releasy!
+  rubyzip
 
 BUNDLED WITH
    2.1.4

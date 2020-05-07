@@ -8,4 +8,6 @@ gem "async-websocket"
 group(:packaging) do
   gem "releasy", github: "gosu/releasy"
   gem "ocra"
+  gem "rubyzip"
+  gem "excon"
 end

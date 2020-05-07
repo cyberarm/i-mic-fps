@@ -4,6 +4,7 @@ require "json"
 require "abbrev"
 require "time"
 require "socket"
+require "tmpdir"
 
 require "opengl"
 require "glu"
@@ -134,7 +135,22 @@ require_relative "lib/tools/map_editor"
 
 # Don't launch game if IMICFPS_SERVER_MODE is defined
 # or if game is being packaged
-unless defined?(IMICFPS_SERVER_MODE) or defined?(Ocra)
+def prevent_launch?
+  packaging_lockfile = File.expand_path("i-mic-fps-packaging.lock", Dir.tmpdir)
+  m = "Game client not launched"
+
+  return [true, "#{m}: Server is running"] if defined?(IMICFPS_SERVER_MODE) && IMICFPS_SERVER_MODE
+
+  return [true, "#{m}: Packaging is running"] if defined?(Ocra)
+
+  if File.exist?(packaging_lockfile) && File.read(packaging_lockfile).strip == IMICFPS::VERSION
+    return [true, "#{m}: Packaging lockfile is present (#{packaging_lockfile})"]
+  end
+
+  return [false, ""]
+end
+
+unless prevent_launch?[0]
   if ARGV.join.include?("--profile")
     begin
       require "ruby-prof"
@@ -149,4 +165,6 @@ unless defined?(IMICFPS_SERVER_MODE) or defined?(Ocra)
   else
     IMICFPS::Window.new.show
   end
+else
+  puts prevent_launch?[1]
 end

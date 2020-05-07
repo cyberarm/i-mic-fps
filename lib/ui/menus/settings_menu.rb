@@ -66,7 +66,7 @@ class IMICFPS
         end
       end
 
-      check_box "Fullscreen", padding_top: 25, padding_top: 25
+      check_box "Fullscreen", padding_top: 25, padding_bottom: 25
 
       flow do
         stack do
