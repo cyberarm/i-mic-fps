@@ -26,7 +26,7 @@ class IMICFPS
 
       gl_version = glGetString(GL_VERSION).to_s
       major, minor = gl_version.split(" ").first.split(".").map { |v| v.to_i }
-      unless major >= 3 && minor >= 3
+      unless (major == 3 && minor >= 3) || (major > 3)
 message =
 "<b><c=f00>[Notice]</c></b> Your computer is reporting support for <b><c=f50>OpenGL #{major}.#{minor}</c></b>,
 however <b><c=5f5>OpenGL 3.3 or higher is required.</c></b>
