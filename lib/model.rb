@@ -3,17 +3,15 @@ class IMICFPS
     include CommonMethods
 
     attr_accessor :objects, :materials, :vertices, :uvs, :texures, :normals, :faces, :colors, :bones
-    attr_accessor :scale, :entity, :material_file, :current_material, :current_object, :vertex_count, :smoothing
+    attr_accessor :material_file, :current_material, :current_object, :vertex_count, :smoothing
     attr_reader :position, :bounding_box, :textured_material, :file_path
 
     attr_reader :positions_buffer_id, :colors_buffer_id, :normals_buffer_id, :uvs_buffer_id, :textures_buffer_id
     attr_reader :vertex_array_id
     attr_reader :aabb_tree
 
-    def initialize(file_path:, entity: nil)
+    def initialize(file_path:)
       @file_path = file_path
-      @entity = entity
-      update if @entity
 
       @material_file  = nil
       @current_object = nil
@@ -230,11 +228,6 @@ class IMICFPS
       end
 
       puts @aabb_tree.inspect if window.config.get(:debug_options, :stats)
-    end
-
-    def update
-      @position = @entity.position
-      @scale = @entity.scale
     end
 
     def has_texture?

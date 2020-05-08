@@ -1,43 +1,36 @@
 class IMICFPS
-  class ModelCache
+  module ModelCache
     CACHE = {}
 
-    attr_reader :model, :name, :debug_color
+    def self.find_or_cache(manifest:)
+      model_file = manifest.file_path + "/model/#{manifest.model}"
 
-    def initialize(manifest:, entity: nil)
-      @name = manifest.name
-      @model_file = model_file = manifest.file_path + "/model/#{manifest.model}"
+      type = File.basename(model_file).split(".").last.to_sym
 
-      @type = File.basename(@model_file).split(".").last.to_sym
-      @debug_color = Color.new(0.0, 1.0, 0.0)
+      if model = load_model_from_cache(type, model_file)
+        return model
+      else
+        model = IMICFPS::Model.new(file_path: model_file)
+        cache_model(type, model_file, model)
 
-      @model = nil
-
-      unless load_model_from_cache
-        @model = IMICFPS::Model.new(file_path: @model_file)
-
-        cache_model
+        return model
       end
-
-      return self
     end
 
-    def load_model_from_cache
-      found = false
-      if CACHE[@type].is_a?(Hash)
-        if CACHE[@type][@model_file]
-          @model = CACHE[@type][@model_file]#.dup # Don't know why, but adding .dup improves performance with Sponza (1 fps -> 20 fps)
-          puts "Used cached model for: #{@model_file.split('/').last}" if $window.config.get(:debug_options, :stats)
-          found = true
+    def self.load_model_from_cache(type, model_file)
+      if CACHE[type].is_a?(Hash)
+        if CACHE[type][model_file]
+          puts "Used cached model for: #{model_file.split('/').last}" if $window.config.get(:debug_options, :stats)
+          return CACHE[type][model_file]
         end
       end
 
-      return found
+      return false
     end
 
-    def cache_model
-      CACHE[@type] = {} unless CACHE[@type].is_a?(Hash)
-      CACHE[@type][@model_file] = @model
+    def self.cache_model(type, model_file, model)
+      CACHE[type] = {} unless CACHE[type].is_a?(Hash)
+      CACHE[type][model_file] = model
     end
   end
 end

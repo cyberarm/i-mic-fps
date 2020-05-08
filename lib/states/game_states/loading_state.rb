@@ -60,7 +60,7 @@ class IMICFPS
         hash = @assets[@asset_index]
         case hash[:type]
         when :model
-          ModelCache.new(manifest: hash[:manifest], entity: @dummy_entity)
+          ModelCache.find_or_cache(manifest: hash[:manifest])
         when :shader
           if window.config.get(:debug_options, :use_shaders)
             shader = Shader.new(name: hash[:name], includes_dir: "shaders/include", vertex: "shaders/vertex/#{hash[:name]}.glsl", fragment: "shaders/fragment/#{hash[:name]}.glsl")

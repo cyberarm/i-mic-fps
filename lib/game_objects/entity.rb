@@ -7,7 +7,7 @@ class IMICFPS
 
     attr_accessor :visible, :renderable, :backface_culling
     attr_accessor :position, :orientation, :scale, :velocity
-    attr_reader :name, :debug_color, :bounding_box, :drag, :camera, :manifest
+    attr_reader :name, :debug_color, :bounding_box, :drag, :camera, :manifest, :model
 
     def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: true, run_scripts: true)
       @manifest = manifest
@@ -16,7 +16,7 @@ class IMICFPS
         @position = map_entity.position.clone
         @orientation = map_entity.orientation.clone
         @scale = map_entity.scale.clone
-        @bound_model = bind_model
+        bind_model
       elsif spawnpoint
         @position = spawnpoint.position.clone
         @orientation = spawnpoint.orientation.clone
@@ -45,8 +45,7 @@ class IMICFPS
 
       setup
 
-      if @bound_model
-        @bound_model.model.entity = self
+      if @model
         @normalized_bounding_box = normalize_bounding_box_with_offset
 
         normalize_bounding_box
@@ -68,22 +67,15 @@ class IMICFPS
     end
 
     def bind_model
-      model = ModelCache.new(manifest: @manifest)
+      model = ModelCache.find_or_cache(manifest: @manifest)
+      raise "model isn't a model!" unless model.is_a?(Model)
 
-      raise "model isn't a model!" unless model.is_a?(ModelCache)
-      @bound_model = model
-      @bound_model.model.entity = self
+      @model = model
       @bounding_box = normalize_bounding_box_with_offset
-
-      return model
-    end
-
-    def model
-      @bound_model.model if @bound_model
     end
 
     def unbind_model
-      @bound_model = nil
+      @model = nil
     end
 
     def attach_camera(camera)
@@ -103,8 +95,6 @@ class IMICFPS
 
 
     def update
-      model.update
-
       unless at_same_position?
         Publisher.instance.publish(:entity_moved, nil, self)
         @bounding_box = normalize_bounding_box_with_offset if model
@@ -122,11 +112,11 @@ class IMICFPS
     end
 
     def normalize_bounding_box_with_offset
-      @bound_model.model.bounding_box.normalize_with_offset(self)
+      @model.bounding_box.normalize_with_offset(self)
     end
 
     def normalize_bounding_box
-      @bound_model.model.bounding_box.normalize(self)
+      @model.bounding_box.normalize(self)
     end
 
     def model_matrix

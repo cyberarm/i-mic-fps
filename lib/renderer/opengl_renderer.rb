@@ -186,7 +186,6 @@ class IMICFPS
 
     def draw_mesh(model)
       model.objects.each_with_index do |o, i|
-        glEnable(GL_CULL_FACE) if model.entity.backface_culling
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
         glShadeModel(GL_FLAT) unless o.faces.first[4]
@@ -238,7 +237,6 @@ class IMICFPS
           glDisable(GL_TEXTURE_2D)
         end
 
-        glDisable(GL_CULL_FACE) if model.entity.backface_culling
         glDisable(GL_COLOR_MATERIAL)
       end
     end
