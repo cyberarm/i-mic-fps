@@ -7,6 +7,7 @@ class IMICFPS
       @start_time = Gosu.milliseconds
       @time_to_live = 3_000
 
+      # SoundManager.sound_effect(SoundEffect::FadeIn, sound: SoundManager.sound("base", :shield_regen), duration: 3_000.0)
       window.needs_cursor = false
     end
 
@@ -32,6 +33,7 @@ class IMICFPS
 
         @title.draw
 
+        fill(Gosu::Color.rgba(0,0,0, 255 * (1.2 - fraction_left)))
       end
     end
 

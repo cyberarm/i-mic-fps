@@ -68,6 +68,7 @@ class IMICFPS
 
       @console.update if @show_console
       @overlay.update
+      SoundManager.update
 
       @number_of_vertices = 0
       @delta_time = Gosu.milliseconds

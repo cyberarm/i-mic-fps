@@ -29,7 +29,7 @@ class IMICFPS
 
       if window.config.get(:options, :fps)
         create_slot "FPS: #{Gosu.fps}"
-        create_slot "Frame time: #{Gosu.milliseconds - window.delta_time}ms" if window.config.get(:debug_options, :stats)
+        create_slot "Frame time: #{(Gosu.milliseconds - window.delta_time).to_s.rjust(3, "0")}ms" if window.config.get(:debug_options, :stats)
       end
 
       if window.config.get(:debug_options, :stats)
