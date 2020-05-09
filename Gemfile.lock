@@ -19,58 +19,25 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    async (1.26.0)
-      console (~> 1.0)
-      nio4r (~> 2.3)
-      timers (~> 4.1)
-    async-http (0.52.2)
-      async (~> 1.25)
-      async-io (~> 1.28)
-      async-pool (~> 0.2)
-      protocol-http (~> 0.19.0)
-      protocol-http1 (~> 0.13.0)
-      protocol-http2 (~> 0.14.0)
-    async-io (1.29.0)
-      async (~> 1.14)
-    async-pool (0.3.1)
-      async (~> 1.25)
-    async-websocket (0.14.0)
-      async-http (~> 0.51)
-      async-io (~> 1.23)
-      protocol-websocket (~> 0.7.0)
-    console (1.8.2)
     cri (2.1.0)
     excon (0.73.0)
     gosu (0.15.1)
     gosu (0.15.1-x64-mingw32)
     gosu_more_drawables (0.3.0)
     mini_portile2 (2.5.0)
-    nio4r (2.5.2)
     nokogiri (1.11.0.rc2)
       mini_portile2 (~> 2.5.0)
     nokogiri (1.11.0.rc2-x64-mingw32)
     ocra (1.3.11)
     opengl-bindings (1.6.10)
-    protocol-hpack (1.4.2)
-    protocol-http (0.19.0)
-    protocol-http1 (0.13.0)
-      protocol-http (~> 0.19)
-    protocol-http2 (0.14.0)
-      protocol-hpack (~> 1.4)
-      protocol-http (~> 0.18)
-    protocol-websocket (0.7.4)
-      protocol-http (~> 0.2)
-      protocol-http1 (~> 0.2)
     rake (13.0.1)
     rubyzip (2.3.0)
-    timers (4.3.0)
 
 PLATFORMS
   ruby
   x64-mingw32
 
 DEPENDENCIES
-  async-websocket
   cyberarm_engine!
   excon
   nokogiri (>= 1.11.0.rc1)
