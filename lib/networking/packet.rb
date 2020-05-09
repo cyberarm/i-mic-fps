@@ -1,17 +1,43 @@
 class IMICFPS
   module Networking
     class Packet
-      def initialize(type:, payload:)
+      HEADER_PACKER = "CnCnC"
+      HEADER_SIZE = 7
+
+      def self.from_stream(raw)
+        header = raw[ 0..HEADER_SIZE ].unpack(HEADER_PACKER)
+        payload = raw[HEADER_SIZE + 1..raw.length - 1]
+
+        new(header[1], [2], payload)
       end
 
-      def self.encode(packet)
-        "#{packet.type}|#{packet.payload}"
+      def initialize(sequence:, type:, payload:)
+        @sequence_number = sequence
+        @packet_type = type
+        @content_length = payload.length
+        @parity = calculate_parity
+        @payload = payload
       end
 
-      def self.decode(string)
-        split = string.split("|")
+      def header
+        [
+          Protocol::PROTOCOL_VERSION, # char
+          @sequence_number,           # uint16
+          @packet_type,               # char
+          @content_length,            # uint16
+          @parity,                    # char
+        ].unpack(HEADER_PACKER)
+      end
 
-        Packet.new(split.first, split.last)
+      def calculate_parity
+        return 0
+      end
+
+      def encode
+        "#{header}#{@payload}"
+      end
+
+      def decode(payload)
       end
     end
   end

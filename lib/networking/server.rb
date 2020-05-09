@@ -1,8 +1,8 @@
 class IMICFPS
   module Networking
-    MAX_CLIENTS = 32
-
     class Server
+      MAX_CLIENTS = 32
+
       attr_reader :hostname, :port, :max_clients, :clients
       def initialize(hostname:, port:, max_clients: MAX_CLIENTS)
         @hostname = hostname

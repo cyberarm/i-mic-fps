@@ -1,7 +1,6 @@
 class IMICFPS
   module Networking
     module Protocol
-      MAX_CLIENTS = 32
       MAX_PACKET_SIZE = 1024
       PROTOCOL_VERSION = 0 # int
       HEARTBEAT_INTERVAL = 250 # ms
@@ -22,11 +21,13 @@ class IMICFPS
         heartbeat
 
         # game data packets
-        client_connected
-        client_disconnected
-        entity_move
+        snapshot
+        player_joined
+        player_left
         play_sound_effect
         create_particle
+        create_entity
+        remove_entity
       }
 
       # emulate c-like enum

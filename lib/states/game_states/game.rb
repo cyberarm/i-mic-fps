@@ -109,13 +109,5 @@ eos
 
       @camera.button_up(id)
     end
-
-    def needs_cursor?
-      @needs_cursor
-    end
-
-    def lose_focus
-      puts 'Bye'
-    end
   end
 end

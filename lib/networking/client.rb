@@ -1,15 +1,12 @@
 class IMICFPS
   module Networking
     class Client
-      attr_reader :uuid,
-                  :packets_sent, :packets_received,
+      attr_reader :packets_sent, :packets_received,
                   :data_sent, :data_received
       def initialize(socket:)
         @socket = socket
         @write_queue = []
         @read_queue = []
-
-        @uuid = "not_defined"
 
         @packets_sent = 0
         @packets_received = 0
@@ -18,9 +15,23 @@ class IMICFPS
       end
 
       def read
+        data = @socket.recvfrom_nonblock(Protocol::MAX_PACKET_SIZE)
+        @read_queue << Packet.decode(data)
+
+        @packets_received += 1
+        @data_received += data.length
+        rescue IO::WaitReadable
       end
 
       def write
+        @write_queue.each do |packet|
+          raw = Packet.encode
+          @socket.send(raw, 0)
+          @write_queue.delete(packet)
+
+          @packets_sent += 1
+          @data_sent += raw.length
+        end
       end
 
       def puts(packet)
@@ -28,7 +39,7 @@ class IMICFPS
       end
 
       def gets
-        @socket.recvfrom_nonblock(Protocol::MAX_PACKET_SIZE)
+        @read_queue.shift
       end
 
       def close
