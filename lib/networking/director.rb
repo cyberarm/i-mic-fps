@@ -1,29 +1,24 @@
 class IMICFPS
   module Networking
     class Director
-      attr_reader :mode, :hostname, :port, :tick_rate, :storage
-      def initialize(mode:, hostname:, port:, interface:, state: nil, tick_rate: 2)
-        @mode = mode
-        @hostname = hostname
+      attr_reader :address, :port, :tick_rate, :storage, :map
+      def initialize(address: DEFAULT_SERVER_HOST, port: DEFAULT_SERVER_PORT, tick_rate: 2)
+        @address = address
         @port = port
-        @state = state
         @tick_rate = (1000.0 / tick_rate) / 1000.0
 
-        case @mode
-        when :server
-          @server = interface.new(hostname: @hostname, port: @port)
-        when :connection
-          @connection = interface.new(hostname: @hostname, port: @port)
-        when :memory
-          @server = interface[:server].new(hostname: @hostname, port: @port)
-          @connection = interface[:connection].new(hostname: @hostname, port: @port)
-        else
-          raise ArgumentError, "Expected mode to be :server, :connection, or :memory, not #{mode.inspect}"
-        end
+        @server = Server.new(address: @address, port: @port, max_peers: DEFAULT_PEER_LIMIT)
+        @server.bind
 
-        @last_tick_time = milliseconds
+        @last_tick_time = Networking.milliseconds
         @directing = true
         @storage = {}
+        @map = nil
+      end
+
+      def load_map(map_parser:)
+        # TODO: send map_change to clients
+        @map = Map.new(map_parser: map_parser)
       end
 
       def run
@@ -33,28 +28,24 @@ class IMICFPS
 
             tick(dt)
 
-            @server.update if @server
-            @connection.update if @connection
-
             @last_tick_time = milliseconds
             sleep(@tick_rate)
           end
         end
       end
 
-      def tick(dt)
+      def tick(delta_time)
+        if @map
+          Publisher.instance.publish(:tick, delta_time * 1000.0)
+
+          @map.update
+          @server.update
+        end
       end
 
       def shutdown
         @directing = false
-
-        @clients.each(&:close)
-        @server.update if @server
-        @connection.update if @connection
-      end
-
-      def milliseconds
-        Process.clock_gettime(Process::CLOCK_MONOTONIC)
+        @server.close
       end
     end
   end

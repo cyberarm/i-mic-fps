@@ -9,7 +9,11 @@ class IMICFPS
       @player = @map.find_entity_by(name: "character")
       @camera = Camera.new(position: @player.position.clone)
       @camera.attach_to(@player)
-      @director = Networking::Director.new(mode: :memory, hostname: "i-mic.rubyclan.org", port: 56789, interface: { server: Networking::MemoryServer, connection: Networking::MemoryConnection }, state: self)
+      @director = Networking::Director.new
+      @director.load_map(map_parser: @options[:map_parser])
+
+      @connection = Networking::Connection.new(address: "localhost", port: Networking::DEFAULT_SERVER_PORT)
+      @connection.connect
 
       @crosshair = Crosshair.new
       @hud = HUD.new(@player)
@@ -35,15 +39,13 @@ class IMICFPS
     def update
       update_text
 
-      Publisher.instance.publish(:tick, Gosu.milliseconds - window.delta_time)
-
-      @map.update
-
       control_player
       @hud.update
 
       @camera.update
+      @connection.update
       @director.tick(window.dt)
+      @map.update
 
       if window.config.get(:debug_options, :stats)
         @text.text = update_text

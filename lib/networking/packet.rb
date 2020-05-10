@@ -1,22 +1,32 @@
 class IMICFPS
   module Networking
     class Packet
-      HEADER_PACKER = "CnCnC"
-      HEADER_SIZE = 7
+      HEADER_PACKER = "CnCnCC"
+      HEADER_SIZE = 8
 
       def self.from_stream(raw)
         header = raw[ 0..HEADER_SIZE ].unpack(HEADER_PACKER)
-        payload = raw[HEADER_SIZE + 1..raw.length - 1]
+        payload = raw[HEADER_SIZE..raw.length - 1]
 
-        new(header[1], [2], payload)
+        new(peer_id: header.last, sequence: header[1], type: header[2], payload: payload)
       end
 
-      def initialize(sequence:, type:, payload:)
+      # TODO: Handle splitting big packets into smaller ones
+      def self.splinter(packet)
+        packets = [packet]
+
+        return packets
+      end
+
+      attr_reader :peer_id, :sequence_number, :packet_type, :parity, :payload, :content_length
+      def initialize(peer_id:, sequence:, type:, payload:)
+        @peer_id = peer_id
         @sequence_number = sequence
         @packet_type = type
-        @content_length = payload.length
         @parity = calculate_parity
         @payload = payload
+
+        @content_length = payload.length
       end
 
       def header
@@ -26,7 +36,8 @@ class IMICFPS
           @packet_type,               # char
           @content_length,            # uint16
           @parity,                    # char
-        ].unpack(HEADER_PACKER)
+          @peer_id,                 # char
+        ].pack(HEADER_PACKER)
       end
 
       def calculate_parity
@@ -38,6 +49,7 @@ class IMICFPS
       end
 
       def decode(payload)
+        payload
       end
     end
   end
