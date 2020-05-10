@@ -1,5 +1,6 @@
 class IMICFPS
   class Texture
+    DEFAULT_TEXTURE = "#{IMICFPS.assets_path}/base/shared/textures/default.png"
     include CommonMethods
 
     CACHE = {}
@@ -8,6 +9,10 @@ class IMICFPS
       CACHE.values.each do |id|
         glDeleteTextures(id)
       end
+    end
+
+    def self.from_cache(path, retro)
+      return CACHE.dig("#{path}?retro=#{retro}")
     end
 
     attr_reader :id
@@ -23,33 +28,44 @@ class IMICFPS
         end
       end
 
-      @id = create_from_image(path ? path : image)
-    end
+      @path = path
 
-    def from_cache(path)
-      CACHE[path] = create_from_image(path) unless CACHE[path]
+      if @path
+        unless File.exist?(@path)
+          warn "Missing texture at: #{@path}" if window.config.get(:debug_options, :stats)
+          @retro = true # override retro setting
+          @path = DEFAULT_TEXTURE
+        end
 
-      return CACHE[path]
-    end
+        if texture = Texture.from_cache(@path, @retro)
+          @id = texture.id
+          puts "Using cached texture: #{@path}" if window.config.get(:debug_options, :stats)
+          return
+        end
 
-    def create_from_image(path_or_image)
-      puts "Allocating texture for: #{path_or_image}" if window.config.get(:debug_options, :stats)
-
-      texture = nil
-      if path_or_image.is_a?(Gosu::Image)
-        texture = path_or_image
+        puts "Allocating texture for: #{@path}" if window.config.get(:debug_options, :stats)
+        image = load_image(@path)
+        @id = create_from_image(image)
       else
-        texture = Gosu::Image.new(path_or_image, retro: false)
+        puts "Allocating texture for: #{image}" if window.config.get(:debug_options, :stats)
+        @id = create_from_image(image)
       end
+    end
 
-      array_of_pixels = texture.to_blob
+    def load_image(path)
+      CACHE["#{path}?retro=#{@retro}"] = self
+      Gosu::Image.new(path, retro: @retro)
+    end
+
+    def create_from_image(image)
+      array_of_pixels = image.to_blob
 
       tex_names_buf = ' ' * 4
       glGenTextures(1, tex_names_buf)
       texture_id = tex_names_buf.unpack('L2').first
 
       glBindTexture(GL_TEXTURE_2D, texture_id)
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, array_of_pixels)
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, array_of_pixels)
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST) if @retro
