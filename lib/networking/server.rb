@@ -25,7 +25,7 @@ class IMICFPS
       def create_peer(address:, port:)
         @peers.each_with_index do |peer, i|
           unless peer
-            new_peer = Peer.new(peer_id: i + 1, address: address, port: port)
+            new_peer = Peer.new(id: i + 1, address: address, port: port)
             @peers[i + 1] = new_peer
 
             return new_peer
@@ -36,7 +36,7 @@ class IMICFPS
       end
 
       def get_peer(peer_id)
-        @peers[peer_id + 1]
+        @peers[peer_id]
       end
 
       def remove_peer(peer_id)
@@ -52,7 +52,7 @@ class IMICFPS
         if peer = get_peer(peer_id)
           packets = Packet.splinter(packet)
 
-          packets.each { |pkt| peer.write_queue.add(pkt) }
+          packets.each { |pkt| peer.packet_write_queue.push(pkt) }
         end
       end
 
@@ -60,7 +60,7 @@ class IMICFPS
         @peers.each do |peer|
           next unless peer
 
-          send_packet(peer.peer_id, packet)
+          send_packet(peer.id, packet)
         end
       end
 
@@ -82,12 +82,23 @@ class IMICFPS
           peer = nil
 
           # initial connection
-          if packet.peer_id == 0
+          if packet.peer_id == 0 && packet.type == Protocol::CONNECT
             peer = create_peer(address: addr_info[2], port: addr_info[1])
+            send_packet(
+              peer.id,
+              Packet.new(
+                peer_id: 0,
+                sequence: 0,
+                type: Protocol::VERIFY_CONNECT,
+                payload: [peer.id].pack("C")
+              )
+            )
           else
-            peer = get_peer(peer.peer_id)
+            peer = get_peer(packet.peer_id)
           end
         end
+
+        # broadcast_packet(Packet.new(peer_id: 0, sequence: 0, type: Protocol::HEARTBEAT, payload: [Networking.milliseconds].pack("G")))
       end
 
       def close

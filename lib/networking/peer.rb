@@ -1,11 +1,11 @@
 class IMICFPS
   module Networking
     class Peer
-      attr_reader :address, :port, :packet_read_queue, :packet_write_queue
+      attr_reader :id, :address, :port, :packet_read_queue, :packet_write_queue
       attr_accessor :total_packets_sent, :total_packets_received, :total_data_sent, :total_data_received, :last_read_time, :last_write_time
-      def initialize(peer_id:, address:, port:)
+      def initialize(id:, address:, port:)
+        @id = id
         @address, @port = address, port
-        @peer_id = peer_id
 
         @packet_write_queue = []
         @packet_read_queue = []

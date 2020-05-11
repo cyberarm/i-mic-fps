@@ -18,7 +18,7 @@ class IMICFPS
 
           if true#packet.valid?
             pairs << [packet, addr]
-            @buffer.delete(buffer)
+            @buffer.delete(hash)
           else
             puts "Invalid packet: #{packet}"
             @buffer.delete(buffer)

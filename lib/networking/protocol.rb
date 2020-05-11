@@ -16,6 +16,7 @@ class IMICFPS
 
         # protocol control packets
         connect
+        verify_connect
         disconnect
         authenticate
         heartbeat

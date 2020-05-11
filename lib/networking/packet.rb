@@ -18,11 +18,11 @@ class IMICFPS
         return packets
       end
 
-      attr_reader :peer_id, :sequence_number, :packet_type, :parity, :payload, :content_length
+      attr_reader :peer_id, :sequence_number, :type, :parity, :payload, :content_length
       def initialize(peer_id:, sequence:, type:, payload:)
         @peer_id = peer_id
         @sequence_number = sequence
-        @packet_type = type
+        @type = type
         @parity = calculate_parity
         @payload = payload
 
@@ -33,10 +33,10 @@ class IMICFPS
         [
           Protocol::PROTOCOL_VERSION, # char
           @sequence_number,           # uint16
-          @packet_type,               # char
+          @type,                      # char
           @content_length,            # uint16
           @parity,                    # char
-          @peer_id,                 # char
+          @peer_id,                   # char
         ].pack(HEADER_PACKER)
       end
 

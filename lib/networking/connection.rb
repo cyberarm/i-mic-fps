@@ -11,6 +11,8 @@ class IMICFPS
         @read_buffer = ReadBuffer.new
         @packet_write_queue = []
 
+        @peer_id = 0
+
         @last_read_time = Networking.milliseconds
         @last_write_time = Networking.milliseconds
 
@@ -48,10 +50,16 @@ class IMICFPS
 
         write
 
-        # puts  "#{Networking.milliseconds} Total sent: #{@total_packets_sent} packets, #{@total_data_sent} data"
-        # puts  "#{Networking.milliseconds} Total received: #{@total_packets_received} packets, #{@total_data_received} data"
+        # puts "#{Networking.milliseconds} Total sent: #{@total_packets_sent} packets, #{@total_data_sent} data"
+        # puts "#{Networking.milliseconds} Total received: #{@total_packets_received} packets, #{@total_data_received} data"
         @read_buffer.reconstruct_packets.each do |packet, addr_info|
-          # @packet_write_queue.push( packet )
+          if packet.peer_id == 0 && packet.type == Protocol::VERIFY_CONNECT
+            @peer_id = packet.payload.unpack1("C")
+          end
+        end
+
+        if @peer_id > 0 && Networking.milliseconds - @last_read_time >= Protocol::HEARTBEAT_INTERVAL
+          send_packet(Packet.new(peer_id: @peer_id, sequence: 0, type: Protocol::HEARTBEAT, payload: ""))
         end
       end
 

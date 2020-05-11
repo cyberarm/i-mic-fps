@@ -15,7 +15,7 @@ class IMICFPS
     HARD_PEER_LIMIT = 254
 
     def self.milliseconds
-      Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      Process.clock_gettime(Process::CLOCK_MONOTONIC, :millisecond)
     end
 
     # https://github.com/jpignata/blog/blob/master/articles/multicast-in-ruby.md
