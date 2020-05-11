@@ -10,12 +10,14 @@ class IMICFPS
       end
 
       def reconstruct_packets
-        packets = []
+        pairs = []
 
-        @buffer.each do |buffer, addr_info|
+        @buffer.each do |hash|
+          buffer, addr = hash[:buffer], hash[:addr_info]
           packet = Packet.from_stream(buffer)
 
-          if packet.valid?
+          if true#packet.valid?
+            pairs << [packet, addr]
             @buffer.delete(buffer)
           else
             puts "Invalid packet: #{packet}"
@@ -23,7 +25,7 @@ class IMICFPS
           end
         end
 
-        return packets
+        return pairs
       end
     end
   end

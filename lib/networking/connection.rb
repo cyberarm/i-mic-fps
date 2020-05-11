@@ -9,7 +9,7 @@ class IMICFPS
 
 
         @read_buffer = ReadBuffer.new
-        @write_queue = []
+        @packet_write_queue = []
 
         @last_read_time = Networking.milliseconds
         @last_write_time = Networking.milliseconds
@@ -37,6 +37,9 @@ class IMICFPS
       end
 
       def send_packet( packet )
+        Packet.splinter(packet).each do |pkt|
+          @packet_write_queue << pkt
+        end
       end
 
       def update
@@ -45,7 +48,10 @@ class IMICFPS
 
         write
 
-        @read_buffer.reconstruct_packets.each do |packet|
+        # puts  "#{Networking.milliseconds} Total sent: #{@total_packets_sent} packets, #{@total_data_sent} data"
+        # puts  "#{Networking.milliseconds} Total received: #{@total_packets_received} packets, #{@total_data_received} data"
+        @read_buffer.reconstruct_packets.each do |packet, addr_info|
+          # @packet_write_queue.push( packet )
         end
       end
 
@@ -67,8 +73,11 @@ class IMICFPS
       end
 
       def write
-        while(packet = @write_queue.shift)
-          @socket.send( packet.encode, 0, @address, @port )
+        while(packet = @packet_write_queue.shift)
+          @socket.send(packet.encode, 0, @address, @port)
+
+          @total_data_sent += packet.encode.length
+          @total_packets_sent += 1
         end
       end
     end

@@ -31,6 +31,8 @@ class IMICFPS
             return new_peer
           end
         end
+
+        return nil
       end
 
       def get_peer(peer_id)
@@ -56,6 +58,8 @@ class IMICFPS
 
       def broadcast_packet(packet)
         @peers.each do |peer|
+          next unless peer
+
           send_packet(peer.peer_id, packet)
         end
       end
@@ -64,8 +68,25 @@ class IMICFPS
         while(read)
         end
 
+        @peers.each do |peer|
+          next unless peer
+
+          peer.packet_write_queue.each do |packet|
+            write(peer, packet)
+            peer.packet_write_queue.delete(packet)
+          end
+        end
+
         # "deliver" packets to peers, record stats to peers
-        @read_buffer.reconstruct_packets.each do |packet|
+        @read_buffer.reconstruct_packets.each do |packet, addr_info|
+          peer = nil
+
+          # initial connection
+          if packet.peer_id == 0
+            peer = create_peer(address: addr_info[2], port: addr_info[1])
+          else
+            peer = get_peer(peer.peer_id)
+          end
         end
       end
 
