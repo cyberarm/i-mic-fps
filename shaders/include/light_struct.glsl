@@ -1,15 +1,11 @@
-const int MAX_LIGHTS = 2;
-
 struct Light {
-  float end;
-  float type;
+  int type;
+  vec3 direction;
   vec3 position;
 
   vec3 diffuse;
   vec3 ambient;
   vec3 specular;
-
-  vec3 direction;
 
   float intensity;
 };

@@ -8,15 +8,6 @@ class IMICFPS
         window.needs_cursor = false
         @manifest = @options[:manifest]
 
-        if window.config.get(:debug_options, :use_shaders) && !Shader.available?("default")
-          Shader.new(
-            name: "default",
-            includes_dir: "shaders/include",
-            vertex: "shaders/vertex/default.glsl",
-            fragment: "shaders/fragment/default.glsl"
-          )
-        end
-
         @map = ProtoMap.new
         Publisher.new
 
@@ -27,7 +18,7 @@ class IMICFPS
         @crosshair = Crosshair.new(color: Gosu::Color.rgba(100, 200, 255, 100))
 
         @lights = []
-        @light = Light.new(id: available_light, position: Vector.new, diffuse: Vector.new(1, 1, 1, 1))
+        @light = Light.new(type: Light::DIRECTIONAL, id: available_light, position: Vector.new, diffuse: Vector.new(1, 1, 1, 1))
         @lights << @light
 
         @camera = Camera.new(position: Vector.new(0, 1.5, 5), orientation: Vector.forward)

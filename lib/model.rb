@@ -119,11 +119,6 @@ class IMICFPS
       buffer = " " * 4
       glGenBuffers(1, buffer)
       @uvs_buffer_id = buffer.unpack('L2').first
-
-      @textures_buffer_id = nil
-      buffer = " " * 4
-      glGenBuffers(1, buffer)
-      @textures_buffer_id = buffer.unpack('L2').first
     end
 
     def populate_vertex_buffer
@@ -131,7 +126,6 @@ class IMICFPS
       colors  = []
       norms   = []
       uvs     = []
-      tex_ids = []
 
       @faces.each do |face|
         pos     << face.vertices.map { |vert| [vert.x, vert.y, vert.z] }
@@ -140,7 +134,6 @@ class IMICFPS
 
         if has_texture?
           uvs     << face.uvs.map    { |vert| [vert.x, vert.y, vert.z] }
-          tex_ids << face.material.texture_id ? face.material.texture_id.to_f : -1.0
         end
       end
 
@@ -156,9 +149,6 @@ class IMICFPS
       if has_texture?
         glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
         glBufferData(GL_ARRAY_BUFFER, uvs.flatten.size * Fiddle::SIZEOF_FLOAT, uvs.flatten.pack("f*"), GL_STATIC_DRAW)
-
-        # glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
-        # glBufferData(GL_ARRAY_BUFFER, tex_ids.flatten.size * Fiddle::SIZEOF_FLOAT, tex_ids.flatten.pack("f*"), GL_STATIC_DRAW)
       end
 
       glBindBuffer(GL_ARRAY_BUFFER, 0)
@@ -192,11 +182,6 @@ class IMICFPS
         glBindBuffer(GL_ARRAY_BUFFER, @uvs_buffer_id)
         #                     inUV
         glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 0, nil)
-        gl_error?
-        # texture ids
-        glBindBuffer(GL_ARRAY_BUFFER, @textures_buffer_id)
-        #                     inTextureID
-        glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, 0, nil)
         gl_error?
       end
 

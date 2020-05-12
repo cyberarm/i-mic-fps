@@ -2,9 +2,10 @@ class IMICFPS
   class Light
     DIRECTIONAL = 0
     POINT = 1
+    SPOT = 2
 
     attr_reader :light_id
-    attr_accessor :type, :ambient, :diffuse, :specular, :position, :intensity
+    attr_accessor :type, :ambient, :diffuse, :specular, :position, :direction, :intensity
     def initialize(
                     id:,
                     type: Light::POINT,
@@ -12,6 +13,7 @@ class IMICFPS
                     diffuse: Vector.new(1, 1, 1),
                     specular: Vector.new(0.2, 0.2, 0.2),
                     position: Vector.new(0, 0, 0),
+                    direction: Vector.new(0, 0, 0),
                     intensity: 1
                   )
       @light_id = id
@@ -21,6 +23,7 @@ class IMICFPS
       @diffuse  = diffuse
       @specular = specular
       @position = position
+      @direction = direction
 
       @intensity = intensity
     end

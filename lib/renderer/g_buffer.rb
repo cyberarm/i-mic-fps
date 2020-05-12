@@ -127,6 +127,9 @@ class IMICFPS
       glBufferData(GL_ARRAY_BUFFER, @uvs.size * Fiddle::SIZEOF_FLOAT, @uvs.pack("f*"), GL_STATIC_DRAW);
       glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, nil)
 
+      glEnableVertexAttribArray(0)
+      glEnableVertexAttribArray(1)
+
       glBindVertexArray(0)
     end
 

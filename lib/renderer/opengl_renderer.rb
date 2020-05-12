@@ -16,26 +16,15 @@ class IMICFPS
     end
 
     def render(camera, lights, entities)
-      if window.config.get(:debug_options, :use_shaders) && Shader.available?("default") && Shader.available?("render_screen")
+      if window.config.get(:debug_options, :use_shaders) && Shader.available?("g_buffer") && Shader.available?("deferred_lighting")
         @g_buffer.bind_for_writing
         gl_error?
 
         glClearColor(0.0, 0.0, 0.0, 0.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        Shader.use("default") do |shader|
-          lights.each_with_index do |light, i|
-            shader.uniform_float("lights[#{i}.end", -1.0);
-            shader.uniform_float("lights[#{i}.type", light.type);
-            shader.uniform_vec3("lights[#{i}].position", light.position)
-            shader.uniform_vec3("lights[#{i}].ambient", light.ambient)
-            shader.uniform_vec3("lights[#{i}].diffuse", light.diffuse)
-            shader.uniform_vec3("lights[#{i}].specular", light.specular)
-          end
+        Shader.use("g_buffer") do |shader|
           gl_error?
-
-
-          shader.uniform_integer("totalLights", lights.size)
 
           entities.each do |entity|
             next unless entity.visible && entity.renderable
@@ -54,7 +43,6 @@ class IMICFPS
         @g_buffer.unbind_framebuffer
         gl_error?
 
-
         @g_buffer.bind_for_reading
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0)
 
@@ -65,7 +53,7 @@ class IMICFPS
         @g_buffer.unbind_framebuffer
         gl_error?
       else
-        puts "Shader 'default' failed to compile, using immediate mode for rendering..." unless @@immediate_mode_warning
+        puts "Shaders are disabled or failed to compile, using immediate mode for rendering..." unless @@immediate_mode_warning
         @@immediate_mode_warning = true
 
         gl_error?
@@ -94,7 +82,7 @@ class IMICFPS
       gl_error?
     end
 
-    def lighting(lights)
+    def copy_g_buffer_to_screen
       @g_buffer.set_read_buffer(:position)
       glBlitFramebuffer(0, 0, @g_buffer.width, @g_buffer.height,
                         0, 0, @g_buffer.width / 2, @g_buffer.height / 2,
@@ -116,15 +104,50 @@ class IMICFPS
                         GL_COLOR_BUFFER_BIT, GL_LINEAR)
     end
 
+    def lighting(lights)
+      Shader.use("deferred_lighting") do |shader|
+        lights.each_with_index do |light, i|
+          shader.uniform_float("light.type", light.type);
+          shader.uniform_vec3("light.direction", light.direction)
+          shader.uniform_vec3("light.position", light.position)
+          shader.uniform_vec3("light.ambient", light.ambient)
+          shader.uniform_vec3("light.diffuse", light.diffuse)
+          shader.uniform_vec3("light.specular", light.specular)
+
+          glBindVertexArray(@g_buffer.screen_vbo)
+
+          glDisable(GL_DEPTH_TEST)
+          glEnable(GL_BLEND)
+
+          glActiveTexture(GL_TEXTURE0)
+          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:diffuse))
+
+          glActiveTexture(GL_TEXTURE1)
+          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:position))
+
+          glActiveTexture(GL_TEXTURE2)
+          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:texcoord))
+
+          glActiveTexture(GL_TEXTURE3)
+          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:normal))
+
+          glActiveTexture(GL_TEXTURE4)
+          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:depth))
+
+          glDrawArrays(GL_TRIANGLES, 0, @g_buffer.vertices.size)
+
+          glBindVertexArray(0)
+        end
+      end
+    end
+
     def post_processing
     end
 
     def render_framebuffer
-      if Shader.available?("render_screen")
-        Shader.use("render_screen") do |shader|
+      if Shader.available?("deferred_lighting")
+        Shader.use("deferred_lighting") do |shader|
           glBindVertexArray(@g_buffer.screen_vbo)
-          glEnableVertexAttribArray(0)
-          glEnableVertexAttribArray(1)
 
           glDisable(GL_DEPTH_TEST)
           glEnable(GL_BLEND)
@@ -134,8 +157,6 @@ class IMICFPS
 
           glDrawArrays(GL_TRIANGLES, 0, @g_buffer.vertices.size)
 
-          glDisableVertexAttribArray(1)
-          glDisableVertexAttribArray(0)
           glBindVertexArray(0)
         end
       end
