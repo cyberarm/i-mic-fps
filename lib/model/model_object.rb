@@ -1,16 +1,17 @@
 class IMICFPS
   class Model
     class ModelObject
-      attr_reader :id, :name, :vertices, :textures, :normals, :bounding_box, :debug_color
+      attr_reader :id, :name, :vertices, :uvs, :normals, :materials, :bounding_box, :debug_color
       attr_accessor :faces, :scale
 
       def initialize(id, name)
         @id = id
         @name = name
         @vertices = []
-        @textures = []
+        @uvs      = []
         @normals  = []
         @faces    = []
+        @materials = []
         @bounding_box = BoundingBox.new
         @debug_color = Color.new(1.0,1.0,1.0)
 
@@ -23,13 +24,17 @@ class IMICFPS
         #   material = index[3]
       end
 
+      def has_texture?
+        @materials.find { |mat| mat.texture_id } ? true : false
+      end
+
       def reflatten
         @vertices_list = nil
-        @textures_list = nil
+        @uvs_list = nil
         @normals_list = nil
 
         flattened_vertices
-        flattened_textures
+        flattened_uvs
         flattened_normals
       end
 
@@ -59,8 +64,8 @@ class IMICFPS
         @vertices_list_size
       end
 
-      def flattened_textures
-        unless @textures_list
+      def flattened_uvs
+        unless @uvs_list
           list = []
           @faces.each do |face|
             face.uvs.each do |v|
@@ -71,11 +76,11 @@ class IMICFPS
             end
           end
 
-          @textures_list_size = list.size
-          @textures_list = list.pack("f*")
+          @uvs_list_size = list.size
+          @uvs_list = list.pack("f*")
         end
 
-        return @textures_list
+        return @uvs_list
       end
 
       def flattened_normals

@@ -22,10 +22,16 @@ class IMICFPS
 
       if path.is_a?(Array)
         if path.size > 1
+          # Try loading from models textures folder
           path = "#{GAME_ROOT_PATH}/assets/#{path.join("/")}"
         else
           path = path.first
         end
+      end
+
+      # Try searching shared textures folder
+      unless File.exist?(path)
+        path = "#{IMICFPS.assets_path}/base/shared/textures/#{path.split("/").last}"
       end
 
       @path = path

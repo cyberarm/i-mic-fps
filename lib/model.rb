@@ -47,7 +47,6 @@ class IMICFPS
       @materials.each do |key, material|
         if material.texture_id
           @has_texture = true
-          @textured_material = key
         end
       end
 

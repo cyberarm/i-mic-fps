@@ -148,8 +148,6 @@ class IMICFPS
       glEnableVertexAttribArray(1)
       glEnableVertexAttribArray(2)
       if model.has_texture?
-        glBindTexture(GL_TEXTURE_2D, model.materials[model.textured_material].texture_id)
-
         glEnableVertexAttribArray(3)
         glEnableVertexAttribArray(4)
       end
@@ -167,7 +165,15 @@ class IMICFPS
         glLineWidth(1)
       end
 
-      glDrawArrays(GL_TRIANGLES, 0, model.faces.count * 3)
+      offset = 0
+      model.objects.each do |object|
+        if object.has_texture?
+          glBindTexture(GL_TEXTURE_2D, object.materials.find { |mat| mat.texture_id }.texture_id)
+        end
+
+        glDrawArrays(GL_TRIANGLES, offset, object.faces.count * 3)
+        offset += object.faces.count * 3
+      end
       window.number_of_vertices += model.faces.count * 3
 
       if model.has_texture?
@@ -194,11 +200,11 @@ class IMICFPS
         glEnableClientState(GL_COLOR_ARRAY)
         glEnableClientState(GL_NORMAL_ARRAY)
 
-        if model.has_texture?
+        if o.has_texture?
           glEnable(GL_TEXTURE_2D)
-          glBindTexture(GL_TEXTURE_2D, model.materials[model.textured_material].texture_id)
+          glBindTexture(GL_TEXTURE_2D, o.materials.find { |mat| mat.texture_id }.texture_id)
           glEnableClientState(GL_TEXTURE_COORD_ARRAY)
-          glTexCoordPointer(3, GL_FLOAT, 0, o.flattened_textures)
+          glTexCoordPointer(3, GL_FLOAT, 0, o.flattened_uvs)
         end
 
         glVertexPointer(4, GL_FLOAT, 0, o.flattened_vertices)
@@ -232,7 +238,7 @@ class IMICFPS
         glDisableClientState(GL_COLOR_ARRAY)
         glDisableClientState(GL_NORMAL_ARRAY)
 
-        if model.has_texture?
+        if o.has_texture?
           glDisableClientState(GL_TEXTURE_COORD_ARRAY)
           glDisable(GL_TEXTURE_2D)
         end

@@ -150,8 +150,8 @@ class IMICFPS
       else
         raise
       end
-      @model.current_object.textures << texture
       @model.uvs << texture
+      @model.current_object.uvs << texture
     end
   end
 end

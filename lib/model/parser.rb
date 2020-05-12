@@ -55,6 +55,7 @@ class IMICFPS
 
       def set_material(name)
         @model.current_material = name
+        @model.current_object.materials << current_material
       end
 
       def add_material(name, material)
