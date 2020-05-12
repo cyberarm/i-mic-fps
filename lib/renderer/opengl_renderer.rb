@@ -43,7 +43,6 @@ class IMICFPS
             shader.uniform_transform("projection", camera.projection_matrix)
             shader.uniform_transform("view", camera.view_matrix)
             shader.uniform_transform("model", entity.model_matrix)
-            shader.uniform_boolean("hasTexture", entity.model.has_texture?)
             shader.uniform_vec3("cameraPosition", camera.position)
 
             gl_error?
@@ -167,8 +166,12 @@ class IMICFPS
 
       offset = 0
       model.objects.each do |object|
+        shader.uniform_boolean("hasTexture", object.has_texture?)
+
         if object.has_texture?
           glBindTexture(GL_TEXTURE_2D, object.materials.find { |mat| mat.texture_id }.texture_id)
+        else
+          glBindTexture(GL_TEXTURE_2D, 0)
         end
 
         glDrawArrays(GL_TRIANGLES, offset, object.faces.count * 3)

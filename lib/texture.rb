@@ -30,7 +30,7 @@ class IMICFPS
       end
 
       # Try searching shared textures folder
-      unless File.exist?(path)
+      if path && !File.exist?(path)
         path = "#{IMICFPS.assets_path}/base/shared/textures/#{path.split("/").last}"
       end
 
