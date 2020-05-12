@@ -48,6 +48,7 @@ class IMICFPS
       get_normals(geometry_id, mesh)
       get_texture_coordinates(geometry_id, mesh)
 
+      project_node(geometry_name)
       build_faces(geometry_id, mesh)
     end
 
@@ -76,6 +77,21 @@ class IMICFPS
     end
 
     def get_texture_coordinates(id, mesh)
+    end
+
+    def project_node(name)
+      @collada.css("library_visual_scenes visual_scene node").each do |node|
+        if node.attributes["name"].value == name
+          transform = Transform.new( node.at_css("matrix").children.first.to_s.split(" ").map { |f| Float(f) } )
+
+          @model.current_object.vertices.each do |vert|
+            v = vert.multiply_transform(transform)
+            vert.x, vert.y, vert.z, vert.w = v.x, v.y, v.z, v.w
+          end
+
+          break
+        end
+      end
     end
 
     def build_faces(id, mesh)
