@@ -5,12 +5,12 @@ class IMICFPS
     attr_reader :opengl_renderer, :bounding_box_renderer
 
     def initialize
-      # @bounding_box_renderer = BoundingBoxRenderer.new(map: map)
+      @bounding_box_renderer = BoundingBoxRenderer.new
       @opengl_renderer = OpenGLRenderer.new
     end
 
     def preload_default_shaders
-      shaders = ["g_buffer", "deferred_lighting"]
+      shaders = ["g_buffer", "lighting"]
       shaders.each do |shader|
         Shader.new(
           name: shader,
@@ -26,6 +26,7 @@ class IMICFPS
       glEnable(GL_DEPTH_TEST)
 
       @opengl_renderer.render(camera, lights, entities)
+      @bounding_box_renderer.render(entities) if window.config.get(:debug_options, :boundingboxes)
     end
 
     def canvas_size_changed

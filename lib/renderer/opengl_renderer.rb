@@ -16,7 +16,7 @@ class IMICFPS
     end
 
     def render(camera, lights, entities)
-      if window.config.get(:debug_options, :use_shaders) && Shader.available?("g_buffer") && Shader.available?("deferred_lighting")
+      if window.config.get(:debug_options, :use_shaders) && Shader.available?("g_buffer") && Shader.available?("lighting")
         @g_buffer.bind_for_writing
         gl_error?
 
@@ -46,9 +46,14 @@ class IMICFPS
         @g_buffer.bind_for_reading
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0)
 
-        # lighting(lights)
+        lighting(lights)
+        gl_error?
+
         post_processing
-        render_framebuffer
+        gl_error?
+
+        # render_framebuffer
+        gl_error?
 
         @g_buffer.unbind_framebuffer
         gl_error?
@@ -105,39 +110,44 @@ class IMICFPS
     end
 
     def lighting(lights)
-      Shader.use("deferred_lighting") do |shader|
+      Shader.use("lighting") do |shader|
+        glBindVertexArray(@g_buffer.screen_vbo)
+
+        glDisable(GL_DEPTH_TEST)
+        glEnable(GL_BLEND)
+
+        glActiveTexture(GL_TEXTURE0)
+        glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:diffuse))
+        shader.uniform_integer("diffuse", 0)
+
+        glActiveTexture(GL_TEXTURE1)
+        glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:position))
+        shader.uniform_integer("position", 1)
+
+        glActiveTexture(GL_TEXTURE2)
+        glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:texcoord))
+        shader.uniform_integer("texcoord", 2)
+
+        glActiveTexture(GL_TEXTURE3)
+        glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:normal))
+        shader.uniform_integer("normal", 3)
+
+        glActiveTexture(GL_TEXTURE4)
+        glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:depth))
+        shader.uniform_integer("depth", 4)
+
         lights.each_with_index do |light, i|
-          shader.uniform_float("light.type", light.type);
-          shader.uniform_vec3("light.direction", light.direction)
-          shader.uniform_vec3("light.position", light.position)
-          shader.uniform_vec3("light.ambient", light.ambient)
-          shader.uniform_vec3("light.diffuse", light.diffuse)
-          shader.uniform_vec3("light.specular", light.specular)
-
-          glBindVertexArray(@g_buffer.screen_vbo)
-
-          glDisable(GL_DEPTH_TEST)
-          glEnable(GL_BLEND)
-
-          glActiveTexture(GL_TEXTURE0)
-          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:diffuse))
-
-          glActiveTexture(GL_TEXTURE1)
-          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:position))
-
-          glActiveTexture(GL_TEXTURE2)
-          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:texcoord))
-
-          glActiveTexture(GL_TEXTURE3)
-          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:normal))
-
-          glActiveTexture(GL_TEXTURE4)
-          glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:depth))
+          shader.uniform_integer("light[0].type", light.type);
+          shader.uniform_vec3("light[0].direction", light.direction)
+          shader.uniform_vec3("light[0].position", light.position)
+          shader.uniform_vec3("light[0].diffuse", light.diffuse)
+          shader.uniform_vec3("light[0].ambient", light.ambient)
+          shader.uniform_vec3("light[0].specular", light.specular)
 
           glDrawArrays(GL_TRIANGLES, 0, @g_buffer.vertices.size)
-
-          glBindVertexArray(0)
         end
+
+        glBindVertexArray(0)
       end
     end
 
@@ -145,8 +155,8 @@ class IMICFPS
     end
 
     def render_framebuffer
-      if Shader.available?("deferred_lighting")
-        Shader.use("deferred_lighting") do |shader|
+      if Shader.available?("lighting")
+        Shader.use("lighting") do |shader|
           glBindVertexArray(@g_buffer.screen_vbo)
 
           glDisable(GL_DEPTH_TEST)
@@ -154,6 +164,7 @@ class IMICFPS
 
           glActiveTexture(GL_TEXTURE0)
           glBindTexture(GL_TEXTURE_2D, @g_buffer.texture(:diffuse))
+          shader.uniform_integer("diffuse_texture", 0)
 
           glDrawArrays(GL_TRIANGLES, 0, @g_buffer.vertices.size)
 

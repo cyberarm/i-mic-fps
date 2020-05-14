@@ -1,29 +1,43 @@
 class IMICFPS
   class BoundingBoxRenderer
     attr_reader :bounding_boxes, :vertex_count
-    def initialize(map:)
-      @map = map
-
+    def initialize
       @bounding_boxes = {}
       @vertex_count = 0
     end
 
-    def create_bounding_box(object, box, color = nil, mesh_object_id)
+    def render(entities)
+      entities.each do |entity|
+        create_bounding_box(entity,color = nil)
+        draw_bounding_boxes
+      end
 
-      color ||= object.debug_color
+      (@bounding_boxes.keys - entities.map { |e| e.object_id }).each do |key|
+        @bounding_boxes.delete(key)
+      end
+    end
 
-      if @bounding_boxes[mesh_object_id]
-        if @bounding_boxes[mesh_object_id][:color] != color
-          @bounding_boxes[mesh_object_id][:colors] = mesh_colors(color).pack("f*")
-          @bounding_boxes[mesh_object_id][:color]  = color
+    def create_bounding_box(entity, color = nil)
+      color ||= entity.debug_color
+      entity_id = entity.object_id
+
+      if @bounding_boxes[entity_id]
+        if @bounding_boxes[entity_id][:color] != color
+          @bounding_boxes[entity_id][:colors] = mesh_colors(color).pack("f*")
+          @bounding_boxes[entity_id][:color]  = color
           return
         else
           return
         end
       end
-      @bounding_boxes[mesh_object_id] = {object: object, box: box, color: color, objects: []}
 
-      box = object.normalize_bounding_box
+      @bounding_boxes[entity_id] = {
+        entity: entity,
+        color: color,
+        objects: []
+      }
+
+      box = entity.normalize_bounding_box
 
       normals  = mesh_normals
       colors   = mesh_colors(color)
@@ -31,14 +45,14 @@ class IMICFPS
 
       @vertex_count+=vertices.size
 
-      @bounding_boxes[mesh_object_id][:vertices_size] = vertices.size
-      @bounding_boxes[mesh_object_id][:vertices]      = vertices.pack("f*")
-      @bounding_boxes[mesh_object_id][:normals]       = normals.pack("f*")
-      @bounding_boxes[mesh_object_id][:colors]        = colors.pack("f*")
+      @bounding_boxes[entity_id][:vertices_size] = vertices.size
+      @bounding_boxes[entity_id][:vertices]      = vertices.pack("f*")
+      @bounding_boxes[entity_id][:normals]       = normals.pack("f*")
+      @bounding_boxes[entity_id][:colors]        = colors.pack("f*")
 
-      object.model.objects.each do |mesh|
+      entity.model.objects.each do |mesh|
         data = {}
-        box = mesh.bounding_box.normalize(object)
+        box = mesh.bounding_box.normalize(entity)
 
         normals  = mesh_normals
         colors   = mesh_colors(mesh.debug_color)
@@ -51,7 +65,7 @@ class IMICFPS
         data[:normals]       = normals.pack("f*")
         data[:colors]        = colors.pack("f*")
 
-        @bounding_boxes[mesh_object_id][:objects] << data
+        @bounding_boxes[entity_id][:objects] << data
       end
     end
 
@@ -199,19 +213,15 @@ class IMICFPS
       @bounding_boxes.each do |key, bounding_box|
         glPushMatrix
 
-        glTranslatef(bounding_box[:object].position.x, bounding_box[:object].position.y, bounding_box[:object].position.z)
+        glTranslatef(
+          bounding_box[:entity].position.x,
+          bounding_box[:entity].position.y,
+          bounding_box[:entity].position.z
+        )
         draw_bounding_box(bounding_box)
         @bounding_boxes[key][:objects].each {|o| draw_bounding_box(o)}
 
         glPopMatrix
-
-        found = @map.entities.detect { |o| o == bounding_box[:object] }
-
-        unless found
-          @vertex_count -= @bounding_boxes[key][:vertices_size]
-          @bounding_boxes[key][:objects].each {|o| @vertex_count -= o[:vertices_size]}
-          @bounding_boxes.delete(key)
-        end
       end
     end
 
@@ -226,7 +236,7 @@ class IMICFPS
 
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
       glDisable(GL_LIGHTING)
-      glDrawArrays(GL_TRIANGLES, 0, bounding_box[:vertices_size]/3)
+      glDrawArrays(GL_TRIANGLES, 0, bounding_box[:vertices_size] / 3)
       glEnable(GL_LIGHTING)
       glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 

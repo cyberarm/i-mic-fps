@@ -145,6 +145,10 @@ class IMICFPS
       glReadBuffer(GL_COLOR_ATTACHMENT0 + @textures.keys.index(buffer))
     end
 
+    def set_read_buffer_depth
+      glReadBuffer(GL_DEPTH_ATTACHMENT)
+    end
+
     def unbind_framebuffer
       glBindFramebuffer(GL_FRAMEBUFFER, 0)
     end
