@@ -7,12 +7,13 @@ class IMICFPS
     attr_reader :text_input
     def initialize
       @text_input = Gosu::TextInput.new
+      @width  = window.width  / 4 * 3
+      @height = window.height / 4 * 3
 
-      @input = Text.new("", x: 4, y: window.height / 4 * 3 - (PADDING * 2), z: Console::Z + 1)
+      @input = Text.new("", x: 4, y: @height - (PADDING * 2), z: Console::Z + 1)
       @input.y -= @input.height
 
-      @history_height = window.height / 4 * 3 - (PADDING * 2 + @input.textobject.height)
-      @history = Text.new("=== #{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME}) ===\n\n", x: 4, y: @history_height, z: Console::Z + 1)
+      @history = Text.new("=== #{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME}) ===\n\n", x: 4, z: Console::Z + 1)
       update_history_y
 
       @command_history       = []
@@ -32,9 +33,6 @@ class IMICFPS
       @caret_interval = 250
       @caret_color = Gosu::Color::WHITE
       @selection_color = Gosu::Color.new(0x5522ff22)
-
-      @width  = window.width  / 4 * 3
-      @height = window.height / 4 * 3
     end
 
     def draw
@@ -84,6 +82,14 @@ class IMICFPS
       if Gosu.milliseconds - @caret_last_change >= @caret_interval
         @caret_last_change = Gosu.milliseconds
         @show_caret = !@show_caret
+      end
+
+      if @width != window.width || @height != @height
+        @width  = window.width  / 4 * 3
+        @height = window.height / 4 * 3
+
+        @input.y = @height - (PADDING * 2 + @input.height)
+        update_history_y
       end
 
       @input.text = @text_input.text
@@ -190,7 +196,7 @@ class IMICFPS
     end
 
     def update_history_y
-      @history.y = @history_height - (@history.text.lines.count * (@history.textobject.height))
+      @history.y = @height - (PADDING * 2) - @input.height - (@history.text.lines.count * (@history.textobject.height))
     end
 
     def handle_command
