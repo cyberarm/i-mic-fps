@@ -20,7 +20,7 @@ class IMICFPS
 
         flow(width: 1.0, height: 1.0) do
           stack(width: 0.25, height: 1.0) do
-            button "Back", margin_bottom: 25 do
+            button "Back", width: 1.0 do
               pop_state
             end
           end

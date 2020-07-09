@@ -18,18 +18,23 @@ class IMICFPS
 
         @maps.sort_by! { |m| m.metadata.name.downcase }
 
-        button "Back", margin_bottom: 25 do
-          pop_state
-        end
+        flow(width: 1.0, height: 1.0) do
+          stack(width: 0.25, height: 1.0) do
+            button "New Map", width: 1.0
 
-        button "New Map"
+            button "Back", margin_top: 64, width: 1.0 do
+              pop_state
+            end
+          end
 
-        label ""
-        label "Edit Map"
-        flow(margin: 10) do
-          @maps.each do |map|
-            button map.metadata.name do
-              push_state(LoadingState, map_parser: map, forward: Editor)
+          stack(width: 0.5, height: 1.0) do
+            label "Edit Map"
+            flow(width: 1.0, height: 1.0) do
+              @maps.each do |map|
+                button map.metadata.name do
+                  push_state(LoadingState, map_parser: map, forward: Editor)
+                end
+              end
             end
           end
         end
