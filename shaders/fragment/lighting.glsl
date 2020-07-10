@@ -12,7 +12,18 @@ flat in Light outLight[1];
 uniform sampler2D diffuse, position, texcoord, normal, depth;
 
 vec4 directionalLight(Light light) {
-  return vec4(0,0,0,1);
+  vec3 norm = normalize(texture(normal, outTexCoords).rgb);
+  vec3 diffuse_color = texture(diffuse, outTexCoords).rgb;
+  vec3 fragPos = texture(position, outTexCoords).rgb;
+
+  vec3 lightDir = normalize(light.position - fragPos);
+  float diff = max(dot(norm, lightDir), 0);
+
+  vec3 _ambient = light.ambient;
+  vec3 _diffuse = light.diffuse * diff;
+  vec3 _specular = light.specular;
+
+  return vec4(_diffuse + _ambient + _specular, 1.0);
 }
 
 vec4 pointLight(Light light) {
@@ -24,7 +35,7 @@ vec4 spotLight(Light light) {
 }
 
 vec4 calculateLighting(Light light) {
-  vec4 result = vec4(0,0,0,0);
+  vec4 result;
 
   switch(light.type) {
     case DIRECTIONAL: {
@@ -37,7 +48,8 @@ vec4 calculateLighting(Light light) {
       result = spotLight(light);
     }
     default: {
-      result = vec4(1,1,1,1);
+      // result = vec4(1,1,1,1);
+      result = directionalLight(light);
     }
   }
 

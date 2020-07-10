@@ -22,7 +22,7 @@
 
   "lights":[
     {
-      "type":"directional",
+      "type":"point",
       "intensity": 1,
       "position": {
         "x":30,
