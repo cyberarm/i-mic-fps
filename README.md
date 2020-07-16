@@ -1,4 +1,6 @@
 # I-MIC FPS
+![logo](https://raw.githubusercontent.com/cyberarm/i-mic-fps/master/svg/logo.svg)
+
 Creating a multiplayer first-person-shooter in pure Ruby; Using C extensions only for Rendering, Sound, and Input. ([Gosu](https://libgosu.org) and [opengl-bindings](https://github.com/vaiorabbit/ruby-opengl/))
 
 ![screenshot](https://raw.githubusercontent.com/cyberarm/i-mic-fps/master/screenshots/screenshot-game.png)
