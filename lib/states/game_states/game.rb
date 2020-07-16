@@ -7,8 +7,7 @@ class IMICFPS
       @map.setup
 
       @player = @map.find_entity_by(name: "character")
-      @camera = Camera.new(position: @player.position.clone)
-      @camera.attach_to(@player)
+      @camera = PerspectiveCamera.new( position: @player.position.clone, aspect_ratio: window.aspect_ratio )
       @director = Networking::Director.new
       @director.load_map(map_parser: @options[:map_parser])
 
@@ -42,7 +41,6 @@ class IMICFPS
       control_player
       @hud.update
 
-      @camera.update
       @connection.update
       @director.tick(window.dt)
       @map.update
@@ -66,9 +64,9 @@ OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}
 Camera Pitch: #{@camera.orientation.x.round(2)} Yaw: #{@camera.orientation.y.round(2)} Roll #{@camera.orientation.z.round(2)}
 Camera X: #{@camera.position.x.round(2)} Y: #{@camera.position.y.round(2)} Z: #{@camera.position.z.round(2)}
 Camera Field Of View: #{@camera.field_of_view}
-Camera Mouse Sesitivity: #{@camera.mouse_sensitivity}
+Camera Mouse Sesitivity: nil
 
-#{if @camera.entity then "Actor X: #{@camera.entity.position.x.round(2)} Y: #{@camera.entity.position.y.round(2)} Z: #{@camera.entity.position.z.round(2)}";end}
+Player X: #{@player.position.x.round(2)} Y: #{@player.position.y.round(2)} Z: #{@player.position.z.round(2)}"
 eos
     end
 
@@ -108,8 +106,6 @@ eos
       @map.entities.each do |entity|
         entity.button_up(id) if defined?(entity.button_up)
       end
-
-      @camera.button_up(id)
     end
   end
 end

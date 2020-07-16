@@ -9,7 +9,7 @@ class IMICFPS
         #       and refactor Game to use it.
         Publisher.new
         @map = Map.new( map_parser: @options[:map_parser] )
-        @camera = Camera.new( position: Vector.new )
+        @camera = PerspectiveCamera.new( position: Vector.new, aspect_ratio: window.aspect_ratio )
         @crosshair = Crosshair.new
 
         @map.setup

@@ -24,7 +24,7 @@ class IMICFPS
       Commands::Command.setup
 
       @renderer = Renderer.new
-      @renderer.preload_default_shaders
+      preload_default_shaders
       @scene = TurnTableScene.new
       @overlay = Overlay.new
 
@@ -37,6 +37,18 @@ class IMICFPS
       push_state(Boot)
 
       @delta_time = Gosu.milliseconds
+    end
+
+    def preload_default_shaders
+      shaders = ["g_buffer", "lighting"]
+      shaders.each do |shader|
+        Shader.new(
+          name: shader,
+          includes_dir: "shaders/include",
+          vertex: "shaders/vertex/#{shader}.glsl",
+          fragment: "shaders/fragment/#{shader}.glsl"
+        )
+      end
     end
 
     def needs_cursor?

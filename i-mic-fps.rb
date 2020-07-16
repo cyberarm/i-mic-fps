@@ -12,9 +12,11 @@ require "nokogiri"
 
 begin
   require_relative "../cyberarm_engine/lib/cyberarm_engine"
+  require_relative "../cyberarm_engine/lib/cyberarm_engine/opengl"
 rescue LoadError => e
   pp e
  require "cyberarm_engine"
+ require "cyberarm_engine/opengl"
 end
 
 Dir.chdir(File.dirname(__FILE__))

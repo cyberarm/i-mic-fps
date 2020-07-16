@@ -1,0 +1,3 @@
+name: "islands_terrain"
+model: "islands_terrain.obj"
+collision: "mesh"

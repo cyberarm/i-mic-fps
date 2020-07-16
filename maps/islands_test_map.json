@@ -1,0 +1,217 @@
+{
+  "metadata": {
+    "name":"Islands Testing Map",
+    "gamemode":"C&C",
+    "authors":["Cyberarm"],
+    "datetime":"2020-05-12 21:15:03 UTC",
+    "thumbnail":"",
+    "description":"A map for testing the map specification."
+  },
+
+  "terrain":{
+    "package":"base",
+    "name":"islands_terrain",
+    "water_level":null
+  },
+
+  "skydome":{
+    "package":"base",
+    "name":"skydome",
+    "scale":0.08
+  },
+
+  "lights":[
+    {
+      "type":"directional",
+      "intensity": 1,
+      "position": {
+        "x":30,
+        "y":10,
+        "z":30
+      },
+      "diffuse": {
+        "red":1,
+        "green":1,
+        "blue":1
+      },
+      "ambient": {
+        "red":0.5,
+        "green":0.5,
+        "blue":0.5
+      },
+      "specular": {
+        "red":0.2,
+        "green":0.2,
+        "blue":0.2
+      }
+    },
+    {
+      "type":"directional",
+      "intensity": 1,
+      "position": {
+        "x":0,
+        "y":100,
+        "z":0
+      },
+      "diffuse": {
+        "red":1,
+        "green":0.5,
+        "blue":0.1
+      },
+      "ambient": {
+        "red":0.5,
+        "green":0.5,
+        "blue":0.5
+      },
+      "specular": {
+        "red":0.2,
+        "green":0.2,
+        "blue":0.2
+      }
+    }
+  ],
+
+  "entities":[
+    {
+      "package":"base",
+      "name":"tree",
+      "position": {
+        "x": -129.563,
+        "y": 0,
+        "z": 34.9507
+      },
+      "orientation": {
+        "x": 0,
+        "y": 37.0,
+        "z": 0
+      },
+      "scale": 1.0,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "name":"tree",
+      "position": {
+        "x": 11.0938,
+        "y": 0,
+        "z": 102.047
+      },
+      "orientation": {
+        "x": 0,
+        "y": 37.0,
+        "z": 0
+      },
+      "scale": 1.0,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "name":"tree",
+      "position": {
+        "x":-21.2121,
+        "y":0.06,
+        "z":6.06061
+      },
+      "orientation": {
+        "x": 0,
+        "y": 64.0,
+        "z": 0
+      },
+      "scale": 1.0,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "name":"tree",
+      "position": {
+        "x":-13.3683,
+        "y":0,
+        "z":109.036
+      },
+      "orientation": {
+        "x": 0,
+        "y": 144.0,
+        "z": 0
+      },
+      "scale": 1.0,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "name":"tree",
+      "position": {
+        "x":63.3727,
+        "y":0,
+        "z":45.6301
+      },
+      "orientation": {
+        "x": 0,
+        "y": 100.0,
+        "z": 0
+      },
+      "scale": 1.0,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "name":"tree",
+      "position": {
+        "x":74.4436,
+        "y":0,
+        "z":49.1526
+      },
+      "orientation": {
+        "x": 0,
+        "y": 21.0,
+        "z": 0
+      },
+      "scale": 1.0,
+      "scripts": []
+    },
+    {
+      "package":"base",
+      "name":"war_factory",
+      "position": {
+        "x":39.3939,
+        "y":0.499657,
+        "z":9.69697
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      },
+      "scale": 1,
+      "scripts": []
+    }
+  ],
+
+  "spawnpoints": [
+    {
+      "team":0,
+      "position": {
+        "x": -104.133,
+        "y": 0,
+        "z": -0.374469
+      },
+      "orientation": {
+        "x": 0,
+        "y": 180,
+        "z": 0
+      }
+    },
+    {
+      "team":1,
+      "position": {
+        "x": 183.27,
+        "y": 0,
+        "z": -26.4139
+      },
+      "orientation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    }
+  ]
+}
