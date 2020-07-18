@@ -7,7 +7,7 @@ class IMICFPS
         @text = CyberarmEngine::Text.new(
           "",
           size: 16,
-          x: @margin, y: @margin, z: 45,
+          x: Widget.margin, y: Widget.margin, z: 45,
           shadow_size: 0.5,
           shadow_alpha: 0,
           shadow_color: Gosu::Color::WHITE,

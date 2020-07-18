@@ -10,6 +10,8 @@ class IMICFPS
         Publisher.new
         @map = Map.new( map_parser: @options[:map_parser] )
         @camera = PerspectiveCamera.new( position: Vector.new, aspect_ratio: window.aspect_ratio )
+        @editor = IMICFPS::Editor.new( manifest: Manifest.new(package: "base", name: "editor") )
+        @camera_controller = CameraController.new(camera: @camera, entity: @editor)
         @crosshair = Crosshair.new
 
         @map.setup
@@ -24,8 +26,26 @@ class IMICFPS
       def update
         super
         Publisher.instance.publish(:tick, Gosu.milliseconds - window.delta_time)
+
+        control_editor
+
         @map.update
-        @camera.update
+        @camera_controller.update
+      end
+
+      def control_editor
+        InputMapper.keys.each do |key, pressed|
+          next unless pressed
+
+          actions = InputMapper.action(key)
+          next unless actions
+
+          actions.each do |action|
+            @editor.send(action) if @editor.respond_to?(action)
+          end
+        end
+
+        @editor.update
       end
 
       def button_down(id)
@@ -38,6 +58,8 @@ class IMICFPS
 
         InputMapper.keydown(id)
         Publisher.instance.publish(:button_down, nil, id)
+
+        @camera_controller.button_down(id)
 
         @map.entities.each do |entity|
           entity.button_down(id) if defined?(entity.button_down)
@@ -52,7 +74,7 @@ class IMICFPS
           entity.button_up(id) if defined?(entity.button_up)
         end
 
-        @camera.button_up(id)
+        @camera_controller.button_up(id)
       end
     end
   end

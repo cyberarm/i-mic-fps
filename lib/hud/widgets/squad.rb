@@ -13,8 +13,8 @@ class IMICFPS
       end
 
       def update
-        @text.x = @margin + @size + @padding
-        @text.y = window.height - (@margin + @text.height)
+        @text.x = Widget.margin + @size + Widget.padding
+        @text.y = window.height - (Widget.margin + @text.height)
       end
     end
   end

@@ -2,18 +2,30 @@ class IMICFPS
   class HUD
     class Widget
       include CommonMethods
-      attr_reader :options
 
+      # Widget margin from screen edge
+      # or how much widget is pushed in
+      def self.margin
+        @@margin ||= 10
+      end
+
+      def self.padding=(n)
+        @@padding = n
+      end
+
+      # Widget element padding
+      def self.padding
+        @@margin ||= 10
+      end
+
+      def self.padding=(n)
+        @@padding = n
+      end
+
+      attr_reader :options
       def initialize(options = {})
         @options = options
         @player = options[:player]
-
-        # Widget margin from screen edge
-        # or how much widget is pushed in
-        @margin = 10
-
-        # Widget element padding
-        @padding = 10
 
         setup
       end

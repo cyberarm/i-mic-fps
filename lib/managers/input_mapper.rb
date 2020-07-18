@@ -83,18 +83,13 @@ class IMICFPS
     end
 
     def self.action(key)
-      answer = nil
-      @@keymap.detect do |action, value|
+      @@keymap.select do |action, value|
         if value.is_a?(Array)
-          answer = action if value.include?(key)
+          action if value.include?(key)
         else
-          if value == key
-            answer = action
-          end
+          action if value == key
         end
-      end
-
-      answer
+      end.map { |keymap| keymap.first.is_a?(Symbol) ? keymap.first : keymap.first.first }
     end
 
     def self.reset_keys
