@@ -64,7 +64,7 @@ class IMICFPS
 
       _canvas_size = Vector.new(self.width, self.height)
       if @canvas_size != _canvas_size
-        @renderer.canvas_size_changed
+        @renderer = Renderer.new#@renderer.canvas_size_changed
         @canvas_size = _canvas_size
       end
     end

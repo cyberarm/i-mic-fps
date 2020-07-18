@@ -8,16 +8,14 @@ class IMICFPS
 
       @player = @map.find_entity_by(name: "character")
       @camera = PerspectiveCamera.new( position: @player.position.clone, aspect_ratio: window.aspect_ratio )
+      @camera_controller = CameraController.new(mode: :first_person, camera: @camera, entity: @player)
       @director = Networking::Director.new
       @director.load_map(map_parser: @options[:map_parser])
 
       @connection = Networking::Connection.new(address: "localhost", port: Networking::DEFAULT_SERVER_PORT)
       @connection.connect
 
-      @crosshair = Crosshair.new
       @hud = HUD.new(@player)
-
-      @text = Text.new("Pending...", x: 10, y: 22, z: 1, size: 18, font: "DejaVu Sans", shadow_color: Gosu::Color::BLACK)
 
       if ARGV.join.include?("--playdemo")
         @demo = Demo.new(camera: @camera, player: @player, demo: "./demo.dat", mode: :play) if File.exist?("./demo.dat")
@@ -30,9 +28,7 @@ class IMICFPS
     def draw
       @map.render(@camera)
 
-      @crosshair.draw
       @hud.draw
-      @text.draw
     end
 
     def update
@@ -40,16 +36,11 @@ class IMICFPS
 
       control_player
       @hud.update
+      @camera_controller.update
 
       @connection.update
       @director.tick(window.dt)
       @map.update
-
-      if window.config.get(:debug_options, :stats)
-        @text.text = update_text
-      else
-        @text.text = ""
-      end
 
       @demo.update if @demo
     end
@@ -60,13 +51,6 @@ OpenGL Vendor: #{glGetString(GL_VENDOR)}
 OpenGL Renderer: #{glGetString(GL_RENDERER)}
 OpenGL Version: #{glGetString(GL_VERSION)}
 OpenGL Shader Language Version: #{glGetString(GL_SHADING_LANGUAGE_VERSION)}
-
-Camera Pitch: #{@camera.orientation.x.round(2)} Yaw: #{@camera.orientation.y.round(2)} Roll #{@camera.orientation.z.round(2)}
-Camera X: #{@camera.position.x.round(2)} Y: #{@camera.position.y.round(2)} Z: #{@camera.position.z.round(2)}
-Camera Field Of View: #{@camera.field_of_view}
-Camera Mouse Sesitivity: nil
-
-Player X: #{@player.position.x.round(2)} Y: #{@player.position.y.round(2)} Z: #{@player.position.z.round(2)}"
 eos
     end
 
@@ -88,6 +72,7 @@ eos
         return
       end
       @demo.button_down(id) if @demo
+      @camera_controller.button_down(id)
 
       InputMapper.keydown(id)
       Publisher.instance.publish(:button_down, nil, id)
@@ -99,6 +84,7 @@ eos
 
     def button_up(id)
       @demo.button_up(id) if @demo
+      @camera_controller.button_up(id)
 
       InputMapper.keyup(id)
       Publisher.instance.publish(:button_up, nil, id)
