@@ -8,7 +8,7 @@ class IMICFPS
 
       @player = @map.find_entity_by(name: "character")
       @camera = PerspectiveCamera.new( position: @player.position.clone, aspect_ratio: window.aspect_ratio )
-      @camera_controller = CameraController.new(mode: :first_person, camera: @camera, entity: @player)
+      @camera_controller = CameraController.new(mode: :fpv, camera: @camera, entity: @player)
       @director = Networking::Director.new
       @director.load_map(map_parser: @options[:map_parser])
 
@@ -58,7 +58,7 @@ eos
       InputMapper.keys.each do |key, pressed|
         next unless pressed
 
-        actions = InputMapper.action(key)
+        actions = InputMapper.actions(key)
         next unless actions
 
         actions.each do |action|

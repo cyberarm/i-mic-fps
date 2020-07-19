@@ -1,5 +1,5 @@
 struct Light {
-  int type;
+  int  type;
   vec3 direction;
   vec3 position;
 

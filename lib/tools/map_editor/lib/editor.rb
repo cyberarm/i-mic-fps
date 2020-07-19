@@ -38,7 +38,7 @@ class IMICFPS
         InputMapper.keys.each do |key, pressed|
           next unless pressed
 
-          actions = InputMapper.action(key)
+          actions = InputMapper.actions(key)
           next unless actions
 
           actions.each do |action|

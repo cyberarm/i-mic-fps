@@ -37,20 +37,22 @@ vec4 spotLight(Light light) {
 vec4 calculateLighting(Light light) {
   vec4 result;
 
-  switch(light.type) {
-    case DIRECTIONAL: {
-      result = directionalLight(light);
-    }
-    case POINT: {
-      result = pointLight(light);
-    }
-    case SPOT: {
-      result = spotLight(light);
-    }
-    default: {
-      // result = vec4(1,1,1,1);
-      result = directionalLight(light);
-    }
+  // switch(light.type) {
+  //   case DIRECTIONAL: {
+  //     result = directionalLight(light);
+  //   }
+  //   case SPOT: {
+  //     result = spotLight(light);
+  //   }
+  //   default: {
+  //     result = pointLight(light);
+  //   }
+  // }
+
+  if (light.type == DIRECTIONAL) {
+    result = directionalLight(light);
+  } else {
+    result = pointLight(light);
   }
 
   return result;

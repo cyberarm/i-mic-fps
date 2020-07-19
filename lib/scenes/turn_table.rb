@@ -2,8 +2,14 @@ class IMICFPS
   class TurnTableScene < Scene
     def setup
       camera.field_of_view = 45
-      lights << (Light.new(id: OpenGL::GL_LIGHT1, position: Vector.new(30, 10.0, 30), diffuse: Color.new(0, 0, 0), specular: Color.new(0, 0, 0)))
-      lights << (Light.new(id: OpenGL::GL_LIGHT2, position: Vector.new(0, 10, 5), diffuse: Color.new(1.0, 1.0, 1.0), specular: Color.new(0, 0, 0)))
+      lights << Light.new(
+        id: OpenGL::GL_LIGHT1,
+        type: Light::DIRECTIONAL,
+        direction: Vector.down,
+        position: Vector.new(0, 10, 5),
+        diffuse: Color.new(1.0, 1.0, 1.0),
+        specular: Color.new(0, 0, 0)
+      )
 
       options = {
         # entity: scale
@@ -14,7 +20,7 @@ class IMICFPS
         "ttank": 0.13,
         "alternate_tank": 0.065,
         "tree": 0.08,
-        # "evergreen_tree": 0.08,
+        "evergreen_tree": 0.08,
         "power_plant": 0.025,
         "war_factory": 0.03,
         "randomish_terrain": 0.004,

@@ -82,7 +82,7 @@ class IMICFPS
       end
     end
 
-    def self.action(key)
+    def self.actions(key)
       @@keymap.select do |action, value|
         if value.is_a?(Array)
           action if value.include?(key)

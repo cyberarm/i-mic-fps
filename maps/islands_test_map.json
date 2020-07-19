@@ -46,7 +46,7 @@
       }
     },
     {
-      "type":"directional",
+      "type":"point",
       "intensity": 1,
       "position": {
         "x":0,

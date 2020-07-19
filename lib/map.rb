@@ -23,7 +23,7 @@ class IMICFPS
       add_entity(Skydome.new(map_entity: @map_parser.skydome, manifest: Manifest.new(package: @map_parser.skydome.package, name: @map_parser.skydome.name), backface_culling: false))
 
       @map_parser.lights.each do |l|
-        add_light(Light.new(id: available_light, position: l.position, diffuse: l.diffuse, ambient: l.ambient, specular: l.specular, intensity: l.intensity))
+        add_light(Light.new(id: available_light, type: l.type, position: l.position, diffuse: l.diffuse, ambient: l.ambient, specular: l.specular, intensity: l.intensity))
       end
 
       @map_parser.entities.each do |ent|

@@ -2,7 +2,11 @@ class IMICFPS
   class HUD
     class RadarWidget < HUD::Widget
       def setup
-        @size = 288
+        @min_size = 148
+        @max_size = 288
+        @target_screen_width = 1920
+        @size = @max_size
+
         @border_color = Gosu::Color.new(0x88c64600)
         @radar_color = Gosu::Color.new(0x88212121)
 
@@ -30,7 +34,10 @@ class IMICFPS
       end
 
       def update
-        @text.text = "RADAR: X #{@player.position.x.round(1)} Y #{@player.position.y.round(1)} Z #{@player.position.z.round(1)}"
+        @size = (window.width / @target_screen_width.to_f * @max_size).clamp(@min_size, @max_size)
+        @scale = (@size - Widget.padding * 2.0) / @image.width
+
+        @text.text = "X: #{@player.position.x.round(1)} Y: #{@player.position.y.round(1)} Z: #{@player.position.z.round(1)}"
         @text.x = Widget.margin + @size / 2 - @text.width / 2
         @text.y = window.height - (Widget.margin + @size + @text.height)
       end

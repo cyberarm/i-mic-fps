@@ -2,6 +2,8 @@ class IMICFPS
   class CameraController
     include CommonMethods
 
+    attr_accessor :mode, :camera, :entity, :distance, :origin_distance,
+                  :constant_pitch, :mouse_sensitivity, :mouse_captured
     def initialize(mode: :fpv, camera:, entity:)
       # :fpv - First Person View
       # :tpv - Third Person View
@@ -21,6 +23,10 @@ class IMICFPS
       @mouse_checked = 0
     end
 
+    def first_person_view?
+      @mode == :fpv
+    end
+
     def distance_from_object
       @distance
     end
@@ -34,12 +40,10 @@ class IMICFPS
     end
 
     def position_camera
-      if defined?(@entity.first_person_view)
-        if @entity.first_person_view
-          @distance = 0
-        else
-          @distance = @origin_distance
-        end
+      if first_person_view?
+        @distance = 0
+      else
+        @distance = @origin_distance
       end
 
       x_offset = horizontal_distance_from_object * Math.sin(@entity.orientation.y.degrees_to_radians)
@@ -75,13 +79,25 @@ class IMICFPS
     end
 
     def button_down(id)
-      case id
-      when Gosu::KB_LEFT_ALT, Gosu::KB_RIGHT_ALT
+      actions = InputMapper.actions(id)
+
+      if actions.include?(:release_mouse)
         @mouse_captured = false
         window.needs_cursor = true
-      when Gosu::MS_LEFT, Gosu::MS_MIDDLE, Gosu::MS_RIGHT
+      elsif actions.include?(:capture_mouse)
         @mouse_captured = true
         window.needs_cursor = false
+
+      elsif actions.include?(:decrease_view_distance)
+        @camera.max_view_distance -= 0.5
+      elsif actions.include?(:increase_view_distance)
+        @camera.max_view_distance += 0.5
+      elsif actions.include?(:toggle_first_person_view)
+        @mode = first_person_view? ? :tpv : :fpv
+        @entity.visible = !first_person_view?
+      elsif actions.include?(:turn_180)
+        @entity.orientation.y += 180
+        @entity.orientation.y %= 360.0
       end
     end
 

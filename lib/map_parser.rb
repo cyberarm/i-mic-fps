@@ -16,6 +16,17 @@ class IMICFPS
       parse(map_file)
     end
 
+    def light_type(type)
+      case type.downcase.strip
+      when "directional"
+        CyberarmEngine::Light::DIRECTIONAL
+      when "spot"
+        CyberarmEngine::Light::SPOT
+      else
+        CyberarmEngine::Light::POINT
+      end
+    end
+
     def parse(file)
       data = JSON.parse(File.read(file))
 
@@ -80,7 +91,7 @@ class IMICFPS
       if section = data["lights"]
         section.each do |l|
           light = MapParser::Light.new
-          light.type = IMICFPS::Light::POINT # TODO: fix me
+          light.type = light_type(l["type"])
           light.position = Vector.new(
             l["position"]["x"],
             l["position"]["y"],

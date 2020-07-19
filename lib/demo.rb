@@ -30,7 +30,7 @@ class IMICFPS
           @file.puts("tick #{@index}")
         end
 
-        @file.puts("down #{InputMapper.action(id)}")
+        @file.puts("down #{InputMapper.actions(id)}")
         @changed = true
       end
     end
@@ -42,7 +42,7 @@ class IMICFPS
           @file.puts("tick #{@index}")
         end
 
-        @file.puts("up #{InputMapper.action(id)}")
+        @file.puts("up #{InputMapper.actions(id)}")
         @changed = true
       end
     end
