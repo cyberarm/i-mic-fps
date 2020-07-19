@@ -15,6 +15,7 @@ class IMICFPS
         @crosshair = Crosshair.new
 
         @map.setup
+        @map.add_entity(@editor)
       end
 
       def draw
@@ -45,7 +46,7 @@ class IMICFPS
           end
         end
 
-        @editor.update
+        @editor.orientation.x = @camera.orientation.x
       end
 
       def button_down(id)

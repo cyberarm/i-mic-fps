@@ -10,10 +10,10 @@ class IMICFPS
       @width  = window.width  / 4 * 3
       @height = window.height / 4 * 3
 
-      @input = Text.new("", x: 4, y: @height - (PADDING * 2), z: Console::Z + 1)
+      @input = Text.new("", x: 4, y: @height - (PADDING * 2), z: Console::Z + 1, font: MONOSPACE_FONT)
       @input.y -= @input.height
 
-      @history = Text.new("=== #{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME}) ===\n\n", x: 4, z: Console::Z + 1)
+      @history = Text.new("=== #{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME}) ===\n\n", x: 4, z: Console::Z + 1, font: MONOSPACE_FONT)
       update_history_y
 
       @command_history       = []

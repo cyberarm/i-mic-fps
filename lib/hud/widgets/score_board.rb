@@ -61,7 +61,8 @@ class IMICFPS
         data[:teams][1][:credits] = data[:players].select { |player| player[:team] == 1 }.map { |player| player[:credits] }.reduce(0, :+)
         data[:teams][1][:score] = data[:players].select { |player| player[:team] == 1 }.map { |player| player[:score] }.reduce(0, :+)
 
-        data[:players].sort! { |player| player[:score] }
+        data[:teams] = data[:teams].sort_by { |team| team[:score] }.reverse
+        data[:players] = data[:players].sort_by { |player| player[:score] }.reverse
 
         return data
       end
@@ -75,14 +76,16 @@ class IMICFPS
         text = ""
         text += "#   Team   Credits   Score\n"
         data[:teams].each_with_index do |team, i|
-          text += "<c=#{i.even? ? 'ffe66100' : 'ffa51d2d'}>#{i}   #{team[:name]}   #{i.even? ? team[:credits] : '-----'}   #{team[:score]}</c>\n"
+          i += 1
+          text += "<c=#{team[:name] == "Compass" ? 'ffe66100' : 'ffa51d2d'}>#{i}   #{team[:name]}   #{i.even? ? team[:credits] : '-----'}   #{team[:score]}</c>\n"
         end
 
         text += "\n"
 
         text += "#   Name   Credits   Score\n"
         data[:players].each_with_index do |player, i|
-          text += "<c=#{i.even? ? 'ffe66100' : 'ffa51d2d'}>#{i}   #{player[:username]}   #{i.even? ? player[:credits] : '-----'}   #{player[:score]}</c>\n"
+          i += 1
+          text += "<c=#{player[:team].even? ? 'ffe66100' : 'ffa51d2d'}>#{i}   #{player[:username]}   #{player[:team].even? ? player[:credits] : '-----'}   #{player[:score]}</c>\n"
         end
 
         @text.text = text

@@ -21,7 +21,7 @@ class IMICFPS
         @light = Light.new(type: Light::DIRECTIONAL, id: available_light, position: Vector.new, diffuse: Vector.new(1, 1, 1, 1))
         @lights << @light
 
-        @camera = Camera.new(position: Vector.new(0, 1.5, 5), orientation: Vector.forward)
+        @camera = PerspectiveCamera.new(aspect_ratio: window.aspect_ratio, position: Vector.new(0, 1.5, 5), orientation: Vector.forward)
 
         label @manifest.name, text_size: 50
         label @manifest.model
@@ -56,7 +56,7 @@ class IMICFPS
       def update
         super
 
-        @camera.update
+        # @camera.update
         @light.position = @camera.position.clone
         @light.position.y += 1.5
         @camera_position.value = "Camera Position: X #{@camera.position.x.round(2)}, Y #{@camera.position.y.round(2)}, Z #{@camera.position.z.round(2)}"

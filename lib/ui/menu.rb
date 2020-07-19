@@ -20,24 +20,27 @@ class IMICFPS
       @accent_color = ACCENT_COLOR
       window.needs_cursor = true
 
-      @__version_text = CyberarmEngine::Text.new("<b>#{IMICFPS::NAME}</b> v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})")
+      @__version_text = CyberarmEngine::Text.new("<b>#{IMICFPS::NAME}</b> v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})", font: MONOSPACE_FONT)
       @__version_text.x = window.width - (@__version_text.width + 10)
       @__version_text.y = window.height - (@__version_text.height + 10)
+
       super(*args)
+
+      theme({ Label: { font: SANS_SERIF_FONT } })
     end
 
     def title(text, color = Gosu::Color::BLACK)
-      @elements << Text.new(text, color: color, size: 100, x: 0, y: 15)
+      @elements << Text.new(text, color: color, size: 100, x: 0, y: 15, font: SANS_SERIF_FONT)
       @_title = @elements.last
     end
 
     def subtitle(text, color = Gosu::Color::WHITE)
-      @elements << Text.new(text, color: color, size: 50, x: 0, y: 100)
+      @elements << Text.new(text, color: color, size: 50, x: 0, y: 100, font: SANS_SERIF_FONT)
       @_subtitle = @elements.last
     end
 
     def link(text, color = Gosu::Color.rgb(0,127,127), &block)
-      text = Text.new(text, color: color, size: 50, x: 0, y: 100 + (60 * @elements.count))
+      text = Text.new(text, color: color, size: 50, x: 0, y: 100 + (60 * @elements.count), font: SANS_SERIF_FONT)
       @elements << Link.new(text, self, block)
     end
 

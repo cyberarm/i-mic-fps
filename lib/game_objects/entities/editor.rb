@@ -40,6 +40,7 @@ class IMICFPS
 
     def backward
       @velocity.z -= Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+      @velocity.y += Math.sin(@orientation.x * Math::PI / 180) * relative_speed
       @velocity.x += Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
     end
 
@@ -62,12 +63,11 @@ class IMICFPS
     end
 
     def ascend
-      @velocity.y += 1 * delta_time
+      @velocity.y += relative_speed
     end
-    alias :jump :ascend
 
     def descend
-      @velocity.y -= 1 * delta_time
+      @velocity.y -= relative_speed
     end
 
     def toggle_first_person_view

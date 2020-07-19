@@ -58,10 +58,12 @@ eos
       InputMapper.keys.each do |key, pressed|
         next unless pressed
 
-        action = InputMapper.action(key)
-        next unless action
+        actions = InputMapper.action(key)
+        next unless actions
 
-        @player.send(action) if @player.respond_to?(action)
+        actions.each do |action|
+          @player.send(action) if @player.respond_to?(action)
+        end
       end
     end
 

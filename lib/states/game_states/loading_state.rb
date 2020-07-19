@@ -11,10 +11,10 @@ class IMICFPS
       end
 
       title IMICFPS::NAME
-      @subheading = Text.new("Loading Map: #{@map_parser.metadata.name}", y: 100, size: 50, alignment: :center)
-      @description = Text.new("Map created by: #{@map_parser.metadata.authors.join(", ")}\n#{@map_parser.metadata.description}", y: 180, size: 24, alignment: :center)
-      @state = Text.new("Preparing...", y: window.height/2-40, size: 40, alignment: :center)
-      @percentage = Text.new("0%", y: window.height - 100 + 25, size: 50, alignment: :center)
+      @subheading = Text.new("Loading Map: #{@map_parser.metadata.name}", y: 100, size: 50, alignment: :center, font: SANS_SERIF_FONT)
+      @description = Text.new("Map created by: #{@map_parser.metadata.authors.join(", ")}\n#{@map_parser.metadata.description}", y: 180, size: 24, alignment: :center, font: SANS_SERIF_FONT)
+      @state = Text.new("Preparing...", y: window.height/2-40, size: 40, alignment: :center, font: SANS_SERIF_FONT)
+      @percentage = Text.new("0%", y: window.height - 100 + 25, size: 50, alignment: :center, font: MONOSPACE_FONT)
 
       @dummy_entity = nil
       @assets = []

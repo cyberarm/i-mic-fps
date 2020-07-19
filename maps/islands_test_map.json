@@ -17,7 +17,7 @@
   "skydome":{
     "package":"base",
     "name":"skydome",
-    "scale":0.08
+    "scale":0.37
   },
 
   "lights":[
