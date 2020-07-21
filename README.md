@@ -1,3 +1,7 @@
+![Ruby](https://github.com/cyberarm/i-mic-fps/workflows/Ruby/badge.svg)
+![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/cyberarm/i-mic-fps?include_prereleases)
+![GitHub repo size](https://img.shields.io/github/repo-size/cyberarm/i-mic-fps)
+
 # I-MIC FPS
 ![logo](https://raw.githubusercontent.com/cyberarm/i-mic-fps/master/svg/logo.svg)
 
