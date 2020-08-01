@@ -9,11 +9,11 @@ class IMICFPS
       @player = @map.find_entity_by(name: "character")
       @camera = PerspectiveCamera.new( position: @player.position.clone, aspect_ratio: window.aspect_ratio )
       @camera_controller = CameraController.new(mode: :fpv, camera: @camera, entity: @player)
-      @director = Networking::Director.new
-      @director.load_map(map_parser: @options[:map_parser])
+      # @director = Networking::Director.new
+      # @director.load_map(map_parser: @options[:map_parser])
 
-      @connection = Networking::Connection.new(address: "localhost", port: Networking::DEFAULT_SERVER_PORT)
-      @connection.connect
+      # @connection = Networking::Connection.new(address: "localhost", port: Networking::DEFAULT_SERVER_PORT)
+      # @connection.connect
 
       @hud = HUD.new(@player)
 
@@ -38,8 +38,8 @@ class IMICFPS
       @hud.update
       @camera_controller.update
 
-      @connection.update
-      @director.tick(window.dt)
+      # @connection.update
+      # @director.tick(window.dt)
       @map.update
 
       @demo.update if @demo
