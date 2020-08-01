@@ -1,6 +1,6 @@
 module CyberarmEngine
   module Networking
-    class Channel
+    module PacketHandler
     end
   end
 end

@@ -1,10 +1,14 @@
-class Peer
-  attr_reader :id, :hostname, :port, :data
-  def initialize(id:, hostname:, port:)
-    @id = id
-    @hostname = hostname
-    @port = port
+module CyberarmEngine
+  module Networking
+    class Peer
+      attr_reader :id, :hostname, :port, :data
+      def initialize(id:, hostname:, port:)
+        @id = id
+        @hostname = hostname
+        @port = port
 
-    @data = {}
+        @data = {}
+      end
+    end
   end
 end

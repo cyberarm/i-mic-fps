@@ -1,6 +1,6 @@
 class IMICFPS
   module Networking
-    class SnapshotPacket < Packet
+    class SnapshotPacket < CyberarmEngine::Networking::Packet
     end
   end
 end

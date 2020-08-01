@@ -1,34 +1,23 @@
-class IMICFPS
+module CyberarmEngine
   module Networking
     module Protocol
       MAX_PACKET_SIZE = 1024
       PROTOCOL_VERSION = 0 # int
-      HEARTBEAT_INTERVAL = 250 # ms
+      HEARTBEAT_INTERVAL = 5_000 # ms
       TIMEOUT_PERIOD = 30_000 # ms
 
       packet_types = %w{
         # protocol packets
         reliable
         multipart
-        acknowledgement
         control
         data
 
-        # protocol control packets
-        connect
-        verify_connect
+        # control packet types
         disconnect
-        authenticate
+        acknowledge
         heartbeat
-
-        # game data packets
-        snapshot
-        player_joined
-        player_left
-        play_sound_effect
-        create_particle
-        create_entity
-        remove_entity
+        ping
       }
 
       # emulate c-like enum
