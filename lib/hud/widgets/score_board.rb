@@ -24,7 +24,7 @@ class IMICFPS
       end
 
       def update
-        @text.x = window.width - (@text.width + Widget.margin)
+        @text.x = window.width - (@text.markup_width + Widget.margin)
       end
 
       def generate_random_data

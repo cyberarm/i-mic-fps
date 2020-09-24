@@ -56,7 +56,6 @@ class IMICFPS
       def update
         super
 
-        # @camera.update
         @light.position = @camera.position.clone
         @light.position.y += 1.5
         @camera_position.value = "Camera Position: X #{@camera.position.x.round(2)}, Y #{@camera.position.y.round(2)}, Z #{@camera.position.z.round(2)}"
@@ -75,7 +74,6 @@ class IMICFPS
         super
 
         InputMapper.keyup(id)
-        @camera.button_up(id)
       end
     end
 

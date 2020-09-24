@@ -22,6 +22,7 @@ class IMICFPS
       @show_console = false
       @console = Console.new
       Commands::Command.setup
+      SettingsMenu.set_defaults
 
       @renderer = Renderer.new
       preload_default_shaders

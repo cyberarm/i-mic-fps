@@ -12,7 +12,7 @@ class IMICFPS
 
     def draw
       return if @text.text.empty?
-      width = @text.width + 8
+      width = @text.markup_width + 8
 
       Gosu.draw_rect(0, 0, width, (@text.height + 4), Gosu::Color.rgba(0, 0, 0, 100))
       Gosu.draw_rect(2, 2, width - 4, (@text.height + 4) - 4, Gosu::Color.rgba(100, 100, 100, 100))

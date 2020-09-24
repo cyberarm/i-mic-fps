@@ -5,6 +5,7 @@ require "abbrev"
 require "time"
 require "socket"
 require "tmpdir"
+require "securerandom"
 
 require "opengl"
 require "glu"
