@@ -8,7 +8,7 @@ class IMICFPS
       end
 
       link "Multiplayer" do
-        push_state(MultiplayerLobbyMenu)
+        push_state(MultiplayerMenu)
       end
 
       link "Settings" do
@@ -19,7 +19,7 @@ class IMICFPS
         push_state(ExtrasMenu)
       end
 
-      link "Exit Game" do
+      link "Quit" do
         window.close
       end
 

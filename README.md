@@ -10,10 +10,32 @@ Creating a multiplayer first-person-shooter in pure Ruby; Using C extensions onl
 ![screenshot](https://raw.githubusercontent.com/cyberarm/i-mic-fps/master/screenshots/screenshot-game.png)
 
 ## Using
-Requires a Ruby runtime that supports the gosu and opengl-bindings C-extensions (truffleruby 1.0.0-rc12 did not work when tested. Rubinus was not tested.)
+Ruby 2.5+ interpeter with support for the Gosu game library C extension.
 * Clone or download this repo
 * `bundle install`
 * `bundle exec ruby i-mic-fps.rb [options]`
+
+### System Requirements
+| Minimum |                         |
+| :------ | ----------------------: |
+| OS      | Windows 10 or GNU/Linux |
+| CPU     | Intel Core i5-3320M     |
+| RAM     | 512 MB                  |
+| GPU     | OpenGL 3.30 Capable     |
+| Storage | To Be Determined        |
+| Network | To Be Determined        |
+| Display | 1280x720                |
+
+| Recommended |                               |
+| :---------- | ----------------------------: |
+| OS          | Windows 10 or GNU/Linux       |
+| CPU         | AMD Ryzen 5 3600              |
+| RAM         | 1 GB+                         |
+| GPU         | AMD Radeon RX 5700 XT         |
+| Storage     | To Be Determined (< 4 GB)     |
+| Network     | Broadband Internet Connection |
+| Display     | 1920x1080 60Hz                |
+Note: Recommended CPU and GPU are those of the primary development system and are overkill at this point.
 
 ### Options
 * `--native` - Launch in fullscreen using primary displays resolution

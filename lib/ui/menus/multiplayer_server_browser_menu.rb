@@ -1,5 +1,5 @@
 class IMICFPS
-  class MultiplayerLobbyMenu < Menu
+  class MultiplayerServerBrowserMenu < Menu
     def setup
       @sample_games = [
         {
@@ -28,13 +28,13 @@ class IMICFPS
         }
       ]
 
-      label "Multiplayer Lobby", text_size: 100
+      label "Server Browser", text_size: 100
       flow width: 1.0, height: 1.0 do
         stack width: 0.25 do
           button "Host Game", width: 1.0
           button "Direct Connect", width: 1.0
 
-          button "Back", width: 1.0 do
+          button "Back", width: 1.0, margin_top: 64 do
             pop_state
           end
         end
