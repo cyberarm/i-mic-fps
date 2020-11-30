@@ -1,30 +1,29 @@
 module CyberarmEngine
   module Networking
     module Protocol
-      MAX_PACKET_SIZE = 1024
-      PROTOCOL_VERSION = 0 # int
+      MAX_PACKET_SIZE = 1024 # bytes
+      PROTOCOL_VERSION = 0 # u32
       HEARTBEAT_INTERVAL = 5_000 # ms
       TIMEOUT_PERIOD = 30_000 # ms
 
-      packet_types = %w{
-        # protocol packets
-        reliable
-        multipart
-        control
-        data
+      PACKET_BASE_HEADER = "NnC" # protocol version (u32), sender peer id (u16), channel (u8)
+      PACKET_BASE_HEADER_LENGTH = 4 + 2 + 1 # bytes
 
-        # control packet types
-        disconnect
-        acknowledge
-        heartbeat
-        ping
-      }
+      # protocol packets
+      PACKET_RELIABLE  = 0
+      PACKET_FRAGMENT  = 1
+      PACKET_CONTROL   = 2
+      PACKET_RAW       = 3
 
-      # emulate c-like enum
-      packet_types.each_with_index do |type, i|
-        next if type.start_with?("#")
-        self.const_set(:"#{type.upcase}", i)
-      end
+      # control packet types
+      CONTROL_CONNECT      = 30
+      CONTROL_SET_PEER_ID  = 31
+      CONTROL_DISCONNECT   = 32
+      CONTROL_ACKNOWLEDGE  = 33
+      CONTROL_HEARTBEAT    = 34
+      CONTROL_PING         = 35
+      CONTROL_PONG         = 36
+      CONTROL_SET_PEER_MTU = 37 # In future
     end
   end
 end

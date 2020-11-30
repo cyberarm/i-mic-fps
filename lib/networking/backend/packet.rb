@@ -1,18 +1,29 @@
 module CyberarmEngine
   module Networking
     class Packet
-      attr_reader :protocol_version, :type, :peer_id, :message
+      attr_reader :protocol_version, :peer_id, :channel, :message
 
-      def self.type
-        raise NotImplementedError, "#{self.class}.type must be defined!"
+      def self.decode(raw)
+        header = raw.unpack(CyberarmEngine::Networking::Protocol::PACKET_BASE_HEADER)
+
+        Packet.new(protocol_version: header[0], peer_id: header[1], channel: header[2], message: raw[Protocol::PACKET_BASE_HEADER_LENGTH...raw.length])
       end
 
-      def self.decode(packet)
-        raise NotImplementedError, "#{self.class}.decode must be defined!"
+      def initialize(protocol_version:, peer_id:, channel:, message:)
+        @protocol_version = protocol_version
+        @peer_id          = peer_id
+        @channel          = channel
+        @message          = message
       end
 
       def encode
-        raise NotImplementedError, "#{self.class}#encode must be defined!"
+        header = [
+          @protocol_version,
+          @peer_id,
+          @channel
+        ].pack(CyberarmEngine::Networking::Protocol::PACKET_BASE_HEADER)
+
+        "#{header}#{@message}"
       end
     end
   end

@@ -1,4 +1,4 @@
-class IMICFPS
+module CyberarmEngine
   module Networking
     MULTICAST_ADDRESS = "224.0.0.1"
     MULTICAST_PORT = 30_000
@@ -6,7 +6,7 @@ class IMICFPS
     REMOTE_GAMEHUB = "i-mic.cyberarm.dev"
     REMOTE_GAMEHUB_PORT = 98765
 
-    DEFAULT_SERVER_HOST = "0.0.0.0"
+    DEFAULT_SERVER_HOSTNAME = "0.0.0.0"
     DEFAULT_SERVER_PORT = 56789
     DEFAULT_SERVER_QUERY_PORT = 28900
 
