@@ -14,7 +14,7 @@ module CyberarmEngine
       )
         @hostname = hostname
         @port = port
-        @max_clients = max_clients
+        @max_clients = max_clients + 2
 
         @channels = Array(0..channels).map { |id| Channel.new(id: id, mode: :default) }
         @peers = []
@@ -124,8 +124,8 @@ module CyberarmEngine
       # !--- this following functions are meant for internal use only ---! #
 
       def available_peer_id
-        peer_ids = @peers.map { ||peer| peer.id }
-        ids = (1..@max_clients).to_a - peer_ids
+        peer_ids = @peers.map(&:id)
+        ids = (2..@max_clients).to_a - peer_ids
 
         ids.size.positive? ? ids.first : nil
       end
@@ -138,7 +138,6 @@ module CyberarmEngine
           pkt = PacketHandler.handle(host: self, raw: data, peer: peer)
           packet_received(peer: peer, message: pkt.message, channel: 0) if pkt.is_a?(RawPacket)
         else
-          # TODO: Reject packet unless it's a connection request
           peer = Peer.new(id: 0, hostname: addr[2], port: addr[1])
           pkt = PacketHandler.handle(host: self, raw: data, peer: peer)
 
@@ -157,6 +156,10 @@ module CyberarmEngine
         @total_packets_received += 1
         @total_data_received += data.length
         @last_read_time = Networking.milliseconds
+
+        peer.total_packets_received += 1
+        peer.total_data_received += data.length
+        peer.last_read_time = Networking.milliseconds
 
         true
       rescue IO::WaitReadable

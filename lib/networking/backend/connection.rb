@@ -47,6 +47,15 @@ module CyberarmEngine
       def update
         while read
         end
+
+        @peer.write_queue.reverse.each do |packet|
+          write(packet)
+          @peer.write_queue.delete(packet)
+        end
+
+        if Networking.milliseconds - @last_write_time > Protocol::HEARTBEAT_INTERVAL
+          @peer.write_queue << PacketHandler.create_control_packet(peer: @peer, control_type: Protocol::CONTROL_HEARTBEAT)
+        end
       end
 
       private
