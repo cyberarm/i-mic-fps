@@ -1,0 +1,13 @@
+en:
+  game:
+    name: I-MIC FPS
+  menus:
+    singleplayer: Single Player
+    multiplayer:  Multiplayer
+    settings:     Settings
+    extras:       Extras
+    quit:         Quit
+    back:         Back
+    leave:        Leave
+    paused:       Paused
+    resume:       Resume

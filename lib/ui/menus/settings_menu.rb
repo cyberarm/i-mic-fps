@@ -29,7 +29,7 @@ class IMICFPS
             end
           end
 
-          button "Back", width: 1.0, margin_top: 64 do
+          button I18n.t("menus.back"), width: 1.0, margin_top: 64 do
             pop_state
           end
         end

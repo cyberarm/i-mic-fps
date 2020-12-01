@@ -12,6 +12,11 @@ class IMICFPS
         super(width: window_width, height: window_height, fullscreen: fullscreen, resizable: true, update_interval: 1000.0/fps_target)
       end
       $window = self
+      I18n.load_path << Dir["#{GAME_ROOT_PATH}/locales/*.yml"]
+      I18n.default_locale = :en
+      language = Gosu.language.split("_").first.to_sym
+      I18n.locale = language if I18n.available_locales.include?(language)
+
       @needs_cursor = false
       @cursor = Gosu::Image.new(IMICFPS::GAME_ROOT_PATH + "/static/cursors/pointer.png")
       @number_of_vertices = 0

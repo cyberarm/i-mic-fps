@@ -3,23 +3,23 @@ class IMICFPS
     def setup
       title IMICFPS::NAME
 
-      link "Single Player" do
+      link I18n.t("menus.singleplayer") do
         push_state(LevelSelectMenu)
       end
 
-      link "Multiplayer" do
+      link I18n.t("menus.multiplayer") do
         push_state(MultiplayerMenu)
       end
 
-      link "Settings" do
+      link I18n.t("menus.settings") do
         push_state(SettingsMenu)
       end
 
-      link "Extras" do
+      link I18n.t("menus.extras") do
         push_state(ExtrasMenu)
       end
 
-      link "Quit" do
+      link I18n.t("menus.quit") do
         window.close
       end
 

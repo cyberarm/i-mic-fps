@@ -11,14 +11,17 @@ module CyberarmEngine
         type = packet.message.unpack1("C")
 
         puts "#{host.class} received #{type_to_name(type: type)}"
+        pp raw
 
         case type
         when Protocol::PACKET_CONTROL
           handle_control_packet(host, packet, peer)
         when Protocol::PACKET_RAW
           handle_raw_packet(packet)
+        when Protocol::PACKET_RELIABLE
+          handle_reliable_packet(host, packet, peer)
         else
-          raise NotImplementedError, "A Packet handler for #{type} is not implmented!"
+          raise NotImplementedError, "A Packet handler for #{type_to_name(type: type)}[#{type}] is not implemented!"
         end
       end
 
@@ -56,7 +59,16 @@ module CyberarmEngine
 
         when Protocol::CONTROL_HEARTBEAT
         when Protocol::CONTROL_PING
+          peer.write_queue << PacketHandler.create_control_packet(
+            peer: peer, control_type: Protocol::CONTROL_PONG,
+            reliable: true,
+            message: [Networking.milliseconds].pack("Q") # Uint64, native endian
+          )
         when Protocol::CONTROL_PONG
+          sent_time = pkt.message.unpack1("Q")
+          difference = Networking.milliseconds - sent_time
+
+          peer.ping = difference
         end
 
         nil
@@ -66,12 +78,30 @@ module CyberarmEngine
         RawPacket.decode(packet.message)
       end
 
+      def self.handle_reliable_packet(host, packet, peer)
+        # TODO: Preserve delivery order of reliable packets
+
+        pkt = ReliablePacket.decode(packet.message)
+        peer.write_queue << create_control_packet(
+          peer: peer,
+          control_type: Protocol::CONTROL_ACKNOWLEDGE,
+          message: [pkt.sequence_number].pack("n")
+        )
+
+        handle(host: host, raw: pkt.message, peer: peer)
+      end
+
       def self.create_control_packet(peer:, control_type:, message: nil, reliable: false, channel: 0)
         message_packet = nil
 
         if reliable
           warn "Reliable packets are not yet implemented!"
-          packet = ControlPacket.new(control_type: control_type, message: message)
+          packet = Packet.new(
+            protocol_version: Protocol::PROTOCOL_VERSION,
+            peer_id: peer.id,
+            channel: channel,
+            message: ControlPacket.new(control_type: control_type, message: message).encode
+          )
           message_packet = ReliablePacket.new(sequence_number: peer.next_reliable_sequence_number, message: packet.encode)
         else
           message_packet = ControlPacket.new(control_type: control_type, message: message)

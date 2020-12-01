@@ -12,7 +12,7 @@ class IMICFPS
         end
       end
 
-      link "Back" do
+      link I18n.t("menus.back") do
         pop_state
       end
     end

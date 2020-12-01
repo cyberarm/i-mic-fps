@@ -9,11 +9,11 @@ class IMICFPS
         pop_state
       end
 
-      link "Settings" do
+      link I18n.t("menus.settings") do
         push_state(SettingsMenu)
       end
 
-      link "Leave" do
+      link I18n.t("menus.leave") do
         push_state(MainMenu)
       end
     end

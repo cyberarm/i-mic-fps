@@ -10,6 +10,7 @@ require "securerandom"
 require "opengl"
 require "glu"
 require "nokogiri"
+require "i18n"
 
 begin
   require_relative "../cyberarm_engine/lib/cyberarm_engine"

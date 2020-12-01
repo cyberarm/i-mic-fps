@@ -19,12 +19,14 @@ def require_all(directory)
     else
       files = failed
     end
-  end until( failed.empty? )
+  end until(failed.empty?)
 end
 
 require "socket"
 require_relative "lib/networking"
 require_all "lib/networking/backend"
+
+Thread.abort_on_exception = true
 
 server = CyberarmEngine::Networking::Server.new
 def server.client_connected(peer:)
@@ -33,6 +35,7 @@ end
 
 def server.packet_received(peer:, message:, channel:)
   pp "Server received: #{message} [on channel: #{channel} from peer: #{peer&.id}]"
+  broadcast_packet(message: "Broadcasting...")
 end
 
 Thread.new do
@@ -47,6 +50,7 @@ end
 connection = CyberarmEngine::Networking::Connection.new(hostname: "localhost", port: CyberarmEngine::Networking::DEFAULT_SERVER_PORT, channels: 3)
 def connection.connected
   puts "Connection: Connected!"
+  send_packet(message: "I be connected!")
 end
 
 def connection.disconnected(reason:)
@@ -55,6 +59,7 @@ end
 
 def connection.packet_received(message:, channel:)
   pp "Connection received: #{message} [on channel: #{channel} from peer: SERVER]"
+  send_packet(message: "ECHO: #{message}")
 end
 connection.connect(timeout: 1_000)
 

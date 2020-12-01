@@ -7,7 +7,7 @@ class IMICFPS
         stack(width: 0.25, height: 1.0) do
           button "Edit Profile", width: 1.0
           button "Log Out", width: 1.0
-          button "Back", width: 1.0, margin_top: 64 do
+          button I18n.t("menus.back"), width: 1.0, margin_top: 64 do
             pop_state
           end
         end

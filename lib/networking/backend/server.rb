@@ -70,7 +70,7 @@ module CyberarmEngine
 
       # Send packet to specified peer
       def send_packet(peer:, message:, reliable: false, channel: 0)
-        if (peer = @peers.get(peer))
+        if (peer = @peers[peer])
           packet = PacketHandler.create_raw_packet(message, reliable, channel)
           peer.write_queue << packet
         else
@@ -80,12 +80,12 @@ module CyberarmEngine
 
       # Send packet to all connected peer
       def broadcast_packet(message:, reliable: false, channel: 0)
-        @peers.each { |peer| send_packet(peer.id, message, reliable, channel) }
+        @peers.each { |peer| send_packet(peer: peer.id, message: message, reliable: reliable, channel: channel) }
       end
 
       # Disconnect peer
       def disconnect_client(peer:, reason: "")
-        if (peer = @peers.get(peer))
+        if (peer = @peers[peer])
           packet = PacketHandler.create_disconnect_packet(peer.id, reason)
           peer.write_now!(packet)
           @peers.delete(peer)
@@ -113,6 +113,16 @@ module CyberarmEngine
             client_disconnected(peer: peer, reason: message)
             @peers.delete(peer)
             next
+          end
+
+          if Networking.milliseconds - peer.last_write_time > Protocol::HEARTBEAT_INTERVAL
+            write(
+              peer: peer,
+              packet: PacketHandler.create_control_packet(
+                peer: peer,
+                control_type: Protocol::CONTROL_PING
+              )
+            )
           end
 
           while(packet = peer.write_queue.shift)
