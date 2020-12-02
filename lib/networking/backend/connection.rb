@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module CyberarmEngine
   module Networking
     class Connection
@@ -63,9 +64,9 @@ module CyberarmEngine
         @peer.total_data_received += data.length
         @peer.last_read_time = Networking.milliseconds
 
-        return true
+        true
       rescue IO::WaitReadable
-        return false
+        false
       end
 
       def write(packet:)

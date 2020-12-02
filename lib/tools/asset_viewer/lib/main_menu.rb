@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class AssetViewerTool
     class MainMenu < Menu
@@ -6,17 +7,17 @@ class IMICFPS
         window.needs_cursor = true
 
         @manifests = []
-        Dir.glob(GAME_ROOT_PATH + "/assets/**/manifest.yaml").each do |manifest|
+        Dir.glob("#{GAME_ROOT_PATH}/assets/**/manifest.yaml").each do |manifest|
           begin
             @manifests << Manifest.new(manifest_file: manifest)
-          rescue
+          rescue StandardError
             warn "Broken manifest: #{manifest}"
           end
         end
 
         @manifests.sort_by! { |m| m.name.downcase }
 
-        label "#{IMICFPS::NAME}", text_size: 100, color: Gosu::Color::BLACK
+        label IMICFPS::NAME.to_s, text_size: 100, color: Gosu::Color::BLACK
         label "Asset Viewer", text_size: 50
 
         flow(width: 1.0, height: 1.0) do

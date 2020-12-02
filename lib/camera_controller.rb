@@ -1,11 +1,13 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class CameraController
     include CommonMethods
 
     attr_accessor :mode, :camera, :entity, :distance, :origin_distance,
                   :constant_pitch, :mouse_sensitivity, :mouse_captured
-    def initialize(mode: :fpv, camera:, entity:)
+
+    def initialize(camera:, entity:, mode: :fpv)
       # :fpv - First Person View
       # :tpv - Third Person View
       @mode = mode
@@ -16,7 +18,8 @@ class IMICFPS
       @origin_distance = @distance
       @constant_pitch = 20.0
 
-      window.mouse_x, window.mouse_y = window.width / 2, window.height / 2
+      window.mouse_x = window.width / 2
+      window.mouse_y = window.height / 2
 
       @true_mouse = Point.new(window.width / 2, window.height / 2)
       @mouse_sensitivity = 20.0 # Less is faster, more is slower
@@ -41,11 +44,11 @@ class IMICFPS
     end
 
     def position_camera
-      if first_person_view?
-        @distance = 0
-      else
-        @distance = @origin_distance
-      end
+      @distance = if first_person_view?
+                    0
+                  else
+                    @origin_distance
+                  end
 
       x_offset = horizontal_distance_from_object * Math.sin(@entity.orientation.y.degrees_to_radians)
       z_offset = horizontal_distance_from_object * Math.cos(@entity.orientation.y.degrees_to_radians)
@@ -63,7 +66,7 @@ class IMICFPS
       position_camera
 
       if @mouse_captured
-        delta = Float(@true_mouse.x - self.mouse_x) / (@mouse_sensitivity * @camera.field_of_view) * 70
+        delta = Float(@true_mouse.x - mouse_x) / (@mouse_sensitivity * @camera.field_of_view) * 70
         @camera.orientation.y -= delta
         @camera.orientation.y %= 360.0
 
@@ -73,9 +76,10 @@ class IMICFPS
         @entity.orientation.y += delta
         @entity.orientation.y %= 360.0
 
-        window.mouse_x = window.width  / 2 if window.mouse_x <= 1 || window.mouse_x >= window.width-1
-        window.mouse_y = window.height / 2 if window.mouse_y <= 1 || window.mouse_y >= window.height-1
-        @true_mouse.x, @true_mouse.y = window.mouse_x, window.mouse_y
+        window.mouse_x = window.width  / 2 if window.mouse_x <= 1 || window.mouse_x >= window.width - 1
+        window.mouse_y = window.height / 2 if window.mouse_y <= 1 || window.mouse_y >= window.height - 1
+        @true_mouse.x = window.mouse_x
+        @true_mouse.y = window.mouse_y
       end
     end
 
@@ -102,6 +106,7 @@ class IMICFPS
       end
     end
 
-    def button_up(id); end
+    def button_up(id)
+    end
   end
 end

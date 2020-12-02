@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Commands
     class HelpCommand < Command
@@ -21,7 +22,7 @@ class IMICFPS
           if list.size == 1
             console.text_input.text = "#{split.first} #{list.first} "
           elsif list.size > 1
-            console.stdin(list.map { |cmd| Style.highlight(cmd) }.join(', '))
+            console.stdin(list.map { |cmd| Style.highlight(cmd) }.join(", "))
           end
         end
       end
@@ -34,7 +35,7 @@ class IMICFPS
             "#{Style.error(command)} is not a command"
           end
         else
-          "Available commands:\n#{Command.list_commands.map { |cmd| "#{Style.highlight(cmd.command)}" }.join(', ')}"
+          "Available commands:\n#{Command.list_commands.map { |cmd| Style.highlight(cmd.command).to_s }.join(', ')}"
         end
       end
     end

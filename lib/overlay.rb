@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Overlay
     include CommonMethods
@@ -13,6 +14,7 @@ class IMICFPS
 
     def draw
       return if @text.text.empty?
+
       width = @text.markup_width + 8
 
       Gosu.draw_rect(0, 0, width, (@text.height + 4), Gosu::Color.rgba(0, 0, 0, 100))
@@ -30,7 +32,9 @@ class IMICFPS
 
       if window.config.get(:options, :fps)
         create_slot "FPS: #{Gosu.fps}"
-        create_slot "Frame time: #{(Gosu.milliseconds - window.delta_time).to_s.rjust(3, "0")}ms" if window.config.get(:debug_options, :stats)
+        if window.config.get(:debug_options, :stats)
+          create_slot "Frame time: #{(Gosu.milliseconds - window.delta_time).to_s.rjust(3, '0')}ms"
+        end
       end
 
       if window.config.get(:debug_options, :stats)
@@ -49,7 +53,7 @@ class IMICFPS
       @text.text = ""
       @slots.each_with_index do |slot, i|
         @text.text += "#{slot.value} <c=ff000000>•</c> " unless i == @slots.size - 1
-        @text.text += "#{slot.value}" if i == @slots.size - 1
+        @text.text += slot.value.to_s if i == @slots.size - 1
       end
     end
 

@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 class IMICFPS
   module SoundManager
     extend CyberarmEngine::Common
 
-    MASTERS = {}
-    EFFECTS = []
-    PLAYLISTS = {}
+    MASTERS = {}.freeze
+    EFFECTS = [].freeze
+    PLAYLISTS = {}.freeze
 
     def self.master_volume
       1.0
@@ -20,15 +21,15 @@ class IMICFPS
     end
 
     def self.load_master(package)
-      return if MASTERS.dig(package)
+      return if MASTERS[package]
 
-      yaml = YAML.load_file( "#{IMICFPS.assets_path}/#{package}/shared/sound/master.yaml" )
+      yaml = YAML.load_file("#{IMICFPS.assets_path}/#{package}/shared/sound/master.yaml")
       MASTERS[package] = yaml
     end
 
     def self.sound(package, name)
       if data = sound_data(package, name.to_s)
-        get_sample("#{IMICFPS.assets_path}/#{package}/shared/sound/#{data["path"]}")
+        get_sample("#{IMICFPS.assets_path}/#{package}/shared/sound/#{data['path']}")
       else
         raise "Missing sound: '#{name}' in package '#{package}'"
       end
@@ -36,11 +37,11 @@ class IMICFPS
 
     def self.sound_data(package, name)
       load_master(package)
-      if master = MASTERS.dig(package)
+      if master = MASTERS[package]
         return master["sounds"].find { |s| s["name"] == name }
       end
 
-      return nil
+      nil
     end
 
     def self.sound_effect(klass, options)

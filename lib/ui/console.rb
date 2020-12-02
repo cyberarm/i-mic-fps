@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Console
     Z = 100_000
@@ -6,6 +7,7 @@ class IMICFPS
     include CommonMethods
 
     attr_reader :text_input
+
     def initialize
       @text_input = Gosu::TextInput.new
       @width  = window.width  / 4 * 3
@@ -47,7 +49,9 @@ class IMICFPS
       @history.draw
       @input.draw
       # Caret
-      draw_rect(@input.x + caret_from_left, @input.y, Console::PADDING, @input.height, @caret_color, Console::Z + 2) if @show_caret
+      if @show_caret
+        draw_rect(@input.x + caret_from_left, @input.y, Console::PADDING, @input.height, @caret_color, Console::Z + 2)
+      end
       # Caret selection
       if caret_start != caret_end
         if caret_start < @text_input.selection_start
@@ -59,8 +63,9 @@ class IMICFPS
     end
 
     def caret_from_left
-      return 0 if @text_input.caret_pos == 0
-      @input.textobject.text_width(@text_input.text[0..@text_input.caret_pos-1])
+      return 0 if @text_input.caret_pos.zero?
+
+      @input.textobject.text_width(@text_input.text[0..@text_input.caret_pos - 1])
     end
 
     def caret_selection_width
@@ -99,7 +104,8 @@ class IMICFPS
     def button_down(id)
       case id
       when Gosu::KbEnter, Gosu::KbReturn
-        return unless @text_input.text.length > 0
+        return unless @text_input.text.length.positive?
+
         @history.text += "\n<c=999999>> #{@text_input.text}</c>"
         @command_history << @text_input.text
         @command_history_index = @command_history.size
@@ -109,7 +115,7 @@ class IMICFPS
 
       when Gosu::KbUp
         @command_history_index -= 1
-        @command_history_index = 0 if @command_history_index < 0
+        @command_history_index = 0 if @command_history_index.negative?
         @text_input.text = @command_history[@command_history_index]
 
       when Gosu::KbDown
@@ -125,26 +131,24 @@ class IMICFPS
         split = @text_input.text.split(" ")
 
         if !@text_input.text.end_with?(" ") && split.size == 1
-          list = abbrev_search(Commands::Command.list_commands.map { |cmd| cmd.command.to_s}, @text_input.text)
+          list = abbrev_search(Commands::Command.list_commands.map { |cmd| cmd.command.to_s }, @text_input.text)
 
           if list.size == 1
             @text_input.text = "#{list.first} "
-          else
-            stdin("\n#{list.map { |cmd| Commands::Style.highlight(cmd)}.join(", ")}") if list.size > 0
+          elsif list.size.positive?
+            stdin("\n#{list.map { |cmd| Commands::Style.highlight(cmd) }.join(', ')}")
           end
-        else
-          if split.size > 0 && cmd = Commands::Command.find(split.first)
-            cmd.autocomplete(self)
-          end
+        elsif split.size.positive? && cmd = Commands::Command.find(split.first)
+          cmd.autocomplete(self)
         end
 
       when Gosu::KbBacktick
         # Remove backtick character from input
-        if @text_input.text.size > 1
-          @text_input.text = @text_input.text[0..@text_input.text.size - 2]
-        else
-          @text_input.text = ""
-        end
+        @text_input.text = if @text_input.text.size > 1
+                             @text_input.text[0..@text_input.text.size - 2]
+                           else
+                             ""
+                           end
 
       # Copy
       when Gosu::KbC
@@ -187,9 +191,7 @@ class IMICFPS
 
       # Clear history
       when Gosu::KbL
-        if control_down?
-          @history.text = ""
-        end
+        @history.text = "" if control_down?
       end
     end
 
@@ -197,29 +199,29 @@ class IMICFPS
     end
 
     def update_history_y
-      @history.y = @height - (PADDING * 2) - @input.height - (@history.text.lines.count * (@history.textobject.height))
+      @history.y = @height - (PADDING * 2) - @input.height - (@history.text.lines.count * @history.textobject.height)
     end
 
     def handle_command
       string = @text_input.text
       split  = string.split(" ")
       command = split.first
-      arguments = split.length > 0 ? split[1..split.length - 1] : []
+      arguments = split.length.positive? ? split[1..split.length - 1] : []
 
       IMICFPS::Commands::Command.use(command, arguments, self)
     end
 
     def abbrev_search(array, text)
-      return [] unless text.length > 0
+      return [] unless text.length.positive?
 
       list = []
       Abbrev.abbrev(array).each do |abbrev, value|
-        next unless abbrev && abbrev.start_with?(text)
+        next unless abbrev&.start_with?(text)
 
         list << value
       end
 
-      return list.uniq
+      list.uniq
     end
 
     def stdin(string)

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class PhysicsManager
     def initialize(collision_manager:)
@@ -16,7 +17,7 @@ class IMICFPS
     end
 
     def resolve(entity, other)
-      entity.velocity.y = other.velocity.y if other.velocity.y < entity.velocity.y && entity.velocity.y < 0
+      entity.velocity.y = other.velocity.y if other.velocity.y < entity.velocity.y && entity.velocity.y.negative?
     end
 
     def simulate
@@ -33,7 +34,7 @@ class IMICFPS
           entity.velocity.y = 0
         else
           entity.velocity.y -= @collision_manager.map.gravity * entity.delta_time if entity.manifest.physics
-          entity.velocity.y = 0 if entity.velocity.y < 0
+          entity.velocity.y = 0 if entity.velocity.y.negative?
         end
       end
     end

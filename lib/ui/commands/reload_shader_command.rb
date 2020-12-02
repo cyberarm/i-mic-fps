@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Commands
     class ReloadShaderCommand < Command
@@ -12,7 +13,7 @@ class IMICFPS
 
       def handle(arguments, console)
         if arguments.size > 2
-          console.stdin("to many arguments for #{Style.highlight("#{command}")}, got #{Style.error(arguments.size)} expected #{Style.notice(1)}.")
+          console.stdin("to many arguments for #{Style.highlight(command.to_s)}, got #{Style.error(arguments.size)} expected #{Style.notice(1)}.")
           return
         end
 
@@ -22,7 +23,7 @@ class IMICFPS
 
         case arguments.size
         when 0
-          console.stdin( usage )
+          console.stdin(usage)
           return
         when 1
           name = arguments.first
@@ -50,9 +51,9 @@ class IMICFPS
         string = $stdout.string
 
         if shader.compiled?
-          console.stdin("#{Style.notice("Successfully reloaded shader")}: #{shader.name}")
+          console.stdin("#{Style.notice('Successfully reloaded shader')}: #{shader.name}")
         else
-          console.stdin("#{Style.error("Failed to reload #{shader.name}")}")
+          console.stdin(Style.error("Failed to reload #{shader.name}").to_s)
           console.stdin(string)
         end
       ensure
@@ -61,7 +62,7 @@ class IMICFPS
       end
 
       def usage
-        "#{Style.highlight(command)} #{Style.notice("vertex_name [fragment_name]")}"
+        "#{Style.highlight(command)} #{Style.notice('vertex_name [fragment_name]')}"
       end
     end
   end

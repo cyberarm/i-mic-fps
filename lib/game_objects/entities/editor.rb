@@ -1,7 +1,7 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Editor < Entity
-
     attr_accessor :speed
     attr_reader :bound_model, :first_person_view
 
@@ -15,7 +15,6 @@ class IMICFPS
       @first_person_view = true
       @visible = false
       @drag = 0.9
-
     end
 
     def update

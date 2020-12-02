@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class HUD
     class ChatHistoryWidget < HUD::Widget
@@ -36,8 +37,8 @@ class IMICFPS
       end
 
       def random_message
-        usernames = [
-          "Cyberarm", "Cyber", "TankKiller", "DavyJones",
+        usernames = %w[
+          Cyberarm Cyber TankKiller DavyJones
         ]
         entities = [
           "Alternate Tank", "Hover Hank", "Helicopter", "Jeep"
@@ -47,12 +48,12 @@ class IMICFPS
           "Compass Bridge", "Compass Power Plant", "Gort Power Plant", "Gort Bridge", "Nest"
         ]
 
-        events = [:spot, :kill, :target, :message]
+        events = %i[spot kill target message]
 
         messages = [
           "Need more tanks!",
           "I need 351 credits to purchase a tank",
-          "I got 300",
+          "I got 300"
         ]
 
         segments = {

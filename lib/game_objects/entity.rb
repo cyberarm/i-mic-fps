@@ -1,14 +1,12 @@
 # frozen_string_literal: true
+
 class IMICFPS
-
-
   # A game object is any renderable thing
   class Entity
     include CommonMethods
 
-    attr_accessor :visible, :renderable, :backface_culling
-    attr_accessor :position, :orientation, :scale, :velocity
-    attr_reader :name, :debug_color, :bounding_box, :drag, :camera, :manifest, :model
+    attr_accessor :visible, :renderable, :backface_culling, :position, :orientation, :scale, :velocity, :debug_color
+    attr_reader :name, :bounding_box, :drag, :camera, :manifest, :model
 
     def initialize(manifest:, map_entity: nil, spawnpoint: nil, backface_culling: true, run_scripts: true)
       @manifest = manifest
@@ -54,7 +52,7 @@ class IMICFPS
 
       @camera = nil
 
-      return self
+      self
     end
 
     def load_scripts
@@ -94,7 +92,6 @@ class IMICFPS
     def draw
     end
 
-
     def update
       unless at_same_position?
         Publisher.instance.publish(:entity_moved, nil, self)
@@ -102,10 +99,6 @@ class IMICFPS
       end
 
       @last_position = Vector.new(@position.x, @position.y, @position.z)
-    end
-
-    def debug_color=(color)
-      @debug_color = color
     end
 
     def at_same_position?

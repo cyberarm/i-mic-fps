@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Game < GameState
     attr_reader :map
@@ -7,7 +8,7 @@ class IMICFPS
       window.director.load_map(map_parser: @options[:map_parser])
 
       @player = window.director.map.find_entity_by(name: "character")
-      @camera = PerspectiveCamera.new( position: @player.position.clone, aspect_ratio: window.aspect_ratio )
+      @camera = PerspectiveCamera.new(position: @player.position.clone, aspect_ratio: window.aspect_ratio)
       @camera_controller = CameraController.new(mode: :fpv, camera: @camera, entity: @player)
 
       # @connection = Networking::Connection.new(address: "localhost", port: Networking::DEFAULT_SERVER_PORT)

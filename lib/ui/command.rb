@@ -1,16 +1,20 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Commands
     module Style
       def self.error(string)
         "<c=ff5555>#{string}</c>"
       end
+
       def self.warn(string)
         "<c=ff7700>#{string}</c>"
       end
+
       def self.notice(string)
         "<c=55ff55>#{string}</c>"
       end
+
       def self.highlight(string, color = "5555ff")
         "<c=#{color}>#{string}</c>"
       end
@@ -28,7 +32,9 @@ class IMICFPS
         @commands = []
         @list.each do |subclass|
           cmd = subclass.new
-          raise "Command '#{cmd.command}' from '#{cmd.class}' already exists!" if @commands.detect { |c| c.command == cmd.command }
+          if @commands.detect { |c| c.command == cmd.command }
+            raise "Command '#{cmd.command}' from '#{cmd.class}' already exists!"
+          end
 
           @commands << cmd
         end
@@ -59,15 +65,19 @@ class IMICFPS
         setup
       end
 
-      def setup; end
+      def setup
+      end
 
       def subcommand(command, type)
-        raise "Subcommand '#{command}' for '#{self.command}' already exists!" if @subcommands.detect { |subcmd| subcmd.command == command.to_sym }
+        if @subcommands.detect { |subcmd| subcmd.command == command.to_sym }
+          raise "Subcommand '#{command}' for '#{self.command}' already exists!"
+        end
+
         @subcommands << SubCommand.new(self, command, type)
       end
 
       def get(key)
-        @store.dig(key)
+        @store[key]
       end
 
       def set(key, value)
@@ -89,15 +99,16 @@ class IMICFPS
       def autocomplete(console)
         split = console.text_input.text.split(" ")
 
-        if @subcommands.size > 0
+        if @subcommands.size.positive?
           if !console.text_input.text.end_with?(" ") && split.size == 2
-            list = console.abbrev_search(@subcommands.map { |cmd| cmd.command.to_s}, split.last)
+            list = console.abbrev_search(@subcommands.map { |cmd| cmd.command.to_s }, split.last)
 
             if list.size == 1
               console.text_input.text = "#{split.first} #{list.first} "
             else
-              return unless list.size > 0
-              console.stdin("#{list.map { |cmd| Commands::Style.highlight(cmd)}.join(", ")}")
+              return unless list.size.positive?
+
+              console.stdin(list.map { |cmd| Commands::Style.highlight(cmd) }.join(", ").to_s)
             end
 
           # List available options on subcommand
@@ -106,26 +117,26 @@ class IMICFPS
 
             if subcommand
               if split.size == 2
-                console.stdin("Available options: #{subcommand.values.map { |value| Commands::Style.highlight(value) }.join(",")}")
+                console.stdin("Available options: #{subcommand.values.map { |value| Commands::Style.highlight(value) }.join(',')}")
               else
                 list = console.abbrev_search(subcommand.values, split.last)
                 if list.size == 1
                   console.text_input.text = "#{split.first} #{split[1]} #{list.first} "
-                else
-                  console.stdin("Available options: #{list.map { |value| Commands::Style.highlight(value) }.join(",")}") if list.size > 0
+                elsif list.size.positive?
+                  console.stdin("Available options: #{list.map { |value| Commands::Style.highlight(value) }.join(',')}")
                 end
               end
             end
 
           # List available subcommands if command was entered and has only a space after it
           elsif console.text_input.text.end_with?(" ") && split.size == 1
-            console.stdin("Available subcommands: #{@subcommands.map { |cmd| Commands::Style.highlight(cmd.command)}.join(", ")}")
+            console.stdin("Available subcommands: #{@subcommands.map { |cmd| Commands::Style.highlight(cmd.command) }.join(', ')}")
           end
         end
       end
 
       def handle_subcommand(arguments, console)
-        if arguments.size == 0
+        if arguments.size.zero?
           console.stdin(usage)
           return
         end

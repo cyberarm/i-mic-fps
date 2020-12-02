@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Menu < IMICFPS::GuiState
     include CommonMethods
@@ -67,7 +68,7 @@ class IMICFPS
       @_subtitle = @elements.last
     end
 
-    def link(text, color = Gosu::Color.rgb(0,127,127), &block)
+    def link(text, color = Gosu::Color.rgb(0, 127, 127), &block)
       text = Text.new(text, color: color, size: 50, x: 0, y: 100 + (60 * @elements.count), font: BOLD_SANS_FONT)
       @elements << Link.new(text, self, block)
     end
@@ -94,14 +95,12 @@ class IMICFPS
       draw_rect(
         window.width / 4, 0,
         window.width / 2, window.height,
-        Gosu::Color.new(0x11ffffff),
+        Gosu::Color.new(0x11ffffff)
       )
     end
 
     def draw_menu
-      @elements.each do |e|
-        e.draw
-      end
+      @elements.each(&:draw)
     end
 
     def update
@@ -110,9 +109,7 @@ class IMICFPS
         e.update
       end
 
-      if window.scene
-        window.scene.update(window.dt)
-      end
+      window.scene&.update(window.dt)
 
       super
 
@@ -124,9 +121,8 @@ class IMICFPS
       if id == Gosu::MsLeft
         @elements.each do |e|
           next unless e.is_a?(Link)
-          if mouse_over?(e)
-            e.clicked
-          end
+
+          e.clicked if mouse_over?(e)
         end
       end
 
@@ -134,36 +130,59 @@ class IMICFPS
     end
 
     def mouse_over?(object)
-      mouse_x.between?(object.x, object.x+object.width) &&
-      mouse_y.between?(object.y, object.y+object.height)
+      mouse_x.between?(object.x, object.x + object.width) &&
+        mouse_y.between?(object.y, object.y + object.height)
     end
 
     class Link
       attr_reader :text, :block
+
       def initialize(text, host, block)
-        @text, @host, @block = text, host, block
+        @text = text
+        @host = host
+        @block = block
         @color = @text.color
         @hover_color = Gosu::Color.rgb(64, 128, 255)
-        @text.shadow_color= Gosu::Color::BLACK
+        @text.shadow_color = Gosu::Color::BLACK
         @text.shadow_size = 2
         @text.shadow_alpha = 100
       end
 
       def update
-        if @host.mouse_over?(self)
-          @text.color = @hover_color
-        else
-          @text.color = @color
-        end
+        @text.color = if @host.mouse_over?(self)
+                        @hover_color
+                      else
+                        @color
+                      end
       end
 
-      def x; text.x; end
-      def x=(n); text.x = n; end
-      def y; text.y; end
-      def width; text.width; end
-      def height; text.height; end
-      def draw; text.draw; end
-      def clicked; @block.call if @block; end
+      def x
+        text.x
+      end
+
+      def x=(n)
+        text.x = n
+      end
+
+      def y
+        text.y
+      end
+
+      def width
+        text.width
+      end
+
+      def height
+        text.height
+      end
+
+      def draw
+        text.draw
+      end
+
+      def clicked
+        @block&.call
+      end
     end
   end
 end

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class TurnTableScene < Scene
     def setup
@@ -25,7 +26,7 @@ class IMICFPS
         "power_plant": 0.025,
         "war_factory": 0.03,
         "randomish_terrain": 0.004,
-        "river_terrain": 0.004,
+        "river_terrain": 0.004
       }
       choice = options.keys.sample
 

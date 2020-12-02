@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class HUD
     def initialize(player)
@@ -7,8 +8,8 @@ class IMICFPS
       @health = HealthWidget.new({ player: player })
       @chat_history = ChatHistoryWidget.new({ player: player })
       @score_board = ScoreBoardWidget.new({ player: player })
-      @squad = SquadWidget.new( { player: player } )
-      @crosshair = CrosshairWidget.new( { player: player } )
+      @squad = SquadWidget.new({ player: player })
+      @crosshair = CrosshairWidget.new({ player: player })
 
       @hud_elements = [
         @ammo,
@@ -17,8 +18,8 @@ class IMICFPS
         @chat_history,
         @score_board,
         @squad,
-        
-        @crosshair,
+
+        @crosshair
       ]
     end
 

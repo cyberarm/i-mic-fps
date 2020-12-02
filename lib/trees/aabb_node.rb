@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class AABBTree
     class AABBNode
       attr_accessor :bounding_box, :parent, :object
       attr_reader :a, :b
+
       def initialize(parent:, object:, bounding_box:)
         @parent = parent
         @object = object
@@ -34,7 +36,7 @@ class IMICFPS
           new_node.a = self
           new_node.b = leaf
 
-          return new_node
+          new_node
         else
           cost_a = @a.bounding_box.volume + @b.bounding_box.union(leaf.bounding_box).volume
           cost_b = @b.bounding_box.volume + @a.bounding_box.union(leaf.bounding_box).volume
@@ -52,7 +54,7 @@ class IMICFPS
 
           @bounding_box = @bounding_box.union(leaf.bounding_box)
 
-          return self
+          self
         end
       end
 
@@ -66,21 +68,19 @@ class IMICFPS
           end
         end
 
-        return items
+        items
       end
 
       def remove_subtree(leaf)
         if leaf
-          return self
+          self
+        elsif leaf.parent == self
+          other_child = other(leaf)
+          other_child.parent = @parent
+          other_child
         else
-          if leaf.parent == self
-            other_child = other(leaf)
-            other_child.parent = @parent
-            return other_child
-          else
-            leaf.parent.disown_child(leaf)
-            return self
-          end
+          leaf.parent.disown_child(leaf)
+          self
         end
       end
 
@@ -116,7 +116,7 @@ class IMICFPS
         unless node.leaf?
           node.bounding_box = node.a.bounding_box.union(node.b.bounding_box)
 
-          while(node = node.parent)
+          while (node = node.parent)
             node.bounding_box = node.a.bounding_box.union(node.b.bounding_box)
           end
         end

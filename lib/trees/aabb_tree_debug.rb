@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 class IMICFPS
   # Gets included into AABBTree
   module AABBTreeDebug
     def inspect
-      @branches, @leaves = 0, 0
+      @branches = 0
+      @leaves = 0
       if @root
         node = @root
 
@@ -11,7 +13,7 @@ class IMICFPS
         debug_search(node.b)
       end
 
-      puts "<#{self.class}:#{self.object_id}> has #{@branches} branches and #{@leaves} leaves"
+      puts "<#{self.class}:#{object_id}> has #{@branches} branches and #{@leaves} leaves"
     end
 
     def debug_search(node)

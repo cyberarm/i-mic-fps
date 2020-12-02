@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class SoundEffect
     class FadeIn < SoundEffect
       def setup
         @start_time = Gosu.milliseconds
         @duration = @options[:duration] # in milliseconds
-        @initial_volume = @options[:volume] ? @options[:volume] : 0.0
+        @initial_volume = @options[:volume] || 0.0
         @sound = @options[:sound]
 
         raise "duration not specified!" unless @duration

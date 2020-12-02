@@ -1,21 +1,28 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class SettingsMenu < Menu
     include CommonMethods
 
     def self.set_defaults
-      $window.config[:options, :audio, :volume_sound]    = 1.0 if $window.config.get(:options, :audio, :volume_sound).nil?
-      $window.config[:options, :audio, :volume_music]    = 0.7 if $window.config.get(:options, :audio, :volume_music).nil?
-      $window.config[:options, :audio, :volume_dialogue] = 0.7 if $window.config.get(:options, :audio, :volume_dialogue).nil?
+      if $window.config.get(:options, :audio, :volume_sound).nil?
+        $window.config[:options, :audio, :volume_sound]    = 1.0
+      end
+      if $window.config.get(:options, :audio, :volume_music).nil?
+        $window.config[:options, :audio, :volume_music]    = 0.7
+      end
+      if $window.config.get(:options, :audio, :volume_dialogue).nil?
+        $window.config[:options, :audio, :volume_dialogue] = 0.7
+      end
     end
 
     def setup
-      @categories = [
-        "Display",
-        "Graphics",
-        "Audio",
-        "Controls",
-        "Multiplayer"
+      @categories = %w[
+        Display
+        Graphics
+        Audio
+        Controls
+        Multiplayer
       ]
       @pages = {}
       @current_page = nil
@@ -40,9 +47,7 @@ class IMICFPS
             @pages[:"#{category}".downcase] = element
             element.hide
 
-            if respond_to?(:"create_page_#{category}".downcase)
-              self.send(:"create_page_#{category}".downcase)
-            end
+            send(:"create_page_#{category}".downcase) if respond_to?(:"create_page_#{category}".downcase)
           end
         end
       end
@@ -51,8 +56,8 @@ class IMICFPS
     end
 
     def show_page(page)
-      if element = @pages.dig(page)
-        @current_page.hide if @current_page
+      if element = @pages[page]
+        @current_page&.hide
         @current_page = element
         element.show
       end
@@ -68,8 +73,8 @@ class IMICFPS
           label "Height"
         end
         stack do
-          edit_line "#{window.width}"
-          edit_line "#{window.height}"
+          edit_line window.width.to_s
+          edit_line window.height.to_s
         end
       end
 
@@ -80,7 +85,7 @@ class IMICFPS
         flow do
           label "Gamma Correction".ljust(longest_string.length, " ")
           @display_gamma_correction = slider range: 0.0..1.0, value: 0.5
-          @display_gamma_correction.subscribe(:changed) do |sender, value|
+          @display_gamma_correction.subscribe(:changed) do |_sender, value|
             @display_gamma_correction_label.value = value.round(1).to_s
           end
           @display_gamma_correction_label = label "0.0"
@@ -88,14 +93,15 @@ class IMICFPS
         flow do
           label "Brightness".ljust(longest_string.length, " ")
           @display_brightness = slider range: 0.0..1.0, value: 0.5
-          @display_brightness.subscribe(:changed) do |sender, value|
+          @display_brightness.subscribe(:changed) do |_sender, value|
             @display_brightness_label.value = value.round(1).to_s
           end
-          @display_brightness_label = label "0.0"        end
+          @display_brightness_label = label "0.0"
+        end
         flow do
           label "Contrast".ljust(longest_string.length, " ")
           @display_contrast = slider range: 0.0..1.0, value: 0.5
-          @display_contrast.subscribe(:changed) do |sender, value|
+          @display_contrast.subscribe(:changed) do |_sender, value|
             @display_contrast_label.value = value.round(1).to_s
           end
           @display_contrast_label = label "0.0"
@@ -106,7 +112,7 @@ class IMICFPS
     def create_page_audio
       label "Audio", text_size: 50
       longest_string = "Dialogue".length
-      volumes = [:sound, :music, :dialogue]
+      volumes = %i[sound music dialogue]
 
       stack do
         volumes.each do |volume|
@@ -115,11 +121,11 @@ class IMICFPS
           flow do
             label volume.to_s.split("_").join(" ").capitalize.ljust(longest_string, " ")
             instance_variable_set(:"@volume_#{volume}", slider(range: 0.0..1.0, value: config_value))
-            instance_variable_get(:"@volume_#{volume}").subscribe(:changed) do |sender, value|
-              instance_variable_get(:"@volume_#{volume}_label").value = "%03.2f%%" % [value * 100.0]
+            instance_variable_get(:"@volume_#{volume}").subscribe(:changed) do |_sender, value|
+              instance_variable_get(:"@volume_#{volume}_label").value = format("%03.2f%%", value * 100.0)
               window.config[:options, :audio, :"volume_#{volume}"] = value
             end
-            instance_variable_set(:"@volume_#{volume}_label", label("%03.2f%%" % [config_value * 100.0]))
+            instance_variable_set(:"@volume_#{volume}_label", label(format("%03.2f%%", config_value * 100.0)))
           end
         end
       end
@@ -130,7 +136,7 @@ class IMICFPS
 
       InputMapper.keymap.each do |key, values|
         flow do
-          label "#{key}"
+          label key.to_s
 
           [values].flatten.each do |value|
             if name = Gosu.button_name(value)
@@ -156,7 +162,7 @@ class IMICFPS
       flow do
         label "Field of View".ljust(longest_string.length, " ")
         @fov = slider range: 70.0..110.0
-        @fov.subscribe(:changed) do |sender, value|
+        @fov.subscribe(:changed) do |_sender, value|
           @fov_label.value = value.round.to_s
         end
         @fov_label = label "90.0"
@@ -164,7 +170,7 @@ class IMICFPS
 
       flow do
         label "Detail".ljust(longest_string.length, " ")
-        list_box items: [:high, :medium, :low], width: 250
+        list_box items: %i[high medium low], width: 250
       end
 
       label ""
@@ -177,27 +183,27 @@ class IMICFPS
         stack do
           flow do
             label "Geometry Detail".ljust(longest_string.length, " ")
-            list_box items: [:high, :medium, :low], width: 250
+            list_box items: %i[high medium low], width: 250
           end
           flow do
             label "Shadow Detail".ljust(longest_string.length, " ")
-            list_box items: [:high, :medium, :low, :off], width: 250
+            list_box items: %i[high medium low off], width: 250
           end
           flow do
             label "Texture Detail".ljust(longest_string.length, " ")
-            list_box items: [:high, :medium, :low], width: 250
+            list_box items: %i[high medium low], width: 250
           end
           flow do
             label "Particle Detail".ljust(longest_string.length, " ")
-            list_box items: [:high, :medium, :low, :off], width: 250
+            list_box items: %i[high medium low off], width: 250
           end
           flow do
             label "Surface Effect Detail".ljust(longest_string.length, " ")
-            list_box items: [:high, :medium, :low], width: 250
+            list_box items: %i[high medium low], width: 250
           end
           flow do
             label "Lighting Mode".ljust(longest_string.length, " ")
-            list_box items: [:per_pixel, :per_vertex], width: 250
+            list_box items: %i[per_pixel per_vertex], width: 250
           end
           flow do
             label "Texture Filtering".ljust(longest_string.length, " ")
@@ -206,7 +212,7 @@ class IMICFPS
         end
       end
 
-      advanced_mode.subscribe(:changed) do |element, value|
+      advanced_mode.subscribe(:changed) do |_element, value|
         advanced_settings.show if value
         advanced_settings.hide unless value
       end

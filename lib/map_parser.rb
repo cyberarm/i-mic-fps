@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class MapParser
-    attr_reader :metadata, :terrain, :skydome, :lights, :entities, :spawnpoints
-    attr_reader :assets, :missing_assets
+    attr_reader :metadata, :terrain, :skydome, :lights, :entities, :spawnpoints, :assets, :missing_assets
+
     def initialize(map_file:)
       @metadata    = MapParser::MetaData.new
       @terrain     = MapParser::Entity.new

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Commands
     class DebugCommand < Command
@@ -39,7 +40,7 @@ class IMICFPS
       end
 
       def usage
-        "debug\n    #{@subcommands.map { |sub| sub.usage }.join("\n    ")}"
+        "debug\n    #{@subcommands.map(&:usage).join("\n    ")}"
       end
     end
   end

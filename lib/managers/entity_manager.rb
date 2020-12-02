@@ -1,13 +1,16 @@
 # frozen_string_literal: true
+
 class IMICFPS
   module EntityManager # Get included into GameState context
     def add_entity(entity)
-      @collision_manager.add(entity) if @collision_manager && entity.manifest.collision # Add every entity to collision manager
+      if @collision_manager && entity.manifest.collision
+        @collision_manager.add(entity)
+      end # Add every entity to collision manager
       Publisher.instance.publish(:create, nil, entity)
       @entities << entity
     end
 
-    def insert_entity(package, name, position, orientation, data = {})
+    def insert_entity(package, name, position, orientation, _data = {})
       ent = MapParser::Entity.new(package, name, position, orientation, Vector.new(1, 1, 1))
       add_entity(IMICFPS::Entity.new(map_entity: ent, manifest: Manifest.new(package: package, name: name)))
     end

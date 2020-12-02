@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "fiddle"
 require "yaml"
 require "json"
@@ -18,8 +19,8 @@ begin
   require_relative "../cyberarm_engine/lib/cyberarm_engine/opengl"
 rescue LoadError => e
   pp e
- require "cyberarm_engine"
- require "cyberarm_engine/opengl"
+  require "cyberarm_engine"
+  require "cyberarm_engine/opengl"
 end
 
 Dir.chdir(File.dirname(__FILE__))
@@ -31,16 +32,16 @@ include GLU
 def require_all(directory)
   files = Dir["#{directory}/**/*.rb"].sort!
 
-  begin
+  loop do
     failed = []
     first_name_error = nil
 
     files.each do |file|
       begin
         require_relative file
-      rescue NameError => name_error
+      rescue NameError => e
         failed << file
-        first_name_error ||= name_error
+        first_name_error ||= e
       end
     end
 
@@ -49,7 +50,8 @@ def require_all(directory)
     else
       files = failed
     end
-  end until( failed.empty? )
+    break if failed.empty?
+  end
 end
 
 require_all "lib"
@@ -68,24 +70,22 @@ def prevent_launch?
     return [true, "#{m}: Packaging lockfile is present (#{packaging_lockfile})"]
   end
 
-  return [false, ""]
+  [false, ""]
 end
 
-unless prevent_launch?[0]
-  if ARGV.join.include?("--profile")
-    begin
-      require "ruby-prof"
-      RubyProf.start
-        IMICFPS::Window.new.show
-      result  = RubyProf.stop
-      printer = RubyProf::MultiPrinter.new(result)
-      printer.print(path: ".", profile: "profile", min_percent: 2)
-    rescue LoadError
-      puts "ruby-prof not installed!"
-    end
-  else
+if prevent_launch?[0]
+  puts prevent_launch?[1]
+elsif ARGV.join.include?("--profile")
+  begin
+    require "ruby-prof"
+    RubyProf.start
     IMICFPS::Window.new.show
+    result  = RubyProf.stop
+    printer = RubyProf::MultiPrinter.new(result)
+    printer.print(path: ".", profile: "profile", min_percent: 2)
+  rescue LoadError
+    puts "ruby-prof not installed!"
   end
 else
-  puts prevent_launch?[1]
+  IMICFPS::Window.new.show
 end

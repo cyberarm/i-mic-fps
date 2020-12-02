@@ -1,17 +1,18 @@
 # frozen_string_literal: true
+
 def require_all(directory)
   files = Dir["#{directory}/**/*.rb"].sort!
 
-  begin
+  loop do
     failed = []
     first_name_error = nil
 
     files.each do |file|
       begin
         require_relative file
-      rescue NameError => name_error
+      rescue NameError => e
         failed << file
-        first_name_error ||= name_error
+        first_name_error ||= e
       end
     end
 
@@ -20,7 +21,8 @@ def require_all(directory)
     else
       files = failed
     end
-  end until(failed.empty?)
+    break if failed.empty?
+  end
 end
 
 require "socket"

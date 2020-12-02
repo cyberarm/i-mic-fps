@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class HUD
     class ScoreBoardWidget < HUD::Widget
       def setup
-        @usernames = Array("AAAA".."zzzz")#"Adran".."Zebra")
+        @usernames = Array("AAAA".."zzzz") # "Adran".."Zebra")
 
         @text = CyberarmEngine::Text.new(
           "",
@@ -36,12 +37,12 @@ class IMICFPS
             {
               name: "Compass",
               credits: 0,
-              score: 0,
+              score: 0
             },
             {
               name: "Gort",
               credits: 0,
-              score: 0,
+              score: 0
             }
           ],
           players: []
@@ -56,8 +57,8 @@ class IMICFPS
           }
         end
 
-        data[:teams][0][:credits] = data[:players].select { |player| player[:team] == 0 }.map { |player| player[:credits] }.reduce(0, :+)
-        data[:teams][0][:score] = data[:players].select { |player| player[:team] == 0 }.map { |player| player[:score] }.reduce(0, :+)
+        data[:teams][0][:credits] = data[:players].select { |player| (player[:team]).zero? }.map { |player| player[:credits] }.reduce(0, :+)
+        data[:teams][0][:score] = data[:players].select { |player| (player[:team]).zero? }.map { |player| player[:score] }.reduce(0, :+)
 
         data[:teams][1][:credits] = data[:players].select { |player| player[:team] == 1 }.map { |player| player[:credits] }.reduce(0, :+)
         data[:teams][1][:score] = data[:players].select { |player| player[:team] == 1 }.map { |player| player[:score] }.reduce(0, :+)
@@ -65,12 +66,12 @@ class IMICFPS
         data[:teams] = data[:teams].sort_by { |team| team[:score] }.reverse
         data[:players] = data[:players].sort_by { |player| player[:score] }.reverse
 
-        return data
+        data
       end
 
       def set_text
-        team_header = [:name, :credits, :score]
-        player_header = [:username, :credits, :score]
+        team_header = %i[name credits score]
+        player_header = %i[username credits score]
 
         data = generate_random_data
 
@@ -78,7 +79,7 @@ class IMICFPS
         text += "#   Team   Credits   Score\n"
         data[:teams].each_with_index do |team, i|
           i += 1
-          text += "<c=#{team[:name] == "Compass" ? 'ffe66100' : 'ffa51d2d'}>#{i}   #{team[:name]}   #{i.even? ? team[:credits] : '-----'}   #{team[:score]}</c>\n"
+          text += "<c=#{team[:name] == 'Compass' ? 'ffe66100' : 'ffa51d2d'}>#{i}   #{team[:name]}   #{i.even? ? team[:credits] : '-----'}   #{team[:score]}</c>\n"
         end
 
         text += "\n"

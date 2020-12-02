@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class EventHandler
     class Input < EventHandler
       def handles
-        [:button_down, :button_up]
+        %i[button_down button_up]
       end
 
       def handle(subscriber, context, *args)
@@ -14,10 +15,8 @@ class IMICFPS
 
         if action.is_a?(Numeric) && action == key
           subscriber.trigger(event)
-        else
-          if InputMapper.get(action) == key
-            subscriber.trigger(event)
-          end
+        elsif InputMapper.get(action) == key
+          subscriber.trigger(event)
         end
       end
     end

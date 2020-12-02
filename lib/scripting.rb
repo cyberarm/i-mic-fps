@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class IMICFPS
   module Scripting
     def on
       # self is a Scripting::SandBox
-      Subscription.new(self.entity)
+      Subscription.new(entity)
     end
 
     def component(name)

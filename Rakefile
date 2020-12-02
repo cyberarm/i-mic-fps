@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "json"
 require "tmpdir"
 require "fileutils"
@@ -6,7 +7,7 @@ require "fileutils"
 require "zip"
 require "excon"
 require "releasy"
-require 'bundler/setup' # Releasy requires that your application uses bundler.
+require "bundler/setup" # Releasy requires that your application uses bundler.
 require_relative "lib/version"
 
 Releasy::Project.new do

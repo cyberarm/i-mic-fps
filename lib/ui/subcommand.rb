@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Commands
     class Command
@@ -9,13 +10,11 @@ class IMICFPS
           @type = type
         end
 
-        def command
-          @command
-        end
+        attr_reader :command
 
         def handle(arguments, console)
           if arguments.size > 1
-            console.stdin("to many arguments for #{Style.highlight("#{command}")}, got #{Style.error(arguments.size)} expected #{Style.notice(1)}.")
+            console.stdin("to many arguments for #{Style.highlight(command.to_s)}, got #{Style.error(arguments.size)} expected #{Style.notice(1)}.")
             return
           end
 
@@ -23,7 +22,7 @@ class IMICFPS
           when :boolean
             case arguments.last
             when "", nil
-              var = @parent.get(command.to_sym) ? @parent.get(command.to_sym) : false
+              var = @parent.get(command.to_sym) || false
               console.stdin("#{command}: #{Style.highlight(var)}")
             when "on"
               var = @parent.set(command.to_sym, true)
@@ -32,12 +31,12 @@ class IMICFPS
               var = @parent.set(command.to_sym, false)
               console.stdin("#{command} => #{Style.highlight(var)}")
             else
-              console.stdin("Invalid argument for #{Style.highlight("#{command}")}, got #{Style.error(arguments.last)} expected #{Style.notice("on")}, or #{Style.notice("off")}.")
+              console.stdin("Invalid argument for #{Style.highlight(command.to_s)}, got #{Style.error(arguments.last)} expected #{Style.notice('on')}, or #{Style.notice('off')}.")
             end
           when :string
             case arguments.last
             when "", nil
-              var = @parent.get(command.to_sym) ? @parent.get(command.to_sym) : "\"\""
+              var = @parent.get(command.to_sym) || "\"\""
               console.stdin("#{command}: #{Style.highlight(var)}")
             else
               var = @parent.set(command.to_sym, arguments.last)
@@ -46,7 +45,7 @@ class IMICFPS
           when :integer
             case arguments.last
             when "", nil
-              var = @parent.get(command.to_sym) ? @parent.get(command.to_sym) : "nil"
+              var = @parent.get(command.to_sym) || "nil"
               console.stdin("#{command}: #{Style.highlight(var)}")
             else
               begin
@@ -59,7 +58,7 @@ class IMICFPS
           when :decimal
             case arguments.last
             when "", nil
-              var = @parent.get(command.to_sym) ? @parent.get(command.to_sym) : "nil"
+              var = @parent.get(command.to_sym) || "nil"
               console.stdin("#{command}: #{Style.highlight(var)}")
             else
               begin
@@ -77,7 +76,7 @@ class IMICFPS
         def values
           case @type
           when :boolean
-            ["on", "off"]
+            %w[on off]
           else
             []
           end
@@ -86,13 +85,13 @@ class IMICFPS
         def usage
           case @type
           when :boolean
-            "#{Style.highlight(command)} #{Style.notice("[on|off]")}"
+            "#{Style.highlight(command)} #{Style.notice('[on|off]')}"
           when :string
-            "#{Style.highlight(command)} #{Style.notice("[string]")}"
+            "#{Style.highlight(command)} #{Style.notice('[string]')}"
           when :integer
-            "#{Style.highlight(command)} #{Style.notice("[0]")}"
+            "#{Style.highlight(command)} #{Style.notice('[0]')}"
           when :decimal
-            "#{Style.highlight(command)} #{Style.notice("[0.0]")}"
+            "#{Style.highlight(command)} #{Style.notice('[0.0]')}"
           end
         end
       end

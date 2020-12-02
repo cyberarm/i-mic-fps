@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class HUD
     class HealthWidget < HUD::Widget
@@ -26,9 +27,7 @@ class IMICFPS
         )
 
         bottom_right = (window.width / 2 - @width / 2) + @width * @health - @slant
-        if @width * @health - @slant < @slant
-          bottom_right = (window.width / 2 - @width / 2) + @slant
-        end
+        bottom_right = (window.width / 2 - @width / 2) + @slant if @width * @health - @slant < @slant
 
         # Current Health
         fill_quad(
@@ -41,7 +40,7 @@ class IMICFPS
       end
 
       def update
-        percentage = "#{(@health * 100).round}".rjust(3, "0")
+        percentage = (@health * 100).round.to_s.rjust(3, "0")
         @text.text = "[Health #{percentage}%]"
         @text.x = window.width / 2 - @text.width / 2
         @text.y = @spacer + Widget.margin + @height / 2 - @text.height / 2

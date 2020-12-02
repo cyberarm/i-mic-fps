@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module CyberarmEngine
   module Networking
     class Server
@@ -85,7 +86,7 @@ module CyberarmEngine
       end
 
       def update
-        while(read)
+        while read
         end
 
         # handle write queue
@@ -117,7 +118,7 @@ module CyberarmEngine
             )
           end
 
-          while(packet = peer.write_queue.shift)
+          while (packet = peer.write_queue.shift)
             write(peer: peer, packet: packet)
           end
         end

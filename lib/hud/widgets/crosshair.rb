@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class HUD
     class CrosshairWidget < HUD::Widget
@@ -7,10 +8,10 @@ class IMICFPS
         @color = Gosu::Color.new(0x44ffffff)
 
         @image = Gosu::Image.new("#{GAME_ROOT_PATH}/static/crosshairs/crosshair.png")
-        
+
         @last_changed_time = Gosu.milliseconds
         @change_interval = 1_500
-        
+
         @colors = [0xffffffff, 0xaaffffff, 0x88ffffff, 0x22ffffff]
       end
 

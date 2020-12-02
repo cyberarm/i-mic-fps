@@ -1,14 +1,15 @@
 # frozen_string_literal: true
+
 PACKAGING_LOCKFILE = File.expand_path("i-mic-fps-packaging.lock", Dir.tmpdir)
 GITHUB_API_URL = "https://api.github.com/repos/cyberarm/i-mic-fps"
 USERAGENT = "cyberarm +i-mic-fps"
-DEFAULT_HEADERS = {"Authorization": "token #{ENV["GITHUB_TOKEN"]}", "User-Agent": USERAGENT}
+DEFAULT_HEADERS = { "Authorization": "token #{ENV['GITHUB_TOKEN']}", "User-Agent": USERAGENT }.freeze
 
 def sh_with_status(command)
-  outbuf = IO.popen(command, :err => [:child, :out], &:read)
-  status = $?
+  outbuf = IO.popen(command, err: %i[child out], &:read)
+  status = $CHILD_STATUS
 
-  return [outbuf, status]
+  [outbuf, status]
 end
 
 def version
@@ -20,7 +21,7 @@ def version_tag
 end
 
 def release_name
-  "#{IMICFPS::NAME}_#{version}".downcase.gsub(/[\ |\-|\.]/, "_")
+  "#{IMICFPS::NAME}_#{version}".downcase.gsub(/[\ |\-|.]/, "_")
 end
 
 def clean?
@@ -46,22 +47,24 @@ end
 
 def already_tagged?
   return false unless sh_with_status("git tag")[0].split(/\n/).include?(version_tag)
+
   abort "  Tag #{version_tag} has already been created."
 end
 
 def create_lockfile
   File.open(PACKAGING_LOCKFILE, "w") { |f| f.write version }
 end
+
 def remove_lockfile
   File.delete(PACKAGING_LOCKFILE)
-  rescue Errno::ENOENT
+rescue Errno::ENOENT
 end
 
 def create_directory(dir)
   levels = dir.split("/")
   location = ""
   levels.each do |level|
-    location +="#{level}/"
+    location += "#{level}/"
     mkdir_p location unless File.exist?(location)
   end
 end
@@ -82,7 +85,7 @@ def create_archive(folder, archive)
   abort "  Archive already exists!" if File.exist?(archive)
   Zip::File.open(archive, Zip::File::CREATE) do |zipfile|
     Dir["#{folder}/**/**"].each do |file|
-      zipfile.add(file.sub(folder + '/', ''), file)
+      zipfile.add(file.sub("#{folder}/", ""), file)
     end
   end
 end
@@ -92,8 +95,8 @@ def get_release
   request = Excon.get(url, headers: DEFAULT_HEADERS)
 
   if request.status == 200
-    release = JSON.parse(request.body).find { |r| r["tag_name"] == version_tag }
-    return release
+    JSON.parse(request.body).find { |r| r["tag_name"] == version_tag }
+
   else
     abort "  Getting repo releases failed! (#{request.status})"
   end
@@ -104,7 +107,7 @@ def upload_asset(asset)
   abort "  GITHUB_TOKEN not set!" unless github_token
 
   release = get_release
-  upload_url = release["upload_url"].split("{?").first + "?name=#{asset.split("/").last}"
+  upload_url = release["upload_url"].split("{?").first + "?name=#{asset.split('/').last}"
 
   file = File.read(asset)
 
@@ -124,7 +127,8 @@ namespace "game" do
     "release:package",
     "release:patch",
     "release:create_archive",
-    "release:deploy"] do
+    "release:deploy"
+  ] do
   end
 
   desc "Check working directory for uncommited changes"

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   module Scripting
     CONSTANTS_WHITELIST = [
@@ -7,8 +8,8 @@ class IMICFPS
       # Ruby information
       RUBY_VERSION, RUBY_ENGINE,
       # Local
-      Vector, BoundingBox, Ray,
-    ]
+      Vector, BoundingBox, Ray
+    ].freeze
 
     METHOD_WHITELIST = [
       Subscription.subscribable_events,
@@ -45,16 +46,16 @@ class IMICFPS
       :combination, :compact, :compact!, :compare_by_identity, :compare_by_identity?, :concat, :count, :cycle, :default, :default=, :default_proc,
       :default_proc=, :delete, :delete_at, :delete_if, :detect, :difference, :dig, :drop, :drop_while, :each, :each_cons, :each_entry, :each_index,
       :each_key, :each_pair, :each_slice, :each_value, :each_with_index, :each_with_object, :empty?, :entries, :eql?, :fetch, :fetch_values, :fill,
-       :filter, :filter!, :find, :find_all, :find_index, :first, :flat_map, :flatten, :flatten!, :grep, :grep_v, :group_by, :has_key?, :has_value?,
-       :hash, :include?, :index, :inject, :insert, :inspect, :invert, :join, :keep_if, :key, :key?, :keys, :last, :lazy, :length, :map, :map!,
-       :max, :max_by, :member?, :merge, :merge!, :min, :min_by, :minmax, :minmax_by, :none?, :one?, :pack, :partition, :permutation, :pop, :prepend,
-       :product, :push, :rassoc, :reduce, :rehash, :reject, :reject!, :repeated_combination, :repeated_permutation, :replace, :reverse, :reverse!,
-       :reverse_each, :rindex, :rotate, :rotate!, :sample, :select, :select!, :shift, :shuffle, :shuffle!, :size, :slice, :slice!, :slice_after, :slice_before,
-       :slice_when, :sort, :sort!, :sort_by, :sort_by!, :store, :sum, :take, :take_while, :to_a, :to_ary, :to_h, :to_hash, :to_proc, :to_s, :to_set,
-       :transform_keys, :transform_keys!, :transform_values, :transform_values!, :transpose, :union, :uniq, :uniq!, :unshift, :update, :value?, :values,
-       :values_at, :zip,
+      :filter, :filter!, :find, :find_all, :find_index, :first, :flat_map, :flatten, :flatten!, :grep, :grep_v, :group_by, :has_key?, :has_value?,
+      :hash, :include?, :index, :inject, :insert, :inspect, :invert, :join, :keep_if, :key, :key?, :keys, :last, :lazy, :length, :map, :map!,
+      :max, :max_by, :member?, :merge, :merge!, :min, :min_by, :minmax, :minmax_by, :none?, :one?, :pack, :partition, :permutation, :pop, :prepend,
+      :product, :push, :rassoc, :reduce, :rehash, :reject, :reject!, :repeated_combination, :repeated_permutation, :replace, :reverse, :reverse!,
+      :reverse_each, :rindex, :rotate, :rotate!, :sample, :select, :select!, :shift, :shuffle, :shuffle!, :size, :slice, :slice!, :slice_after, :slice_before,
+      :slice_when, :sort, :sort!, :sort_by, :sort_by!, :store, :sum, :take, :take_while, :to_a, :to_ary, :to_h, :to_hash, :to_proc, :to_s, :to_set,
+      :transform_keys, :transform_keys!, :transform_values, :transform_values!, :transpose, :union, :uniq, :uniq!, :unshift, :update, :value?, :values,
+      :values_at, :zip,
       # Casting
-      :to_c, :to_f, :to_i, :to_r, :to_str, :to_ary, :to_h, :to_hash, :to_proc, :to_a, :to_s, :to_sym,
+      :to_c, :to_f, :to_i, :to_r, :to_str, :to_ary, :to_h, :to_hash, :to_proc, :to_a, :to_s, :to_sym
     ].flatten
   end
 end

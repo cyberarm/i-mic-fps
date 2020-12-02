@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   module Scripting
     class SandBox
@@ -10,7 +11,7 @@ class IMICFPS
         execute(script.source) if source_safe?(script.source)
       end
 
-      def source_safe?(source)
+      def source_safe?(_source)
         true # TODO: implement whitelisting/safety checks
       end
 
@@ -18,9 +19,7 @@ class IMICFPS
         instance_eval(source)
       end
 
-      def entity
-        @entity
-      end
+      attr_reader :entity
     end
   end
 end

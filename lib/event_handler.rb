@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class EventHandler
     @@handlers = {}
@@ -23,7 +24,7 @@ class IMICFPS
     end
 
     def self.get(event)
-      @@handlers.dig(event)
+      @@handlers[event]
     end
 
     def initialize

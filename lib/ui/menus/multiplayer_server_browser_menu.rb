@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class MultiplayerServerBrowserMenu < Menu
     def setup

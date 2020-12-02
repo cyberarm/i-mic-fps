@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Commands
     class ConnectCommand < Command
@@ -14,7 +15,7 @@ class IMICFPS
       end
 
       def usage
-        "Connect to a server.\n#{Style.highlight("connect")} #{Style.notice("[example.com:56789]")}"
+        "Connect to a server.\n#{Style.highlight('connect')} #{Style.notice('[example.com:56789]')}"
       end
     end
   end

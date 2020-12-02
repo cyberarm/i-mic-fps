@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class HUD
     class Widget
@@ -24,6 +25,7 @@ class IMICFPS
       end
 
       attr_reader :options
+
       def initialize(options = {})
         @options = options
         @player = options[:player]

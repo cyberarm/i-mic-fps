@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class SoundEffect
     class FadeInAndOut < FadeIn
       def setup
-        @hang_time = @options[:hang_time] ? @options[:hang_time] : 0.0
+        @hang_time = @options[:hang_time] || 0.0
 
         super
       end

@@ -1,7 +1,9 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class CollisionManager
     attr_reader :map, :collisions
+
     def initialize(map:)
       @map = map
       @collisions = {}
@@ -48,13 +50,13 @@ class IMICFPS
         next if entity.manifest.collision_resolution == :static # Only dynamic entities can be resolved
 
         search = @aabb_tree.search(entity.bounding_box)
-        if search.size > 0
-          search.reject! {|ent| ent == entity || !ent.collidable?}
+        if search.size.positive?
+          search.reject! { |ent| ent == entity || !ent.collidable? }
           broadphase[entity] = search
         end
       end
 
-      broadphase.each do |entity, _collisions|
+      broadphase.each do |_entity, _collisions|
         _collisions.each do |ent|
           # aabb vs aabb
           # next unless entity.bounding_box.intersect?(ent.bounding_box)
@@ -73,15 +75,15 @@ class IMICFPS
 
     # AABBTree on entities is relative to model origin of 0,0,0
     def localize_entity_bounding_box(entity, target)
-      return entity.bounding_box if target.position == 0 && target.orientation == 0
+      return entity.bounding_box if target.position.zero? && target.orientation.zero?
 
       # "tranform" entity bounding box into target's space
-      local =  (target.position) # needs tweaking, works well enough for now
+      local = target.position # needs tweaking, works well enough for now
       box = entity.bounding_box.clone
       box.min -= local
       box.max -= local
 
-      return box
+      box
     end
 
     def on_ground?(entity) # TODO: Use some form of caching to speed this up
@@ -96,7 +98,7 @@ class IMICFPS
 
         broadphase.detect do |ent|
           ray = Ray.new(entity.position - ent.position, Vector.down)
-          if ent.model.aabb_tree.search(ray).size > 0
+          if ent.model.aabb_tree.search(ray).size.positive?
             on_ground = true
             return true
           end
@@ -105,7 +107,7 @@ class IMICFPS
         break if on_ground
       end
 
-      return on_ground
+      on_ground
     end
   end
 end

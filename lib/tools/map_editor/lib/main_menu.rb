@@ -1,18 +1,19 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class MapEditorTool
     class MainMenu < Menu
       def setup
         window.needs_cursor = true
 
-        label "#{IMICFPS::NAME}", text_size: 50
+        label IMICFPS::NAME.to_s, text_size: 50
         label "Map Editor", text_size: 28
 
         @maps = []
-        Dir.glob(GAME_ROOT_PATH + "/maps/*.json").each do |map|
+        Dir.glob("#{GAME_ROOT_PATH}/maps/*.json").each do |map|
           begin
             @maps << MapParser.new(map_file: map)
-          rescue
+          rescue StandardError
             warn "Broken map file: #{map}"
           end
         end

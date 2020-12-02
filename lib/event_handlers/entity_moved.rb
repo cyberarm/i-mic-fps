@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class EventHandler
     class EntityMoved < EventHandler
@@ -6,7 +7,7 @@ class IMICFPS
         [:entity_moved]
       end
 
-      def handle(subscriber, context, *args)
+      def handle(subscriber, _context, *args)
         event = EventHandler::Event.new(entity: args.first.first)
 
         subscriber.trigger(event)

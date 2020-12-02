@@ -1,10 +1,12 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class AssetViewerTool
     class TurnTable < CyberarmEngine::GuiState
       include LightManager
 
       attr_reader :map
+
       def setup
         window.needs_cursor = false
         @manifest = @options[:manifest]
@@ -42,7 +44,7 @@ class IMICFPS
           0, 0, color_top,
           window.width, 0, color_top,
           window.width, window.height, color_bottom,
-          0, window.height, color_bottom,
+          0, window.height, color_bottom
         )
 
         Gosu.gl do
@@ -83,6 +85,7 @@ class IMICFPS
       include EntityManager
 
       attr_reader :entities
+
       def initialize
         @entities = []
       end

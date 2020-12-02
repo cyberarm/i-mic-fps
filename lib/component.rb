@@ -1,26 +1,27 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Component
-    COMPONENTS = {}
+    @components = {}
 
     def self.get(name)
-      COMPONENTS.dig(name)
+      @components[name]
     end
 
     def self.inherited(subclass)
-      COMPONENTS["__pending"] ||= []
-      COMPONENTS["__pending"] << subclass
+      @components["__pending"] ||= []
+      @components["__pending"] << subclass
     end
 
     def self.initiate
-      return unless COMPONENTS.dig("__pending") # Already setup
+      return unless @components["__pending"] # Already setup
 
-      COMPONENTS["__pending"].each do |klass|
+      @components["__pending"].each do |klass|
         component = klass.new
-        COMPONENTS[component.name] = component
+        @components[component.name] = component
       end
 
-      COMPONENTS.delete("__pending")
+      @components.delete("__pending")
     end
 
     def initialize
@@ -31,9 +32,7 @@ class IMICFPS
       string = self.class.name.split("::").last
       split = string.scan(/[A-Z][a-z]*/)
 
-      component_name = "#{split.map { |s| s.downcase }.join("_")}".to_sym
-
-      return component_name
+      split.map(&:downcase).join("_").to_s.to_sym
     end
 
     def setup

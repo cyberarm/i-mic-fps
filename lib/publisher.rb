@@ -1,8 +1,10 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Publisher
     def self.subscribe(subscription)
       raise "Expected IMICFPS::Subscription not #{subscription.class}" unless subscription.is_a?(IMICFPS::Subscription)
+
       Publisher.instance.add_sub(subscription)
     end
 
@@ -22,13 +24,14 @@ class IMICFPS
 
     def add_sub(subscription)
       raise "Expected IMICFPS::Subscription not #{subscription.class}" unless subscription.is_a?(IMICFPS::Subscription)
+
       @events[subscription.event] ||= []
 
       @events[subscription.event] << subscription
     end
 
     def publish(event, context, *args)
-      if subscribers = @events.dig(event)
+      if subscribers = @events[event]
         return unless event_handler = EventHandler.get(event)
 
         subscribers.each do |subscriber|

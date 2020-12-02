@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Commands
     class RendererInfoCommand < Command
@@ -10,7 +11,7 @@ class IMICFPS
         :renderer_info
       end
 
-      def handle(arguments, console)
+      def handle(_arguments, console)
         console.stdin("OpenGL Vendor:                  #{Style.notice(glGetString(GL_VENDOR))}")
         console.stdin("OpenGL Renderer:                #{Style.notice(glGetString(GL_RENDERER))}")
         console.stdin("OpenGL Version:                 #{Style.notice(glGetString(GL_VERSION))}")
@@ -18,7 +19,7 @@ class IMICFPS
       end
 
       def usage
-        "#{Style.highlight("renderer_info")} #{Style.notice("Returns OpenGL renderer information")}"
+        "#{Style.highlight('renderer_info')} #{Style.notice('Returns OpenGL renderer information')}"
       end
     end
   end

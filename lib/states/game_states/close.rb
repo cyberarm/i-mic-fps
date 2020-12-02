@@ -1,10 +1,11 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Close < GameState
     def setup
       @slope = Menu::BAR_SLOPE
 
-      @logo = get_image(IMICFPS::GAME_ROOT_PATH + "/static/logo.png")
+      @logo = get_image("#{IMICFPS::GAME_ROOT_PATH}/static/logo.png")
 
       @start_time = Gosu.milliseconds
       @time_to_live = 3_000
@@ -31,7 +32,7 @@ class IMICFPS
 
       @logo.draw(window.width / 2 - @logo.width / 2, window.height / 2 - @logo.height / 2, 0)
 
-      fill(Gosu::Color.rgba(0,0,0, 255 * (1.1 - fraction_left)))
+      fill(Gosu::Color.rgba(0, 0, 0, 255 * (1.1 - fraction_left)))
     end
 
     def update
@@ -40,9 +41,9 @@ class IMICFPS
     end
 
     def button_up(id)
-      if id == Gosu::KbEscape or
-        (id >= Gosu::GP_LEFT and id >= Gosu::GP_BUTTON_15) or
-        id == Gosu::MsLeft
+      if (id == Gosu::KbEscape) ||
+         ((id >= Gosu::GP_LEFT) && (id >= Gosu::GP_BUTTON_15)) ||
+         (id == Gosu::MsLeft)
         window.close!
       end
     end

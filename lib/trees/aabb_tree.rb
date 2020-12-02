@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class AABBTree
     include IMICFPS::AABBTreeDebug
 
     attr_reader :root, :objects, :branches, :leaves
+
     def initialize
       @objects = {}
       @root = nil
@@ -23,11 +25,11 @@ class IMICFPS
     end
 
     def insert_leaf(leaf)
-      if @root
-        @root = @root.insert_subtree(leaf)
-      else
-        @root = leaf
-      end
+      @root = if @root
+                @root.insert_subtree(leaf)
+              else
+                leaf
+              end
     end
 
     def update(object, bounding_box)
@@ -41,17 +43,17 @@ class IMICFPS
       items = []
       if @root
         items = @root.search_subtree(collider)
-        items.map! {|e| e.object} unless return_nodes
+        items.map!(&:object) unless return_nodes
       end
 
-      return items
+      items
     end
 
     def remove(object)
       leaf  = @objects.delete(object)
       @root = @root.remove_subtree(leaf) if leaf
 
-      return leaf
+      leaf
     end
   end
 end

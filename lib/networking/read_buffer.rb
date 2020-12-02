@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   module Networking
     class ReadBuffer
@@ -14,10 +15,11 @@ class IMICFPS
         pairs = []
 
         @buffer.each do |hash|
-          buffer, addr = hash[:buffer], hash[:addr_info]
+          buffer = hash[:buffer]
+          addr = hash[:addr_info]
           packet = Packet.from_stream(buffer)
 
-          if true#packet.valid?
+          if true # packet.valid?
             pairs << [packet, addr]
             @buffer.delete(hash)
           else
@@ -26,7 +28,7 @@ class IMICFPS
           end
         end
 
-        return pairs
+        pairs
       end
     end
   end

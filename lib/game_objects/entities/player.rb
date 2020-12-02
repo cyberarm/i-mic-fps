@@ -1,7 +1,7 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Player < Entity
-
     attr_accessor :speed
     attr_reader :name, :bound_model
 

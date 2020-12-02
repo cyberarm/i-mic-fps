@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class Demo
     def initialize(camera:, player:, demo:, mode:)
@@ -7,7 +8,7 @@ class IMICFPS
       @demo = demo
       @mode = mode
 
-      @index= 0
+      @index = 0
       @tick = 0
       @changed = false
 
@@ -55,33 +56,37 @@ class IMICFPS
       @tick += 1
     end
 
-    def playing?; @mode == :play; end
-    def recording?; !playing?; end
+    def playing?
+      @mode == :play
+    end
+
+    def recording?
+      !playing?
+    end
 
     def play
       if @data[@index]&.start_with?("tick")
         if @tick == @data[@index].split(" ").last.to_i
-          @index+=1
+          @index += 1
 
-          until(@data[@index]&.start_with?("tick"))
+          until @data[@index]&.start_with?("tick")
             break unless @data[@index]
 
             data = @data[@index].split(" ")
-            if data.first == "up"
+            case data.first
+            when "up"
               input = InputMapper.get(data.last.to_sym)
               key = input.is_a?(Array) ? input.first : input
               $window.current_state.button_up(key) if key
 
-            elsif data.first == "down"
+            when "down"
               input = InputMapper.get(data.last.to_sym)
               key = input.is_a?(Array) ? input.first : input
               $window.current_state.button_down(key) if key
 
-            elsif data.first == "mouse"
+            when "mouse"
               @camera.orientation.z = data[1].to_f
               @player.orientation.y = (data[2].to_f * -1) - 180
-            else
-              # hmm
             end
 
             @index += 1

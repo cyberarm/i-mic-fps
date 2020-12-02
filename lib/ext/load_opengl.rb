@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 case OpenGL.get_platform
 when :OPENGL_PLATFORM_WINDOWS
   OpenGL.load_lib("opengl32.dll", "C:/Windows/System32")
@@ -29,8 +30,8 @@ when :OPENGL_PLATFORM_LINUX
     OpenGL.load_lib("libGL.so", gl_library_path)
     GLU.load_lib("libGLU.so", gl_library_path)
   else
-    raise RuntimeError, "Couldn't find GL libraries"
+    raise "Couldn't find GL libraries"
   end
 else
-  raise RuntimeError, "Unsupported platform."
+  raise "Unsupported platform."
 end

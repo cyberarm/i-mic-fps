@@ -1,9 +1,10 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class EventHandler
     class EntityLifeCycle < EventHandler
       def handles
-        [:create, :move, :destroy]
+        %i[create move destroy]
       end
 
       def handle(subscriber, context, *args)

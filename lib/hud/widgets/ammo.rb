@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class HUD
     class AmmoWidget < HUD::Widget
@@ -18,7 +19,7 @@ class IMICFPS
 
       def update
         if (Gosu.milliseconds / 1000.0) % 1.0 >= 0.9
-          random = "#{rand(0..199)}".rjust(3, "0")
+          random = rand(0..199).to_s.rjust(3, "0")
           @text.text = "#{random}/999"
         end
 

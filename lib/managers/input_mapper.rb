@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 class IMICFPS
   class InputMapper
     @@keymap = {}
@@ -16,11 +17,12 @@ class IMICFPS
       if id_or_action.is_a?(Integer)
         @@keys[id_or_action] = true
       else
-        query = @@keymap.dig(id_or_action)
+        query = @@keymap[id_or_action]
 
-        if query.is_a?(Integer)
-           query
-        elsif query.is_a?(Array)
+        case query
+        when Integer
+          query
+        when Array
           query.each do |key|
             @@keys[key] = true
           end
@@ -34,11 +36,12 @@ class IMICFPS
       if id_or_action.is_a?(Integer)
         @@keys[id_or_action] = false
       else
-        query = @@keymap.dig(id_or_action)
+        query = @@keymap[id_or_action]
 
-        if query.is_a?(Integer)
+        case query
+        when Integer
           query
-        elsif query.is_a?(Array)
+        when Array
           query.each do |key|
             @@keys[key] = false
           end
@@ -49,12 +52,14 @@ class IMICFPS
     end
 
     def self.get(action)
-      @@keymap.dig(action)
+      @@keymap[action]
     end
 
     def self.set(action, key)
-      raise "action must be a symbol"    unless action.is_a?(Symbol)
-      raise "key must be a whole number or Array of whole numbers, got #{key}" unless key.is_a?(Integer) || key.is_a?(Array)
+      raise "action must be a symbol" unless action.is_a?(Symbol)
+      unless key.is_a?(Integer) || key.is_a?(Array)
+        raise "key must be a whole number or Array of whole numbers, got #{key}"
+      end
 
       warn "InputMapper.set(:#{action}) is already defined as #{@@keymap[action]}" if @@keymap[action]
 
@@ -74,7 +79,7 @@ class IMICFPS
     end
 
     def self.is?(action, query_key)
-      keys = @@keymap.dig(action)
+      keys = @@keymap[action]
 
       if keys.is_a?(Array)
         keys.include?(query_key)
@@ -85,16 +90,17 @@ class IMICFPS
 
     def self.actions(key)
       @@keymap.select do |action, value|
-        if value.is_a?(Array)
+        case value
+        when Array
           action if value.include?(key)
-        else
-          action if value == key
+        when key
+          action
         end
       end.map { |keymap| keymap.first.is_a?(Symbol) ? keymap.first : keymap.first.first }
     end
 
     def self.reset_keys
-      @@keys.each do |key, value|
+      @@keys.each do |key, _value|
         @@keys[key] = false
       end
     end
