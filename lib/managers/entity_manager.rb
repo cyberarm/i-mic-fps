@@ -1,7 +1,7 @@
 class IMICFPS
   module EntityManager # Get included into GameState context
     def add_entity(entity)
-      @collision_manager.add(entity) if @collision_manager && entity.manifest.collision# Add every entity to collision manager
+      @collision_manager.add(entity) if @collision_manager && entity.manifest.collision # Add every entity to collision manager
       Publisher.instance.publish(:create, nil, entity)
       @entities << entity
     end

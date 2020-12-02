@@ -1,14 +1,14 @@
 class IMICFPS
   class MapEditorTool
     class Editor < CyberarmEngine::GuiState
-
       attr_reader :map
+
       def setup
         # TODO: Move everything required for a playable game map
         #       in to a Scene or Scene3D container object
         #       and refactor Game to use it.
         Publisher.new
-        @map = Map.new( map_parser: @options[:map_parser] )
+        @map = Map.new(map_parser: @options[:map_parser])
         @camera = PerspectiveCamera.new( position: Vector.new, aspect_ratio: window.aspect_ratio )
         @editor = IMICFPS::Editor.new( manifest: Manifest.new(package: "base", name: "editor") )
         @camera_controller = CameraController.new(camera: @camera, entity: @editor)

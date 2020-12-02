@@ -20,27 +20,54 @@ class IMICFPS
       @accent_color = ACCENT_COLOR
       window.needs_cursor = true
 
-      @__version_text = CyberarmEngine::Text.new("<b>#{IMICFPS::NAME}</b> v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})", font: MONOSPACE_FONT)
+      @__version_text = CyberarmEngine::Text.new("<b>#{IMICFPS::NAME}</b> v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})", font: BOLD_SANS_FONT)
       @__version_text.x = window.width - (@__version_text.width + 10)
       @__version_text.y = window.height - (@__version_text.height + 10)
 
       super(*args)
 
-      theme({ Label: { font: SANS_SERIF_FONT } })
+      theme(
+        {
+          Label:
+          {
+            font: SANS_FONT
+          },
+          Button:
+          {
+            font: BOLD_SANS_FONT,
+            background: [0xff222222, 0xff3A3A3E],
+            border_color: [0xaa_111111, 0xaa_000000],
+            border_thickness: 2,
+            text_align: :center,
+            # color: 0xffff8800,
+            color: 0xffffffff,
+
+            hover: {
+              background: [0xff444444, 0xff5A5A5E],
+              color: 0xffeeeeee
+            },
+
+            active: {
+              color: Gosu::Color::WHITE,
+              background: [0xff222222, 0xff1A1A1E]
+            }
+          }
+        }
+      )
     end
 
     def title(text, color = Gosu::Color::BLACK)
-      @elements << Text.new(text, color: color, size: 100, x: 0, y: 15, font: SANS_SERIF_FONT)
+      @elements << Text.new(text, color: color, size: 100, x: 0, y: 15, font: BOLD_SANS_FONT)
       @_title = @elements.last
     end
 
     def subtitle(text, color = Gosu::Color::WHITE)
-      @elements << Text.new(text, color: color, size: 50, x: 0, y: 100, font: SANS_SERIF_FONT)
+      @elements << Text.new(text, color: color, size: 50, x: 0, y: 100, font: SANS_FONT)
       @_subtitle = @elements.last
     end
 
     def link(text, color = Gosu::Color.rgb(0,127,127), &block)
-      text = Text.new(text, color: color, size: 50, x: 0, y: 100 + (60 * @elements.count), font: SANS_SERIF_FONT)
+      text = Text.new(text, color: color, size: 50, x: 0, y: 100 + (60 * @elements.count), font: BOLD_SANS_FONT)
       @elements << Link.new(text, self, block)
     end
 

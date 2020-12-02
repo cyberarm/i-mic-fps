@@ -22,30 +22,6 @@
 
   "lights":[
     {
-      "type":"directional",
-      "intensity": 1,
-      "position": {
-        "x":30,
-        "y":10,
-        "z":30
-      },
-      "diffuse": {
-        "red":1,
-        "green":1,
-        "blue":1
-      },
-      "ambient": {
-        "red":0.5,
-        "green":0.5,
-        "blue":0.5
-      },
-      "specular": {
-        "red":0.2,
-        "green":0.2,
-        "blue":0.2
-      }
-    },
-    {
       "type":"point",
       "intensity": 1,
       "position": {
@@ -67,6 +43,30 @@
         "red":0.2,
         "green":0.2,
         "blue":0.2
+      }
+    },
+    {
+      "type": "directional",
+      "intensity": 1,
+      "position": {
+        "x": 30,
+        "y": 10,
+        "z": 30
+      },
+      "diffuse": {
+        "red": 1,
+        "green": 1,
+        "blue": 1
+      },
+      "ambient": {
+        "red": 0.5,
+        "green": 0.5,
+        "blue": 0.5
+      },
+      "specular": {
+        "red": 0.2,
+        "green": 0.2,
+        "blue": 0.2
       }
     }
   ],

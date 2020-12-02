@@ -12,7 +12,7 @@ class IMICFPS
           shadow_alpha: 0,
           shadow_color: Gosu::Color::WHITE,
           mode: :add,
-          font: SANS_SERIF_FONT
+          font: SANS_FONT
         )
 
         @last_message_time = 0

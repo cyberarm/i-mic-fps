@@ -1,7 +1,8 @@
 class IMICFPS
   GAME_ROOT_PATH = File.expand_path("..", File.dirname(__FILE__))
 
-  SANS_SERIF_FONT = "#{GAME_ROOT_PATH}/static/fonts/Oxygen_Mono/OxygenMono-Regular.ttf"
+  SANS_FONT      = "#{GAME_ROOT_PATH}/static/fonts/Cantarell/Cantarell-Regular.otf"
+  BOLD_SANS_FONT = "#{GAME_ROOT_PATH}/static/fonts/Cantarell/Cantarell-Bold.otf"
   MONOSPACE_FONT = "#{GAME_ROOT_PATH}/static/fonts/Oxygen_Mono/OxygenMono-Regular.ttf"
 
   # Objects exported from blender using the default or meter object scale will be close to 1 GL unit

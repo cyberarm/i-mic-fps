@@ -13,7 +13,7 @@ class IMICFPS
           "MATE\nTinyTanker\nOther Player Dude\nHuman 0xdeadbeef",
           size: 18,
           mode: :add,
-          font: SANS_SERIF_FONT,
+          font: SANS_FONT,
           color: @color,
           shadow: true,
           shadow_color: 0x88000000,
