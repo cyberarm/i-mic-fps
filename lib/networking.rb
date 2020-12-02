@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CyberarmEngine
   module Networking
     MULTICAST_ADDRESS = "224.0.0.1"

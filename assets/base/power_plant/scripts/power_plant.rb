@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 component(:building)
 
 on.create do |event|

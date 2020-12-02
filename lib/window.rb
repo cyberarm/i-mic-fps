@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   class Window < CyberarmEngine::Window
     attr_accessor :number_of_vertices, :needs_cursor

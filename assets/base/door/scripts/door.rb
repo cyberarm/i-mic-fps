@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 origin = entity.position
 
 on.entity_moved do |event|

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   GAME_ROOT_PATH = File.expand_path("..", File.dirname(__FILE__))
 

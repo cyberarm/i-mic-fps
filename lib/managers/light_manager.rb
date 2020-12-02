@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   module LightManager
     MAX_LIGHTS = OpenGL::GL_MAX_LIGHTS

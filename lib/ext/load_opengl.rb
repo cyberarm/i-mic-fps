@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 case OpenGL.get_platform
 when :OPENGL_PLATFORM_WINDOWS
   OpenGL.load_lib("opengl32.dll", "C:/Windows/System32")

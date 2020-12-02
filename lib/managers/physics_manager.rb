@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   class PhysicsManager
     def initialize(collision_manager:)

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 def require_all(directory)
   files = Dir["#{directory}/**/*.rb"].sort!
 

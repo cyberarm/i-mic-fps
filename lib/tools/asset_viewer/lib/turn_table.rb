@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   class AssetViewerTool
     class TurnTable < CyberarmEngine::GuiState

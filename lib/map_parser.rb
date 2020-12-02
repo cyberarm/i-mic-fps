@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   class MapParser
     attr_reader :metadata, :terrain, :skydome, :lights, :entities, :spawnpoints

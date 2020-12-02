@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   class Game < GameState
     attr_reader :map

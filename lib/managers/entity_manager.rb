@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   module EntityManager # Get included into GameState context
     def add_entity(entity)

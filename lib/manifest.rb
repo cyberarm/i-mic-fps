@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   class Manifest
     attr_reader :name, :model, :collision, :collision_mesh, :collision_resolution, :physics, :scripts, :uses

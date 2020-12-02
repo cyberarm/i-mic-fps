@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   class Menu < IMICFPS::GuiState
     include CommonMethods

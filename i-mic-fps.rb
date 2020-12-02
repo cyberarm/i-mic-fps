@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "fiddle"
 require "yaml"
 require "json"

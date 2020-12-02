@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   def self.assets_path
     File.expand_path("./../../assets", __FILE__)

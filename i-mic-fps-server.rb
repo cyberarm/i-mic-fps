@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 IMICFPS_SERVER_MODE = true
 require_relative "i-mic-fps"
 

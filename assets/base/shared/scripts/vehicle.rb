@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 component(:vehicle) # Generic, Weapon
 
 on.button_down(:interact) do |event|

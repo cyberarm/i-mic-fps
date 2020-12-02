@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 PACKAGING_LOCKFILE = File.expand_path("i-mic-fps-packaging.lock", Dir.tmpdir)
 GITHUB_API_URL = "https://api.github.com/repos/cyberarm/i-mic-fps"
 USERAGENT = "cyberarm +i-mic-fps"

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 begin
   require_relative "../cyberarm_engine/lib/cyberarm_engine"
 rescue LoadError

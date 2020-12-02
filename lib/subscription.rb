@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class IMICFPS
   class Subscription
     attr_reader :entity, :event, :args, :block
