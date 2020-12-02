@@ -10,7 +10,7 @@ class IMICFPS
     end
 
     def map
-      $window.current_state.map
+      $window.director.map
     end
   end
 end

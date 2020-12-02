@@ -1,29 +1,36 @@
 class IMICFPS
   module Networking
     class Director
-      attr_reader :address, :port, :tick_rate, :storage, :map
-      def initialize(address: DEFAULT_SERVER_HOST, port: DEFAULT_SERVER_PORT, tick_rate: 2)
-        @address = address
-        @port = port
+      attr_reader :tick_rate, :storage, :map, :server, :connection
+
+      def initialize(tick_rate: 15)
         @tick_rate = (1000.0 / tick_rate) / 1000.0
 
-        @server = Server.new(address: @address, port: @port, max_peers: DEFAULT_PEER_LIMIT)
-        @server.bind
-
-        @last_tick_time = Networking.milliseconds
+        @last_tick_time = CyberarmEngine::Networking.milliseconds
         @directing = true
         @storage = {}
         @map = nil
       end
 
+      def host_server(hostname: CyberarmEngine::Networking::DEFAULT_SERVER_HOSTNAME, port: CyberarmEngine::Networking::DEFAULT_SERVER_PORT, max_peers: CyberarmEngine::Networking::DEFAULT_PEER_LIMIT)
+        @server = Server.new(hostname: hostname, port: port, max_peers: max_peers)
+        @server.bind
+      end
+
+      def connect(hostname:, port: CyberarmEngine::Networking::DEFAULT_SERVER_PORT)
+        @connection = Connection.new(hostname: hostname, port: port)
+        @connection.connect
+      end
+
       def load_map(map_parser:)
         # TODO: send map_change to clients
         @map = Map.new(map_parser: map_parser)
+        @map.setup
       end
 
       def run
-        Thread.start do |thread|
-          while(@directing)
+        Thread.start do
+          while @directing
             dt = milliseconds - @last_tick_time
 
             tick(dt)
@@ -35,17 +42,19 @@ class IMICFPS
       end
 
       def tick(delta_time)
-        if @map
-          Publisher.instance.publish(:tick, delta_time * 1000.0)
+        return unless @map
 
-          @map.update
-          @server.update
-        end
+        Publisher.instance.publish(:tick, delta_time * 1000.0)
+
+        @map.update
+        @server&.update
+        @connection&.update
       end
 
       def shutdown
         @directing = false
-        @server.close
+        @server&.close
+        @connection&.close
       end
     end
   end

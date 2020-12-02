@@ -29,8 +29,8 @@ require_all "lib/networking/backend"
 Thread.abort_on_exception = true
 
 server = CyberarmEngine::Networking::Server.new
-def server.client_connected(peer:)
-  puts "Client connected as peer: #{peer.id}"
+def server.peer_connected(peer:)
+  puts "Peer connected: #{peer.id}"
 end
 
 def server.packet_received(peer:, message:, channel:)

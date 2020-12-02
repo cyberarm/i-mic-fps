@@ -60,9 +60,9 @@ class IMICFPS
     end
 
     def jump
-      if InputMapper.down?(:jump) && window.current_state.map.collision_manager.on_ground?(self)
-        @velocity.y = 1.5
-      end
+      return unless InputMapper.down?(:jump) && window.director.map.collision_manager.on_ground?(self)
+
+      @velocity.y = 1.5
     end
   end
 end

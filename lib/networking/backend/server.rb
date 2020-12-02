@@ -1,7 +1,7 @@
 module CyberarmEngine
   module Networking
     class Server
-      attr_reader :hostname, :port, :max_clients
+      attr_reader :hostname, :port, :max_peers, :peers
       attr_accessor :total_packets_sent, :total_packets_received,
                     :total_data_sent, :total_data_received,
                     :last_read_time, :last_write_time
@@ -9,12 +9,12 @@ module CyberarmEngine
       def initialize(
         hostname: CyberarmEngine::Networking::DEFAULT_SERVER_HOSTNAME,
         port: CyberarmEngine::Networking::DEFAULT_SERVER_PORT,
-        max_clients: CyberarmEngine::Networking::DEFAULT_PEER_LIMIT,
+        max_peers: CyberarmEngine::Networking::DEFAULT_PEER_LIMIT,
         channels: 3
       )
         @hostname = hostname
         @port = port
-        @max_clients = max_clients + 2
+        @max_peers = max_peers + 2
 
         @channels = Array(0..channels).map { |id| Channel.new(id: id, mode: :default) }
         @peers = []
@@ -28,35 +28,26 @@ module CyberarmEngine
         @total_data_received = 0
       end
 
-      # Helpers #
-      def connected_clients
-        @peers.size
-      end
-
-      def clients
-        @peers
-      end
-
       # Callbacks #
 
-      # Called when client connects
-      def client_connected(peer:)
+      # Called when peer connects
+      def peer_connected(peer:)
       end
 
-      # Called when client times out or explicitly disconnects
-      def client_disconnected(peer:, reason:)
+      # Called when peer times out or explicitly disconnects
+      def peer_disconnected(peer:, reason:)
       end
 
       ### REMOVE? ###
-      # Called when client was not sending heartbeats or regular packets for a
+      # Called when peer was not sending heartbeats or regular packets for a
       # period of time, but was not logically disconnected and removed, and started
       # send packets again.
       #
-      # TLDR: Client was temporarily unreachable but did not timeout.
-      def client_reconnected(peer:)
+      # TLDR: peer was temporarily unreachable but did not timeout.
+      def peer_reconnected(peer:)
       end
 
-      # Called when a (logical) packet is received from client
+      # Called when a (logical) packet is received from peer
       def packet_received(peer:, message:, channel:)
       end
 
@@ -84,7 +75,7 @@ module CyberarmEngine
       end
 
       # Disconnect peer
-      def disconnect_client(peer:, reason: "")
+      def disconnect_peer(peer:, reason: "")
         if (peer = @peers[peer])
           packet = PacketHandler.create_disconnect_packet(peer.id, reason)
           peer.write_now!(packet)
@@ -110,7 +101,7 @@ module CyberarmEngine
                 message: message
               )
             )
-            client_disconnected(peer: peer, reason: message)
+            peer_disconnected(peer: peer, reason: message)
             @peers.delete(peer)
             next
           end
@@ -135,7 +126,7 @@ module CyberarmEngine
 
       def available_peer_id
         peer_ids = @peers.map(&:id)
-        ids = (2..@max_clients).to_a - peer_ids
+        ids = (2..@max_peers).to_a - peer_ids
 
         ids.size.positive? ? ids.first : nil
       end
@@ -157,7 +148,7 @@ module CyberarmEngine
               packet: PacketHandler.create_control_packet(
                 peer: peer,
                 control_type: Protocol::CONTROL_DISCONNECT,
-                message: "ERROR: client not connected"
+                message: "ERROR: peer not connected"
               )
             )
           end

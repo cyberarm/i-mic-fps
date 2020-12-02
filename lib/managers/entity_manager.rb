@@ -7,25 +7,24 @@ class IMICFPS
     end
 
     def insert_entity(package, name, position, orientation, data = {})
-      ent = MapParser::Entity.new(package, name, position, orientation, Vector.new(1,1,1))
+      ent = MapParser::Entity.new(package, name, position, orientation, Vector.new(1, 1, 1))
       add_entity(IMICFPS::Entity.new(map_entity: ent, manifest: Manifest.new(package: package, name: name)))
     end
 
     def find_entity(entity)
-      @entities.detect {|entity| entity == entity}
+      @entities.detect { |e| e == entity }
     end
 
     def find_entity_by(name:)
-      @entities.detect { |entity| entity.name == name}
+      @entities.detect { |entity| entity.name == name }
     end
 
     def remove_entity(entity)
-      ent = @entities.detect {|entity| entity == entity}
-      if ent
-        @collision_manager.remove(entity) if @collision_manager && entity.manifest.collision
-        @publisher.publish(:destroy, nil, entity)
-        @entities.delete(ent)
-      end
+      return unless (ent = @entities.detect { |e| e == entity })
+
+      @collision_manager.remove(entity) if @collision_manager && entity.manifest.collision
+      @publisher.publish(:destroy, nil, entity)
+      @entities.delete(ent)
     end
 
     def entities

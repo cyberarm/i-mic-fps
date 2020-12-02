@@ -1,7 +1,7 @@
 class IMICFPS
   class Window < CyberarmEngine::Window
     attr_accessor :number_of_vertices, :needs_cursor
-    attr_reader :renderer, :scene, :config
+    attr_reader :renderer, :scene, :config, :director
 
     attr_reader :console, :delta_time
     def initialize(window_width = 1280, window_height = 720, fullscreen = false)
@@ -22,6 +22,8 @@ class IMICFPS
       @number_of_vertices = 0
 
       self.caption = "#{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})"
+
+      @director = Networking::Director.new
 
       @config = CyberarmEngine::ConfigFile.new(file: IMICFPS::GAME_ROOT_PATH + "/data/config.json")
       @show_console = false

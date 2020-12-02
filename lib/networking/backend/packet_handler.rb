@@ -32,9 +32,9 @@ module CyberarmEngine
         when Protocol::CONTROL_CONNECT # TOSERVER only
           if (peer_id = host.available_peer_id)
             peer.id = peer_id
-            host.clients << peer
+            host.peers << peer
             peer.write_queue << create_control_packet(peer: peer, control_type: Protocol::CONTROL_SET_PEER_ID, message: [peer_id].pack("n"))
-            host.client_connected(peer: peer)
+            host.peer_connected(peer: peer)
           else
             host.write(
               peer: peer,
@@ -52,7 +52,7 @@ module CyberarmEngine
 
         when Protocol::CONTROL_DISCONNECT
           if host.is_a?(Server)
-            host.client_disconnected(peer: peer)
+            host.peer_disconnected(peer: peer)
           else
             host.disconnected(reason: pkt.message)
           end

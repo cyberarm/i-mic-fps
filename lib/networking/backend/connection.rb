@@ -2,6 +2,7 @@ module CyberarmEngine
   module Networking
     class Connection
       attr_reader :hostname, :port, :peer
+
       def initialize(hostname:, port:, channels: 3)
         @hostname = hostname
         @port = port
@@ -26,7 +27,7 @@ module CyberarmEngine
 
       # Functions #
       def send_packet(message:, reliable: false, channel: 0)
-          @peer.write_queue << PacketHandler.create_raw_packet(peer: @peer, message: message, reliable: reliable, channel: channel)
+        @peer.write_queue << PacketHandler.create_raw_packet(peer: @peer, message: message, reliable: reliable, channel: channel)
       end
 
       def connect(timeout: Protocol::TIMEOUT_PERIOD)

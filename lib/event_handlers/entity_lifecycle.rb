@@ -7,6 +7,7 @@ class IMICFPS
 
       def handle(subscriber, context, *args)
         return unless subscriber.entity == args.first.first
+
         event = EventHandler::Event.new(entity: subscriber.entity, context: context)
 
         subscriber.trigger(event)
