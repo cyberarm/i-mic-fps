@@ -4,9 +4,9 @@ class IMICFPS
   module SoundManager
     extend CyberarmEngine::Common
 
-    MASTERS = {}.freeze
-    EFFECTS = [].freeze
-    PLAYLISTS = {}.freeze
+    @masters = {}
+    @effects = []
+    @playlists = {}
 
     def self.master_volume
       1.0
@@ -21,10 +21,10 @@ class IMICFPS
     end
 
     def self.load_master(package)
-      return if MASTERS[package]
+      return if @masters[package]
 
       yaml = YAML.load_file("#{IMICFPS.assets_path}/#{package}/shared/sound/master.yaml")
-      MASTERS[package] = yaml
+      @masters[package] = yaml
     end
 
     def self.sound(package, name)
@@ -37,7 +37,7 @@ class IMICFPS
 
     def self.sound_data(package, name)
       load_master(package)
-      if master = MASTERS[package]
+      if master = @masters[package]
         return master["sounds"].find { |s| s["name"] == name }
       end
 
@@ -45,11 +45,11 @@ class IMICFPS
     end
 
     def self.sound_effect(klass, options)
-      EFFECTS << klass.new(options)
+      @effects << klass.new(options)
     end
 
     def self.update
-      EFFECTS.each { |e| e.update; EFFECTS.delete(e) if e.done? }
+      @effects.each { |e| e.update; @effects.delete(e) if e.done? }
     end
   end
 end
