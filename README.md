@@ -35,6 +35,7 @@ Ruby 2.5+ interpeter with support for the Gosu game library C extension.
 | Storage     | To Be Determined (< 4 GB)     |
 | Network     | Broadband Internet Connection |
 | Display     | 1920x1080 60Hz                |
+
 Note: Recommended CPU and GPU are those of the primary development system and are overkill at this point.
 
 ### Options
