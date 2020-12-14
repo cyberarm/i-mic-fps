@@ -10,7 +10,8 @@ class IMICFPS
         #       in to a Scene or Scene3D container object
         #       and refactor Game to use it.
         Publisher.new
-        @map = Map.new(map_parser: @options[:map_parser])
+        window.director.load_map(map_parser: @options[:map_parser])
+        @map = window.director.map
         @camera = PerspectiveCamera.new(position: Vector.new, aspect_ratio: window.aspect_ratio)
         @editor = IMICFPS::Editor.new(manifest: Manifest.new(package: "base", name: "editor"))
         @camera_controller = CameraController.new(camera: @camera, entity: @editor)
@@ -37,7 +38,7 @@ class IMICFPS
       end
 
       def control_editor
-        InputMapper.each_key do |key, pressed|
+        InputMapper.keys.each do |key, pressed|
           next unless pressed
 
           actions = InputMapper.actions(key)

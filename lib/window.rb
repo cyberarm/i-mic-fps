@@ -79,8 +79,6 @@ class IMICFPS
     end
 
     def draw_cursor
-      size = 16
-
       @cursor.draw(mouse_x, mouse_y, Float::INFINITY)
     end
 
