@@ -12,7 +12,7 @@ class IMICFPS
         @last_changed_time = Gosu.milliseconds
         @change_interval = 1_500
 
-        @colors = [0xffffffff, 0xaaffffff, 0x88ffffff, 0x22ffffff]
+        @color = 0xaaffffff
       end
 
       def draw
@@ -24,14 +24,6 @@ class IMICFPS
           @scale,
           @color
         )
-      end
-
-      def update
-        if Gosu.milliseconds - @last_changed_time >= @change_interval
-          @last_changed_time = Gosu.milliseconds
-
-          @color = @colors.sample
-        end
       end
     end
   end

@@ -1,11 +1,11 @@
 GIT
   remote: https://github.com/cyberarm/cyberarm_engine
-  revision: d02c001989ce967e2b3184d1a0f01cd5b20ac241
+  revision: 20970e5aa9fbcad6d4bf7d9b56cbd06ba5c53275
   specs:
-    cyberarm_engine (0.14.0)
-      clipboard (~> 1.3.4)
-      excon (~> 0.76.0)
-      gosu (~> 0.15.0)
+    cyberarm_engine (0.17.1)
+      clipboard (~> 1.3.5)
+      excon (~> 0.78.0)
+      gosu (~> 1.1)
       gosu_more_drawables (~> 0.3)
 
 GIT
@@ -22,21 +22,23 @@ GEM
   remote: https://rubygems.org/
   specs:
     clipboard (1.3.5)
-    concurrent-ruby (1.1.7)
+    concurrent-ruby (1.1.8)
     cri (2.1.0)
-    excon (0.76.0)
-    gosu (0.15.2)
-    gosu (0.15.2-x64-mingw32)
+    excon (0.78.1)
+    gosu (1.1.0)
     gosu_more_drawables (0.3.1)
-    i18n (1.8.5)
+    i18n (1.8.8)
       concurrent-ruby (~> 1.0)
     mini_portile2 (2.5.0)
-    nokogiri (1.11.0.rc3)
+    nokogiri (1.11.1)
       mini_portile2 (~> 2.5.0)
-    nokogiri (1.11.0.rc3-x64-mingw32)
+      racc (~> 1.4)
+    nokogiri (1.11.1-x64-mingw32)
+      racc (~> 1.4)
     ocra (1.3.11)
     opengl-bindings (1.6.10)
-    rake (13.0.1)
+    racc (1.5.2)
+    rake (13.0.3)
     rubyzip (2.3.0)
 
 PLATFORMS
@@ -55,4 +57,4 @@ DEPENDENCIES
   rubyzip
 
 BUNDLED WITH
-   2.1.4
+   2.2.3

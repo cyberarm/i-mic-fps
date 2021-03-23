@@ -10,6 +10,7 @@ class IMICFPS
       @score_board = ScoreBoardWidget.new({ player: player })
       @squad = SquadWidget.new({ player: player })
       @crosshair = CrosshairWidget.new({ player: player })
+      @chat = ChatWidget.new({ player: player })
 
       @hud_elements = [
         @ammo,
@@ -18,6 +19,7 @@ class IMICFPS
         @chat_history,
         @score_board,
         @squad,
+        @chat,
 
         @crosshair
       ]

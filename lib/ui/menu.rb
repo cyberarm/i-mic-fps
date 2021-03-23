@@ -30,9 +30,41 @@ class IMICFPS
 
       theme(
         {
-          Label:
+          TextBlock:
           {
             font: SANS_FONT
+          },
+          Title: {
+            font: BOLD_SANS_FONT,
+            text_size: 100,
+            color: Gosu::Color::BLACK,
+            text_align: :center,
+            width: 1.0
+          },
+          Subtitle: {
+            text_size: 50,
+            color: Gosu::Color::WHITE,
+            text_align: :center,
+            width: 1.0
+          },
+          Link: {
+            font: BOLD_SANS_FONT,
+            text_size: 50,
+            text_align: :center,
+            text_shadow: true,
+            text_shadow_size: 2,
+            text_shadow_color: Gosu::Color::BLACK,
+            text_shadow_alpha: 100,
+            color: Gosu::Color.rgb(0, 127, 127),
+            width: 1.0,
+            hover: {
+              color: Gosu::Color.rgb(64, 128, 255),
+              border_thickness: 2,
+              border_color: Gosu::Color::BLACK,
+            },
+            active: {
+              color: Gosu::Color.rgb(64, 128, 255),
+            }
           },
           Button:
           {
@@ -56,21 +88,6 @@ class IMICFPS
           }
         }
       )
-    end
-
-    def title(text, color = Gosu::Color::BLACK)
-      @elements << Text.new(text, color: color, size: 100, x: 0, y: 15, font: BOLD_SANS_FONT)
-      @_title = @elements.last
-    end
-
-    def subtitle(text, color = Gosu::Color::WHITE)
-      @elements << Text.new(text, color: color, size: 50, x: 0, y: 100, font: SANS_FONT)
-      @_subtitle = @elements.last
-    end
-
-    def link(text, color = Gosu::Color.rgb(0, 127, 127), &block)
-      text = Text.new(text, color: color, size: 50, x: 0, y: 100 + (60 * @elements.count), font: BOLD_SANS_FONT)
-      @elements << Link.new(text, self, block)
     end
 
     def draw
@@ -132,57 +149,6 @@ class IMICFPS
     def mouse_over?(object)
       mouse_x.between?(object.x, object.x + object.width) &&
         mouse_y.between?(object.y, object.y + object.height)
-    end
-
-    class Link
-      attr_reader :text, :block
-
-      def initialize(text, host, block)
-        @text = text
-        @host = host
-        @block = block
-        @color = @text.color
-        @hover_color = Gosu::Color.rgb(64, 128, 255)
-        @text.shadow_color = Gosu::Color::BLACK
-        @text.shadow_size = 2
-        @text.shadow_alpha = 100
-      end
-
-      def update
-        @text.color = if @host.mouse_over?(self)
-                        @hover_color
-                      else
-                        @color
-                      end
-      end
-
-      def x
-        text.x
-      end
-
-      def x=(n)
-        text.x = n
-      end
-
-      def y
-        text.y
-      end
-
-      def width
-        text.width
-      end
-
-      def height
-        text.height
-      end
-
-      def draw
-        text.draw
-      end
-
-      def clicked
-        @block&.call
-      end
     end
   end
 end
