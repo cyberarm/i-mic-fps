@@ -65,22 +65,22 @@ class IMICFPS
     def update
       position_camera
 
-      if @mouse_captured
-        delta = Float(@true_mouse.x - mouse_x) / (@mouse_sensitivity * @camera.field_of_view) * 70
-        @camera.orientation.y -= delta
-        @camera.orientation.y %= 360.0
+      return unless @mouse_captured
 
-        @camera.orientation.x -= Float(@true_mouse.y - window.mouse_y) / (@mouse_sensitivity * @camera.field_of_view) * 70
-        @camera.orientation.x = @camera.orientation.x.clamp(-90.0, 90.0)
+      delta = Float(@true_mouse.x - mouse_x) / (@mouse_sensitivity * @camera.field_of_view) * 70
+      @camera.orientation.y -= delta
+      @camera.orientation.y %= 360.0
 
-        @entity.orientation.y += delta
-        @entity.orientation.y %= 360.0
+      @camera.orientation.x -= Float(@true_mouse.y - window.mouse_y) / (@mouse_sensitivity * @camera.field_of_view) * 70
+      @camera.orientation.x = @camera.orientation.x.clamp(-90.0, 90.0)
 
-        window.mouse_x = window.width  / 2 if window.mouse_x <= 1 || window.mouse_x >= window.width - 1
-        window.mouse_y = window.height / 2 if window.mouse_y <= 1 || window.mouse_y >= window.height - 1
-        @true_mouse.x = window.mouse_x
-        @true_mouse.y = window.mouse_y
-      end
+      @entity.orientation.y += delta
+      @entity.orientation.y %= 360.0
+
+      window.mouse_x = window.width  / 2 if window.mouse_x <= 1 || window.mouse_x >= window.width  - 1
+      window.mouse_y = window.height / 2 if window.mouse_y <= 1 || window.mouse_y >= window.height - 1
+      @true_mouse.x = window.mouse_x
+      @true_mouse.y = window.mouse_y
     end
 
     def button_down(id)
