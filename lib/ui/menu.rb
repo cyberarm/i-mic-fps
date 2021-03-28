@@ -59,8 +59,6 @@ class IMICFPS
             width: 1.0,
             hover: {
               color: Gosu::Color.rgb(64, 128, 255),
-              border_thickness: 2,
-              border_color: Gosu::Color::BLACK,
             },
             active: {
               color: Gosu::Color.rgb(64, 128, 255),
