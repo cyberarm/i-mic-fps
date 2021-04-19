@@ -5,14 +5,7 @@ class IMICFPS
     attr_accessor :number_of_vertices, :needs_cursor
     attr_reader :renderer, :scene, :config, :director, :console, :delta_time
 
-    def initialize(window_width = 1280, window_height = 720, fullscreen = false)
-      fps_target = ARGV.first.to_i != 0 ? ARGV.first.to_i : 60
-      if ARGV.join.include?("--native")
-        super(width: Gosu.screen_width, height: Gosu.screen_height, fullscreen: true, resizable: true, update_interval: 1000.0 / fps_target)
-      else
-        super(width: window_width, height: window_height, fullscreen: fullscreen, resizable: true, update_interval: 1000.0 / fps_target)
-      end
-      $window = self
+    def setup
       I18n.load_path << Dir["#{GAME_ROOT_PATH}/locales/*.yml"]
       I18n.default_locale = :en
       language = Gosu.language.split("_").first.to_sym
@@ -43,7 +36,7 @@ class IMICFPS
         @config.save!
       end
 
-      push_state(Boot)
+      push_state(CyberarmEngine::IntroState, forward: Boot)
 
       @delta_time = Gosu.milliseconds
     end

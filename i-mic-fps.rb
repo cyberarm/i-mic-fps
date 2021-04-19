@@ -31,6 +31,7 @@ include GLU
 
 def require_all(directory)
   files = Dir["#{directory}/**/*.rb"].sort!
+  file_order = []
 
   loop do
     failed = []
@@ -39,6 +40,7 @@ def require_all(directory)
     files.each do |file|
       begin
         require_relative file
+        file_order << file
       rescue NameError => e
         failed << file
         first_name_error ||= e
@@ -52,6 +54,8 @@ def require_all(directory)
     end
     break if failed.empty?
   end
+
+  # pp file_order.map { |f| f.gsub(".rb", "")}
 end
 
 require_all "lib"
@@ -87,5 +91,17 @@ elsif ARGV.join.include?("--profile")
     puts "ruby-prof not installed!"
   end
 else
-  IMICFPS::Window.new.show
+  native = ARGV.join.include?("--native")
+  fps_target = ARGV.first.to_i != 0 ? ARGV.first.to_i : 60
+  window_width = native ? Gosu.screen_width : 1280
+  window_height = native ? Gosu.screen_height : 720
+  window_fullscreen = native ? true : false
+
+  IMICFPS::Window.new(
+    width: window_width,
+    height: window_height,
+    fullscreen: window_fullscreen,
+    resizable: !window_fullscreen,
+    update_interval: 1000.0 / fps_target
+  ).show
 end
