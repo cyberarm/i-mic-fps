@@ -6,6 +6,7 @@ layout (location = 2) out vec3 fragNormal;
 layout (location = 3) out vec3 fragUV;
 
 in vec3 outPosition, outColor, outNormal, outUV, outFragPos, outCameraPos;
+out vec4 outputFragColor;
 flat in int outHasTexture;
 
 uniform sampler2D diffuse_texture;
@@ -25,5 +26,5 @@ void main() {
   fragUV = outUV;
 
   float gamma = 2.2;
-  FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / gamma));
+  outputFragColor.rgb = pow(fragColor.rgb, vec3(1.0 / gamma));
 }
