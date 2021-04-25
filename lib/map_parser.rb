@@ -40,7 +40,7 @@ class IMICFPS
         @metadata.thumbnail   = section["thumbnail"] # TODO: convert thumbnail to Image
         @metadata.description = section["description"]
       else
-        raise "Map metadata is missing!"
+        warn "Map metadata is missing!"
       end
 
       if section = data["terrain"]
@@ -64,7 +64,7 @@ class IMICFPS
         end
         @terrain.water_level = section["water_level"]
       else
-        raise "Map terrain data is missing!"
+        warn "Map terrain data is missing!"
       end
 
       if section = data["skydome"]
@@ -87,7 +87,7 @@ class IMICFPS
           @skydome.scale = Vector.new(1, 1, 1)
         end
       else
-        raise "Map skydome data is missing!"
+        warn "Map skydome data is missing!"
       end
 
       if section = data["lights"]
@@ -150,7 +150,7 @@ class IMICFPS
           @entities << entity
         end
       else
-        raise "Map has no entities!"
+        warn "Map has no entities!"
       end
 
       if section = data["spawnpoints"]
@@ -171,7 +171,7 @@ class IMICFPS
           @spawnpoints << spawnpoint
         end
       else
-        raise "Map has no spawnpoints!"
+        warn "Map has no spawnpoints!"
       end
     end
 

@@ -7,7 +7,7 @@ class IMICFPS
     attr_accessor :mode, :camera, :entity, :distance, :origin_distance,
                   :constant_pitch, :mouse_sensitivity, :mouse_captured
 
-    def initialize(camera:, entity:, mode: :fpv)
+    def initialize(camera:, entity: nil, mode: :fpv)
       # :fpv - First Person View
       # :tpv - Third Person View
       @mode = mode
@@ -63,7 +63,7 @@ class IMICFPS
     end
 
     def update
-      position_camera
+      position_camera if @entity
 
       return unless @mouse_captured
 
@@ -74,8 +74,10 @@ class IMICFPS
       @camera.orientation.x -= Float(@true_mouse.y - window.mouse_y) / (@mouse_sensitivity * @camera.field_of_view) * 70
       @camera.orientation.x = @camera.orientation.x.clamp(-90.0, 90.0)
 
-      @entity.orientation.y += delta
-      @entity.orientation.y %= 360.0
+      if @entity
+        @entity.orientation.y += delta
+        @entity.orientation.y %= 360.0
+      end
 
       window.mouse_x = window.width  / 2 if window.mouse_x <= 1 || window.mouse_x >= window.width  - 1
       window.mouse_y = window.height / 2 if window.mouse_y <= 1 || window.mouse_y >= window.height - 1
@@ -99,14 +101,49 @@ class IMICFPS
         @camera.max_view_distance += 0.5
       elsif actions.include?(:toggle_first_person_view)
         @mode = first_person_view? ? :tpv : :fpv
-        @entity.visible = !first_person_view?
+        @entity.visible = !first_person_view? if @entity
       elsif actions.include?(:turn_180)
-        @entity.orientation.y += 180
-        @entity.orientation.y %= 360.0
+        @entity.orientation.y += 180 if @entity
+        @entity.orientation.y %= 360.0 if @entity
       end
     end
 
     def button_up(id)
+    end
+
+    def free_move
+      relative_y_rotation = (@camera.orientation.y + 180)
+      relative_speed = 2.5
+      relative_speed = 1.5 if InputMapper.down?(:sneak)
+      relative_speed = 10.0 if InputMapper.down?(:sprint)
+      relative_speed *= window.dt
+
+      if InputMapper.down?( :forward)
+        @camera.position.z += Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+        @camera.position.x -= Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
+      end
+
+      if InputMapper.down?(:backward)
+        @camera.position.z -= Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+        @camera.position.x += Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
+      end
+
+      if InputMapper.down?(:strife_left)
+        @camera.position.z += Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
+        @camera.position.x += Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+      end
+
+      if InputMapper.down?(:strife_right)
+        @camera.position.z -= Math.sin(relative_y_rotation * Math::PI / 180) * relative_speed
+        @camera.position.x -= Math.cos(relative_y_rotation * Math::PI / 180) * relative_speed
+      end
+
+      if InputMapper.down?(:ascend)
+        @camera.position.y += relative_speed
+      end
+      if InputMapper.down?(:descend)
+        @camera.position.y -= relative_speed
+      end
     end
   end
 end

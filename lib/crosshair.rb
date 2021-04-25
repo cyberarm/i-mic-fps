@@ -11,8 +11,25 @@ class IMICFPS
     end
 
     def draw
-      draw_rect(window.width / 2 - @size, (window.height / 2 - @size) - @thickness / 2, @size * 2, @thickness, @color, 0, :default)
-      draw_rect((window.width / 2) - @thickness / 2, window.height / 2 - (@size * 2), @thickness, @size * 2, @color, 0, :default)
+      draw_rect(
+        window.width / 2 - @size,
+        (window.height / 2 - @size) - @thickness / 2,
+        @size * 2,
+        @thickness,
+        @color,
+        0,
+        :default
+      )
+
+      draw_rect(
+        (window.width / 2) - @thickness / 2,
+        window.height / 2 - (@size * 2),
+        @thickness,
+        @size * 2,
+        @color,
+        0,
+        :default
+      )
     end
   end
 end

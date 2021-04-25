@@ -3,16 +3,14 @@
 class IMICFPS
   class AssetViewerTool
     class TurnTable < CyberarmEngine::GuiState
-      include LightManager
-
       attr_reader :map
 
       def setup
         window.needs_cursor = false
         @manifest = @options[:manifest]
 
-        @map = ProtoMap.new
-        Publisher.new
+        window.director.load_map(map_parser: MapParser.new(map_file: "#{GAME_ROOT_PATH}/maps/model_viewer.json"))
+        @map = window.director.map
 
         @entity = Entity.new(manifest: @manifest)
         @entity.bind_model
@@ -20,16 +18,15 @@ class IMICFPS
         @map.entities.each { |e| e.backface_culling = false }
         @crosshair = Crosshair.new(color: Gosu::Color.rgba(100, 200, 255, 100))
 
-        @lights = []
-        @light = Light.new(type: Light::DIRECTIONAL, id: available_light, position: Vector.new, diffuse: Vector.new(1, 1, 1, 1))
-        @lights << @light
+        @map.add_light @light = Light.new(type: Light::DIRECTIONAL, id: @map.available_light, position: Vector.new, diffuse: Vector.new(1, 1, 1, 1))
 
         @camera = PerspectiveCamera.new(aspect_ratio: window.aspect_ratio, position: Vector.new(0, 1.5, 5), orientation: Vector.forward)
+        @camera_controller = CameraController.new(camera: @camera, entity: nil, mode: :fpv)
 
-        label @manifest.name, text_size: 50
-        label @manifest.model
-        @camera_position    = label ""
-        @camera_orientation = label ""
+        label @manifest.name, text_size: 50, text_shadow: true, text_shadow_color: Gosu::Color::BLACK
+        label @manifest.model, text_shadow: true, text_shadow_color: Gosu::Color::BLACK
+        @camera_position    = label "", text_shadow: true, text_shadow_color: Gosu::Color::BLACK
+        @camera_orientation = label "", text_shadow: true, text_shadow_color: Gosu::Color::BLACK
 
         button "Back" do
           pop_state
@@ -48,7 +45,7 @@ class IMICFPS
         )
 
         Gosu.gl do
-          window.renderer.draw(@camera, [@light], @map.entities)
+          window.renderer.draw(@camera, @map.lights, @map.entities)
         end
 
         @crosshair.draw
@@ -64,30 +61,24 @@ class IMICFPS
         @camera_position.value = "Camera Position: X #{@camera.position.x.round(2)}, Y #{@camera.position.y.round(2)}, Z #{@camera.position.z.round(2)}"
         @camera_orientation.value = "Camera Orientation: X #{@camera.orientation.x.round(2)}, Y #{@camera.orientation.y.round(2)}, Z #{@camera.orientation.z.round(2)}\nEntities: #{@map.entities.count}"
 
-        @map.entities.each(&:update)
+        @camera_controller.free_move
+        @camera_controller.update
+
+        # @map.entities.each(&:update)
       end
 
       def button_down(id)
         super
 
         InputMapper.keydown(id)
+        @camera_controller.button_down(id)
       end
 
       def button_up(id)
         super
 
         InputMapper.keyup(id)
-      end
-    end
-
-    # Stub for enabling scripted models to load properly
-    class ProtoMap
-      include EntityManager
-
-      attr_reader :entities
-
-      def initialize
-        @entities = []
+        @camera_controller.button_up(id)
       end
     end
   end

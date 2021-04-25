@@ -1,0 +1,30 @@
+{
+  "metadata": {
+    "name": "Model Viewer",
+    "gamemode": null,
+    "authors": [
+      "Cyberarm"
+    ],
+    "datetime": "2021-04-25 22:51:00 UTC",
+    "thumbnail": "",
+    "description": "A map for the model viewer tool to use."
+  },
+
+  "entities": [],
+
+    "spawnpoints": [
+      {
+        "team": 0,
+        "position": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        },
+        "orientation": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+        }
+      }
+    ]
+}

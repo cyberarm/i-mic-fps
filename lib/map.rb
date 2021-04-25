@@ -20,8 +20,8 @@ class IMICFPS
     end
 
     def setup
-      add_terrain
-      add_skybox
+      add_terrain if @map_parser.terrain.name
+      add_skybox if @map_parser.skydome.name
       add_lights
       add_entities
 
