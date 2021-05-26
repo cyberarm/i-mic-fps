@@ -4,7 +4,7 @@ class IMICFPS
   class HUD
     class ChatWidget < HUD::Widget
       def setup
-        @text = Text.new("", size: 28, mode: :add, font: SANS_FONT)
+        @text = Text.new("", size: 28, font: SANS_FONT)
         @background = Gosu::Color.new(0x88c64600)
       end
 

@@ -11,11 +11,8 @@ class IMICFPS
           size: 16,
           x: Widget.margin, y: Widget.margin, z: 45,
           shadow: true,
-          shadow_size: 0.5,
-          shadow_alpha: 30,
-          shadow_color: Gosu::Color::WHITE,
-          mode: :add,
-          font: MONOSPACE_FONT
+          shadow_color: Gosu::Color::BLACK,
+          font: BOLD_SANS_FONT
         )
 
         set_text

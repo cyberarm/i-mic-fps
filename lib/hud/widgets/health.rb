@@ -5,7 +5,7 @@ class IMICFPS
     class HealthWidget < HUD::Widget
       def setup
         @spacer = 0
-        @text = Text.new("", mode: :add, font: MONOSPACE_FONT)
+        @text = Text.new("", font: MONOSPACE_FONT, shadow: true, shadow_color: Gosu::Color::BLACK)
         @width = 512
         @height = 24
         @slant = 32

@@ -10,11 +10,8 @@ class IMICFPS
           "",
           size: 16,
           x: Widget.margin, y: Widget.margin, z: 45,
-          shadow_size: 0.5,
-          shadow_alpha: 0,
-          shadow_color: Gosu::Color::WHITE,
-          mode: :add,
-          font: SANS_FONT
+          shadow_color: Gosu::Color::BLACK,
+          font: BOLD_SANS_FONT
         )
 
         @last_message_time = 0

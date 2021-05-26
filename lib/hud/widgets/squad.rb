@@ -14,12 +14,10 @@ class IMICFPS
         @text = Text.new(
           "MATE\nTinyTanker\nOther Player Dude\nHuman 0xdeadbeef",
           size: 18,
-          mode: :add,
           font: SANS_FONT,
           color: @color,
           shadow: true,
-          shadow_color: 0x88000000,
-          shadow_size: 0.75
+          shadow_color: Gosu::Color::BLACK,
         )
       end
 

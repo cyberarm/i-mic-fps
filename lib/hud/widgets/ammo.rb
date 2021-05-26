@@ -4,16 +4,16 @@ class IMICFPS
   class HUD
     class AmmoWidget < HUD::Widget
       def setup
-        @text = Text.new("", size: 64, mode: :add, font: MONOSPACE_FONT)
+        @text = Text.new("", size: 64, font: MONOSPACE_FONT, shadow: true, shadow_color: Gosu::Color::BLACK)
         @background = Gosu::Color.new(0x88c64600)
       end
 
       def draw
-        Gosu.draw_rect(
-          @text.x - Widget.padding, @text.y - Widget.padding,
-          @text.width + Widget.padding * 2, @text.height + Widget.padding * 2,
-          @background
-        )
+        # Gosu.draw_rect(
+        #   @text.x - Widget.padding, @text.y - Widget.padding,
+        #   @text.width + Widget.padding * 2, @text.height + Widget.padding * 2,
+        #   @background
+        # )
         @text.draw
       end
 

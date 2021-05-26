@@ -12,7 +12,7 @@ class IMICFPS
         @border_color = Gosu::Color.new(0x88c64600)
         @radar_color = Gosu::Color.new(0x88212121)
 
-        @text = Text.new("RADAR", size: 18, mode: :add, font: MONOSPACE_FONT)
+        @text = Text.new("RADAR", size: 18, font: MONOSPACE_FONT, shadow: true, shadow_color: Gosu::Color::BLACK)
         @image = Gosu::Image.new("#{CYBERARM_ENGINE_ROOT_PATH}/assets/textures/default.png", retro: true)
         @scale = (@size - Widget.padding * 2.0) / @image.width
       end
