@@ -11,3 +11,9 @@ en:
     leave:        Leave
     paused:       Paused
     resume:       Resume
+  settings:
+    display: Display
+    graphics: Graphics
+    audio: Audio
+    controls: Controls
+    multiplayer: Multiplayer

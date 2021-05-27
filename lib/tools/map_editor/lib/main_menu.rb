@@ -6,9 +6,6 @@ class IMICFPS
       def setup
         window.needs_cursor = true
 
-        label IMICFPS::NAME.to_s, text_size: 50
-        label "Map Editor", text_size: 28
-
         @maps = []
         Dir.glob("#{GAME_ROOT_PATH}/maps/*.json").each do |map|
           begin
@@ -22,15 +19,20 @@ class IMICFPS
 
         flow(width: 1.0, height: 1.0) do
           stack(width: 0.25, height: 1.0) do
-            button "New Map", width: 1.0
-
-            button "Back", margin_top: 64, width: 1.0 do
-              pop_state
-            end
           end
 
           stack(width: 0.5, height: 1.0) do
-            label "Edit Map"
+            label "Map Editor", text_size: 100, font: BOLD_SANS_FONT, width: 1.0, text_align: :center
+
+            flow width: 1.0 do
+              link I18n.t("menus.back"), width: 0.32 do
+                pop_state
+              end
+
+              button "New Map", width: 1.0, width: 0.64
+            end
+
+            label "Edit Map", width: 1.0, text_align: :center, text_size: 50
             flow(width: 1.0, height: 1.0) do
               @maps.each do |map|
                 button map.metadata.name do

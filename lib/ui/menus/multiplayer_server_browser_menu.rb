@@ -30,19 +30,25 @@ class IMICFPS
         }
       ]
 
-      label "Server Browser", text_size: 100
-      flow width: 1.0, height: 1.0 do
+      flow(width: 1.0, height: 1.0) do
         stack width: 0.25 do
-          button "Host Game", width: 1.0
-          button "Direct Connect", width: 1.0
-
-          button I18n.t("menus.back"), width: 1.0, margin_top: 64 do
-            pop_state
-          end
         end
 
         stack width: 0.5, height: 1.0 do
-          stack width: 1.0, height: 0.75, border_color: 0xffffffff, border_thickness: 1 do
+          stack width: 1.0, height: 0.25 do
+            label "Server Browser", text_size: 100, text_align: :center, width: 1.0
+
+            flow(width: 1.0) do
+              link I18n.t("menus.back"), width: 0.32 do
+                pop_state
+              end
+
+              button "Host Game", width: 0.32
+              button "Direct Connect", width: 0.32
+            end
+          end
+
+          stack width: 1.0, height: 0.5, border_color: 0xffffffff, border_thickness: 1 do
             @sample_games.each_with_index do |game, i|
               text_size = 18
               flow width: 1.0 do

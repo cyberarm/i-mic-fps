@@ -17,53 +17,69 @@ class IMICFPS
     end
 
     def setup
-      @categories = %w[
-        Display
-        Graphics
-        Audio
-        Controls
-        Multiplayer
-      ]
       @pages = {}
       @current_page = nil
 
-      label "Settings", text_size: 100, color: Gosu::Color::BLACK
-
       flow(width: 1.0, height: 1.0) do
         stack(width: 0.25, height: 1.0) do
-          @categories.each do |category|
-            button category, width: 1.0 do
-              show_page(:"#{category}".downcase)
+        end
+
+        stack(width: 0.5, height: 1.0) do
+          stack(width: 1.0, height: 0.25) do
+            label "Settings", color: Gosu::Color::BLACK, text_size: 100, text_align: :center, width: 1.0
+
+            flow(width: 1.0) do
+              link I18n.t("menus.back"), width: nil do
+                pop_state
+              end
+
+              button get_image("#{GAME_ROOT_PATH}/static/icons/settings_display.png"),     image_width: 64, tip: I18n.t("settings.display") do
+                show_page(:display)
+              end
+
+              button get_image("#{GAME_ROOT_PATH}/static/icons/settings_graphics.png"),    image_width: 64, tip: I18n.t("settings.graphics") do
+                show_page(:graphics)
+              end
+
+              button get_image("#{GAME_ROOT_PATH}/static/icons/settings_audio.png"),       image_width: 64, tip: I18n.t("settings.audio") do
+                show_page(:audio)
+              end
+
+              button get_image("#{GAME_ROOT_PATH}/static/icons/settings_controls.png"),    image_width: 64, tip: I18n.t("settings.controls") do
+                show_page(:controls)
+              end
+
+              button get_image("#{GAME_ROOT_PATH}/static/icons/settings_multiplayer.png"), image_width: 64, tip: I18n.t("settings.multiplayer") do
+                show_page(:multiplayer)
+              end
             end
           end
 
-          button I18n.t("menus.back"), width: 1.0, margin_top: 64 do
-            pop_state
-          end
-        end
-
-        @categories.each do |category|
-          stack(width: 0.5, height: 1.0) do |element|
-            @pages[:"#{category}".downcase] = element
-            element.hide
-
-            send(:"create_page_#{category}".downcase) if respond_to?(:"create_page_#{category}".downcase)
+          @page_container = stack(width: 1.0, height: 0.75, scroll: true) do
           end
         end
       end
+
+      #   @categories.each do |category|
+      #     stack(width: 0.5, height: 1.0) do |element|
+      #       @pages[:"#{category}".downcase] = element
+      #       element.hide
+
+      #       send(:"create_page_#{category}".downcase) if respond_to?(:"create_page_#{category}".downcase)
+      #     end
+      #   end
+      # end
 
       show_page(:display)
     end
 
     def show_page(page)
-      if element = @pages[page]
-        @current_page&.hide
-        @current_page = element
-        element.show
+      @page_container.clear do
+        send(:"page_#{page}")
       end
     end
 
-    def create_page_display
+    def page_display
       label "Display", text_size: 50
 
       label "Resolution"
@@ -109,7 +125,7 @@ class IMICFPS
       end
     end
 
-    def create_page_audio
+    def page_audio
       label "Audio", text_size: 50
       longest_string = "Dialogue".length
       volumes = %i[sound music dialogue]
@@ -131,7 +147,7 @@ class IMICFPS
       end
     end
 
-    def create_page_controls
+    def page_controls
       label "Controls", text_size: 50
 
       InputMapper.keymap.each do |key, values|
@@ -150,7 +166,7 @@ class IMICFPS
       end
     end
 
-    def create_page_graphics
+    def page_graphics
       label "Graphics", text_size: 50
 
       longest_string = "Surface Effect Detail"
@@ -218,7 +234,7 @@ class IMICFPS
       end
     end
 
-    def create_page_multiplayer
+    def page_multiplayer
       label "Multiplayer", text_size: 50
 
       flow do

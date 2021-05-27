@@ -17,17 +17,19 @@ class IMICFPS
 
         @manifests.sort_by! { |m| m.name.downcase }
 
-        label IMICFPS::NAME.to_s, text_size: 100, color: Gosu::Color::BLACK
-        label "Asset Viewer", text_size: 50
+
 
         flow(width: 1.0, height: 1.0) do
           stack(width: 0.25, height: 1.0) do
-            button "Back", width: 1.0 do
-              pop_state
-            end
           end
 
           stack(width: 0.5, height: 1.0) do
+            label "Asset Viewer", text_size: 100, font: BOLD_SANS_FONT, width: 1.0, text_align: :center
+
+            link I18n.t("menus.back"), width: 1.0 do
+              pop_state
+            end
+
             flow(width: 1.0, height: 1.0) do
               @manifests.each do |manifest|
                 button manifest.name do
