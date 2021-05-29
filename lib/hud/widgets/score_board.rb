@@ -10,8 +10,8 @@ class IMICFPS
           "",
           size: 16,
           x: Widget.margin, y: Widget.margin, z: 45,
-          shadow: true,
-          shadow_color: Gosu::Color::BLACK,
+          border: true,
+          border_color: Gosu::Color::BLACK,
           font: BOLD_SANS_FONT
         )
 

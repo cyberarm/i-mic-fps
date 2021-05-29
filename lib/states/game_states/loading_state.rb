@@ -22,8 +22,8 @@ class IMICFPS
       @assets = []
       @asset_index = 0
 
-      add_asset(:model, @map_parser.terrain.package, @map_parser.terrain.name)
-      add_asset(:model, @map_parser.skydome.package, @map_parser.skydome.name)
+      add_asset(:model, @map_parser.terrain.package, @map_parser.terrain.name) if @map_parser.terrain.package
+      add_asset(:model, @map_parser.skydome.package, @map_parser.skydome.name) if @map_parser.skydome.package
       @map_parser.entities.each do |entity|
         add_asset(:model, entity.package, entity.name)
       end

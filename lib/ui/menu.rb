@@ -22,7 +22,9 @@ class IMICFPS
       @accent_color = ACCENT_COLOR
       window.needs_cursor = true
 
-      @__version_text = CyberarmEngine::Text.new("<b>#{IMICFPS::NAME}</b> v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})", font: BOLD_SANS_FONT)
+      @__version_text = CyberarmEngine::Text.new(
+        "<b>#{IMICFPS::NAME}</b> v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME})",
+        font: BOLD_SANS_FONT, border: true, border_color: Gosu::Color::BLACK)
       @__version_text.x = window.width - (@__version_text.width + 10)
       @__version_text.y = window.height - (@__version_text.height + 10)
 
@@ -39,7 +41,9 @@ class IMICFPS
             text_size: 100,
             color: Gosu::Color::BLACK,
             text_align: :center,
-            width: 1.0
+            text_shadow: true,
+            text_shadow_size: 4,
+            width: 1.0,
           },
           Subtitle: {
             text_size: 50,
@@ -51,10 +55,10 @@ class IMICFPS
             font: BOLD_SANS_FONT,
             text_size: 50,
             text_align: :center,
-            text_shadow: true,
-            text_shadow_size: 2,
-            text_shadow_color: Gosu::Color::BLACK,
-            text_shadow_alpha: 100,
+            text_border: true,
+            text_border_size: 2,
+            text_border_color: Gosu::Color::BLACK,
+            text_border_alpha: 100,
             color: Gosu::Color.rgb(0, 127, 127),
             width: 1.0,
             hover: {

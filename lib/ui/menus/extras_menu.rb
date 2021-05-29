@@ -3,8 +3,7 @@
 class IMICFPS
   class ExtrasMenu < Menu
     def setup
-      title IMICFPS::NAME
-      subtitle "Extras"
+      title I18n.t("menus.extras")
 
       link "Asset Viewer" do
         push_state(IMICFPS::AssetViewerTool::MainMenu)

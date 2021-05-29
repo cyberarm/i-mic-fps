@@ -16,7 +16,9 @@ class IMICFPS
       @input = Text.new("", x: 4, y: @height - (PADDING * 2), z: Console::Z + 1, font: MONOSPACE_FONT)
       @input.y -= @input.height
 
-      @history = Text.new("=== #{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME}) ===\n\n", x: 4, z: Console::Z + 1, font: MONOSPACE_FONT)
+      @history = Text.new(
+        "=== #{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME}) ===\n\n",
+        x: 4, z: Console::Z + 1, font: MONOSPACE_FONT, border: true, border_color: Gosu::Color::BLACK)
       update_history_y
 
       @command_history       = []

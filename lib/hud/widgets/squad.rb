@@ -16,8 +16,8 @@ class IMICFPS
           size: 18,
           font: SANS_FONT,
           color: @color,
-          shadow: true,
-          shadow_color: Gosu::Color::BLACK,
+          border: true,
+          border_color: Gosu::Color::BLACK,
         )
       end
 

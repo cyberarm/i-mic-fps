@@ -3,8 +3,7 @@
 class IMICFPS
   class MultiplayerMenu < Menu
     def setup
-      title IMICFPS::NAME
-      subtitle "Multiplayer"
+      title I18n.t("menus.multiplayer")
 
       link "Quick Join"
       link "Server Browser" do

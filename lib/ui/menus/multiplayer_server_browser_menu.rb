@@ -36,7 +36,7 @@ class IMICFPS
 
         stack width: 0.5, height: 1.0 do
           stack width: 1.0, height: 0.25 do
-            label "Server Browser", text_size: 100, text_align: :center, width: 1.0
+            title "Server Browser"
 
             flow(width: 1.0) do
               link I18n.t("menus.back"), width: 0.32 do

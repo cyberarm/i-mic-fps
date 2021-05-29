@@ -3,7 +3,7 @@
 class IMICFPS
   class LevelSelectMenu < Menu
     def setup
-      title IMICFPS::NAME
+      title I18n.t("menus.singleplayer")
       subtitle "Choose a Map"
 
       Dir.glob("#{GAME_ROOT_PATH}/maps/*.json").map { |file| [file, MapParser.new(map_file: file)] }.each do |file, map|

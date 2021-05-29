@@ -7,7 +7,7 @@ class IMICFPS
     Slot = Struct.new(:value, :width)
 
     def initialize
-      @text = CyberarmEngine::Text.new("", x: 3, y: 3, shadow_color: Gosu::Color::BLACK)
+      @text = CyberarmEngine::Text.new("", x: 3, y: 3, border_color: Gosu::Color::BLACK)
       @slots = []
       @space_width = @text.textobject.text_width(" ")
     end

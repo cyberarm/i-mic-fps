@@ -3,7 +3,7 @@
 class IMICFPS
   class Boot < GameState
     def setup
-      @title = Text.new(IMICFPS::NAME, size: 100, z: 0, color: Gosu::Color.new(0xff000000), shadow: false, font: IMICFPS::BOLD_SANS_FONT)
+      @title = Text.new(IMICFPS::NAME, size: 100, z: 0, color: Gosu::Color.new(0xff000000), border: false, font: IMICFPS::BOLD_SANS_FONT)
       @logo = get_image("#{IMICFPS::GAME_ROOT_PATH}/static/logo.png")
 
       @start_time = Gosu.milliseconds
@@ -76,8 +76,11 @@ class IMICFPS
     def update
       @animators.each(&:update)
 
+      y = window.height / 2 - (@logo.height / 2 + @title.height + 8)
+      y = 0 if y < @title.height
+
       @title.x = window.width / 2 - @title.width / 2
-      @title.y = (0 - @title.height) + (@title.height * @title_animator.transition)
+      @title.y = (0 - (@title.height * (1 - @title_animator.transition))) + (y * @title_animator.transition)
 
       push_state(MainMenu) if Gosu.milliseconds - @start_time >= @time_to_live
     end

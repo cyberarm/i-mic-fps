@@ -8,7 +8,7 @@ class IMICFPS
         end
 
         stack(width: 0.5, height: 1.0) do
-          label "Profile", text_size: 100, color: Gosu::Color::BLACK, width: 1.0, text_align: :center
+          title "Profile"
 
           flow width: 1.0 do
             link I18n.t("menus.back"), width: 0.32 do

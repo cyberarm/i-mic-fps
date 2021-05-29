@@ -24,7 +24,7 @@ class IMICFPS
           end
 
           stack(width: 0.5, height: 1.0) do
-            label "Asset Viewer", text_size: 100, font: BOLD_SANS_FONT, width: 1.0, text_align: :center
+            title "Asset Viewer"
 
             link I18n.t("menus.back"), width: 1.0 do
               pop_state

@@ -23,10 +23,10 @@ class IMICFPS
         @camera = PerspectiveCamera.new(aspect_ratio: window.aspect_ratio, position: Vector.new(0, 1.5, 5), orientation: Vector.forward)
         @camera_controller = CameraController.new(camera: @camera, entity: nil, mode: :fpv)
 
-        label @manifest.name, text_size: 50, text_shadow: true, text_shadow_color: Gosu::Color::BLACK
-        label @manifest.model, text_shadow: true, text_shadow_color: Gosu::Color::BLACK
-        @camera_position    = label "", text_shadow: true, text_shadow_color: Gosu::Color::BLACK
-        @camera_orientation = label "", text_shadow: true, text_shadow_color: Gosu::Color::BLACK
+        label @manifest.name, text_size: 50, text_border: true, text_border_color: Gosu::Color::BLACK
+        label @manifest.model, text_border: true, text_border_color: Gosu::Color::BLACK
+        @camera_position    = label "", text_border: true, text_border_color: Gosu::Color::BLACK
+        @camera_orientation = label "", text_border: true, text_border_color: Gosu::Color::BLACK
 
         button "Back" do
           pop_state

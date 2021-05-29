@@ -4,8 +4,7 @@ class IMICFPS
   class GamePauseMenu < Menu
     def setup
       @bar_alpha = 50
-      title IMICFPS::NAME
-      subtitle "Paused"
+      title "Paused"
 
       link "Resume" do
         pop_state

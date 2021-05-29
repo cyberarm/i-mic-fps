@@ -22,14 +22,14 @@ class IMICFPS
           end
 
           stack(width: 0.5, height: 1.0) do
-            label "Map Editor", text_size: 100, font: BOLD_SANS_FONT, width: 1.0, text_align: :center
+            title "Map Editor"
 
             flow width: 1.0 do
               link I18n.t("menus.back"), width: 0.32 do
                 pop_state
               end
 
-              button "New Map", width: 1.0, width: 0.64
+              button "New Map", width: 0.64
             end
 
             label "Edit Map", width: 1.0, text_align: :center, text_size: 50

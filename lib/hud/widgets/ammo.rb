@@ -4,7 +4,7 @@ class IMICFPS
   class HUD
     class AmmoWidget < HUD::Widget
       def setup
-        @text = Text.new("", size: 64, font: MONOSPACE_FONT, shadow: true, shadow_color: Gosu::Color::BLACK)
+        @text = Text.new("", size: 64, font: MONOSPACE_FONT, border: true, border_color: Gosu::Color::BLACK)
         @background = Gosu::Color.new(0x88c64600)
       end
 
