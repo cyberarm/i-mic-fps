@@ -2,7 +2,7 @@
 
 class IMICFPS
   class Window < CyberarmEngine::Window
-    attr_accessor :number_of_vertices, :needs_cursor
+    attr_accessor :needs_cursor
     attr_reader :renderer, :scene, :config, :director, :console, :delta_time
 
     def setup
@@ -82,7 +82,6 @@ class IMICFPS
       @overlay.update
       SoundManager.update
 
-      @number_of_vertices = 0
       @delta_time = Gosu.milliseconds
     end
 

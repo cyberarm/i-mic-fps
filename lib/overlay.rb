@@ -38,8 +38,8 @@ class IMICFPS
       end
 
       if window.config.get(:debug_options, :stats)
-        create_slot "Vertices: #{formatted_number(window.number_of_vertices)}"
-        create_slot "Faces: #{formatted_number(window.number_of_vertices / 3)}"
+        create_slot "Vertices: #{formatted_number(window.renderer.opengl_renderer.number_of_vertices)}"
+        create_slot "Faces: #{formatted_number(window.renderer.opengl_renderer.number_of_vertices / 3)}"
       end
 
       if window.config.get(:debug_options, :boundingboxes)
