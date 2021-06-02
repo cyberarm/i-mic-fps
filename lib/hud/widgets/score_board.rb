@@ -9,7 +9,7 @@ class IMICFPS
         @text = CyberarmEngine::Text.new(
           "",
           size: 16,
-          x: Widget.margin, y: Widget.margin, z: 45,
+          x: Widget.horizontal_margin, y: Widget.vertical_margin, z: 45,
           border: true,
           border_color: Gosu::Color::BLACK,
           font: BOLD_SANS_FONT
@@ -23,7 +23,7 @@ class IMICFPS
       end
 
       def update
-        @text.x = window.width - (@text.markup_width + Widget.margin)
+        @text.x = window.width - (@text.markup_width + Widget.horizontal_margin)
       end
 
       def generate_random_data

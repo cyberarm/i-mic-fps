@@ -7,21 +7,37 @@ class IMICFPS
 
       # Widget margin from screen edge
       # or how much widget is pushed in
-      def self.margin
-        @@margin ||= 10
+      def self.vertical_margin
+        @@vertical_margin ||= 36
       end
 
-      def self.padding=(n)
-        @@padding = n
+      def self.vertical_margin=(n)
+        @@vertical_margin = n
+      end
+
+      def self.horizontal_margin
+        @@horizontal_margin ||= 10
+      end
+
+      def self.horizontal_margin=(n)
+        @@horizontal_margin = n
       end
 
       # Widget element padding
-      def self.padding
-        @@margin ||= 10
+      def self.vertical_padding
+        @@vertical_padding ||= 10
       end
 
-      def self.padding=(n)
-        @@padding = n
+      def self.vertical_padding=(n)
+        @@vertical_padding = n
+      end
+
+      def self.horizontal_padding
+        @@horizontal_padding ||= 10
+      end
+
+      def self.horizontal_padding=(n)
+        @@horizontal_padding = n
       end
 
       attr_reader :options

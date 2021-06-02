@@ -9,11 +9,11 @@ class IMICFPS
       end
 
       def draw
-        # Gosu.draw_rect(
-        #   @text.x - Widget.padding, @text.y - Widget.padding,
-        #   @text.width + Widget.padding * 2, @text.height + Widget.padding * 2,
-        #   @background
-        # )
+        Gosu.draw_rect(
+          @text.x - Widget.horizontal_padding, @text.y - Widget.vertical_padding,
+          @text.width + Widget.horizontal_padding * 2, @text.height + Widget.vertical_padding * 2,
+          @background
+        )
         @text.draw
       end
 
@@ -23,8 +23,8 @@ class IMICFPS
           @text.text = "#{random}/999"
         end
 
-        @text.x = window.width - (Widget.margin + @text.width + Widget.padding)
-        @text.y = window.height - (Widget.margin + @text.height + Widget.padding)
+        @text.x = window.width - (Widget.horizontal_margin + @text.width + Widget.horizontal_padding)
+        @text.y = window.height - (Widget.vertical_margin + @text.height + Widget.vertical_padding)
       end
     end
   end

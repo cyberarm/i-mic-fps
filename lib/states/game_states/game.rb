@@ -27,7 +27,7 @@ class IMICFPS
     def draw
       window.director.map.render(@camera)
 
-      @hud.draw
+      @hud.draw if window.config.get(:options, :hud)
     end
 
     def update

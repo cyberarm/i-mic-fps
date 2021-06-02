@@ -12,8 +12,8 @@ class IMICFPS
         return unless window.text_input
 
         Gosu.draw_rect(
-          @text.x - Widget.padding, @text.y - Widget.padding,
-          @text.width + Widget.padding * 2, @text.height + Widget.padding * 2,
+          @text.x - Widget.horizontal_padding, @text.y - Widget.horizontal_padding,
+          @text.width + Widget.vertical_padding * 2, @text.height + Widget.vertical_padding * 2,
           @background
         )
 
@@ -37,8 +37,8 @@ class IMICFPS
         end
 
         @text.text = text.to_s
-        @text.x = window.width / 2 - (Widget.margin + @text.width / 2 + Widget.padding)
-        @text.y = window.height - (Widget.margin + @text.height + Widget.padding)
+        @text.x = window.width / 2 - (Widget.horizontal_margin + @text.width / 2 + Widget.horizontal_padding)
+        @text.y = window.height - (Widget.vertical_margin + @text.height + Widget.vertical_padding)
       end
     end
   end

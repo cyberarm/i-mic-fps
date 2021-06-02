@@ -79,17 +79,6 @@ end
 
 if prevent_launch?[0]
   puts prevent_launch?[1]
-elsif ARGV.join.include?("--profile")
-  begin
-    require "ruby-prof"
-    RubyProf.start
-    IMICFPS::Window.new.show
-    result  = RubyProf.stop
-    printer = RubyProf::MultiPrinter.new(result)
-    printer.print(path: ".", profile: "profile", min_percent: 2)
-  rescue LoadError
-    puts "ruby-prof not installed!"
-  end
 else
   native = ARGV.join.include?("--native")
   fps_target = ARGV.first.to_i != 0 ? ARGV.first.to_i : 60
@@ -97,11 +86,29 @@ else
   window_height = native ? Gosu.screen_height : 720
   window_fullscreen = native ? true : false
 
-  IMICFPS::Window.new(
+  window = IMICFPS::Window.new(
     width: window_width,
     height: window_height,
     fullscreen: window_fullscreen,
     resizable: !window_fullscreen,
     update_interval: 1000.0 / fps_target
-  ).show
+  )
+
+  if ARGV.join.include?("--profile")
+    begin
+      require "ruby-prof"
+      RubyProf.start
+
+      window.show
+
+      result  = RubyProf.stop
+      printer = RubyProf::MultiPrinter.new(result)
+      printer.print(path: ".", profile: "profile", min_percent: 2)
+    rescue LoadError
+      puts "ruby-prof not installed!"
+      raise
+    end
+  else
+    window.show
+  end
 end

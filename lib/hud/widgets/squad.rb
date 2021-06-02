@@ -28,8 +28,8 @@ class IMICFPS
       def update
         @size = (window.width / @target_screen_width.to_f * @max_size).clamp(@min_size, @max_size)
 
-        @text.x = Widget.margin + @size + Widget.padding
-        @text.y = window.height - (Widget.margin + @text.height)
+        @text.x = Widget.horizontal_margin + @size + Widget.horizontal_padding
+        @text.y = window.height - (Widget.vertical_margin + @text.height)
       end
     end
   end

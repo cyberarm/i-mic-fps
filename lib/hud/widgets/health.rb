@@ -19,10 +19,10 @@ class IMICFPS
       def draw
         @text.draw
         fill_quad(
-          window.width / 2 - @width / 2, @spacer + Widget.margin, # TOP LEFT
-          window.width / 2 + @width / 2, @spacer + Widget.margin, # TOP RIGHT
-          window.width / 2 + @width / 2 - @slant, @spacer + Widget.margin + @height, # BOTTOM RIGHT
-          window.width / 2 - @width / 2 + @slant, @spacer + Widget.margin + @height, # BOTTOM LEFT
+          window.width / 2 - @width / 2, @spacer + Widget.vertical_margin, # TOP LEFT
+          window.width / 2 + @width / 2, @spacer + Widget.vertical_margin, # TOP RIGHT
+          window.width / 2 + @width / 2 - @slant, @spacer + Widget.vertical_margin + @height, # BOTTOM RIGHT
+          window.width / 2 - @width / 2 + @slant, @spacer + Widget.vertical_margin + @height, # BOTTOM LEFT
           @color
         )
 
@@ -31,10 +31,10 @@ class IMICFPS
 
         # Current Health
         fill_quad(
-          window.width / 2 - @width / 2, @spacer + Widget.margin, # TOP LEFT
-          (window.width / 2 - @width / 2) + @width * @health, @spacer + Widget.margin, # TOP RIGHT
-          bottom_right, @spacer + Widget.margin + @height, # BOTTOM RIGHT
-          window.width / 2 - @width / 2 + @slant, @spacer + Widget.margin + @height, # BOTTOM LEFT
+          window.width / 2 - @width / 2, @spacer + Widget.vertical_margin, # TOP LEFT
+          (window.width / 2 - @width / 2) + @width * @health, @spacer + Widget.vertical_margin, # TOP RIGHT
+          bottom_right, @spacer + Widget.vertical_margin + @height, # BOTTOM RIGHT
+          window.width / 2 - @width / 2 + @slant, @spacer + Widget.vertical_margin + @height, # BOTTOM LEFT
           @shield
         )
       end
@@ -43,7 +43,7 @@ class IMICFPS
         percentage = (@health * 100).round.to_s.rjust(3, "0")
         @text.text = "[Health #{percentage}%]"
         @text.x = window.width / 2 - @text.width / 2
-        @text.y = @spacer + Widget.margin + @height / 2 - @text.height / 2
+        @text.y = @spacer + Widget.vertical_margin + @height / 2 - @text.height / 2
 
         @health += 0.1 * window.dt
         @health = 0 if @health > 1.0
