@@ -19,7 +19,7 @@ class IMICFPS
       end
 
       def calculate_volume
-        volume = (SoundManager.sfx_volume - @initial_volume) * ratio
+        (SoundManager.sfx_volume - @initial_volume) * ratio
       end
 
       def update

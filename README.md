@@ -10,7 +10,7 @@ Creating a multiplayer first-person-shooter in pure Ruby; Using C extensions onl
 ![screenshot](https://raw.githubusercontent.com/cyberarm/i-mic-fps/master/screenshots/screenshot-game.png)
 
 ## Using
-Ruby 2.5+ interpeter with support for the Gosu game library C extension.
+Ruby 3.0+ interpeter with support for the Gosu game library C extension.
 * Clone or download this repo
 * `bundle install`
 * `bundle exec ruby i-mic-fps.rb [options]`

@@ -6,6 +6,8 @@ class IMICFPS
       @title = Text.new(IMICFPS::NAME, size: 100, z: 0, color: Gosu::Color.new(0xff000000), border: false, font: IMICFPS::BOLD_SANS_FONT)
       @logo = get_image("#{IMICFPS::GAME_ROOT_PATH}/static/logo.png")
 
+      @title_screen_sound = get_sample("#{IMICFPS::GAME_ROOT_PATH}/static/sounds/title_screen.ogg")
+
       @start_time = Gosu.milliseconds
       @time_to_live = 5_000
 
@@ -43,6 +45,8 @@ class IMICFPS
 
       # SoundManager.sound_effect(SoundEffect::FadeIn, sound: SoundManager.sound("base", :shield_regen), duration: 3_000.0)
       window.needs_cursor = false
+
+      @title_screen_sound_channel = @title_screen_sound.play(1.0)
     end
 
     def draw
@@ -88,6 +92,7 @@ class IMICFPS
     def button_down(id)
       super
 
+      @title_screen_sound_channel.stop
       push_state(MainMenu)
     end
   end
