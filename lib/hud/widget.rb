@@ -57,6 +57,20 @@ class IMICFPS
 
       def update
       end
+
+      def button_down(id)
+      end
+
+      def button_up(id)
+      end
+
+      def hijack_input!
+        $window.input_hijack = self
+      end
+
+      def release_input!
+        $window.input_hijack = nil
+      end
     end
   end
 end

@@ -69,6 +69,8 @@ class IMICFPS
       window.director.map.entities.each do |entity|
         entity.button_down(id) if defined?(entity.button_down)
       end
+
+      @hud.button_down(id)
     end
 
     def button_up(id)
@@ -81,6 +83,8 @@ class IMICFPS
       window.director.map.entities.each do |entity|
         entity.button_up(id) if defined?(entity.button_up)
       end
+
+      @hud.button_up(id)
     end
   end
 end

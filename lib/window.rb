@@ -53,6 +53,12 @@ class IMICFPS
       end
     end
 
+    def input_hijack=(hijacker)
+      @input_hijacker = hijacker
+
+      InputMapper.reset_keys
+    end
+
     def needs_cursor?
       false
     end
@@ -92,6 +98,8 @@ class IMICFPS
     def button_down(id)
       if @show_console
         @console.button_down(id)
+      elsif @input_hijacker
+        @input_hijacker.button_down(id)
       else
         super
       end
@@ -105,6 +113,8 @@ class IMICFPS
     def button_up(id)
       if @show_console
         @console.button_up(id)
+      elsif @input_hijacker
+        @input_hijacker.button_up(id)
       else
         super
       end

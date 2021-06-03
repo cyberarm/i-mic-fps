@@ -32,5 +32,13 @@ class IMICFPS
     def update
       @hud_elements.each(&:update)
     end
+
+    def button_down(id)
+      @hud_elements.each { |e| e.button_down(id) }
+    end
+
+    def button_up(id)
+      @hud_elements.each { |e| e.button_up(id) }
+    end
   end
 end

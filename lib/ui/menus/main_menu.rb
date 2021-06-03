@@ -40,14 +40,17 @@ Fallback <b>immediate mode renderer</b> will be used."
 (Linux Only) For MESA based drivers append <b>--mesa-override</b>
 as a commandline argument to override reported version."
         message += linux_mesa_message if RUBY_PLATFORM =~ /linux/ && gl_version.downcase.include?(" mesa ")
-        @old_gl_warning = Gosu::Image.from_markup(message, 24, align: :center, font: "")
+        @old_gl_warning = Text.new(message, size: 24, z: Float::INFINITY, border: true, border_color: Gosu::Color::BLACK)
       end
     end
 
     def draw
       super
 
-      @old_gl_warning&.draw(window.width / 2 - @old_gl_warning.width / 2, window.height - (@old_gl_warning.height + 10), Float::INFINITY)
+      @old_gl_warning&.x = window.width / 2 - @old_gl_warning.width / 2
+      @old_gl_warning&.y = window.height - (@old_gl_warning.height + 10)
+
+      @old_gl_warning&.draw
     end
   end
 end
