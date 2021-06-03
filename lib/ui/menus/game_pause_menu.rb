@@ -14,7 +14,7 @@ class IMICFPS
         push_state(SettingsMenu)
       end
 
-      link I18n.t("menus.leave") do
+      link I18n.t("menus.leave"), margin_top: 25 do
         push_state(MainMenu)
       end
     end

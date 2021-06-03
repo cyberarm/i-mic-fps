@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/cyberarm/cyberarm_engine
-  revision: 20970e5aa9fbcad6d4bf7d9b56cbd06ba5c53275
+  revision: 1b080f9fb99cc4ec696f32f00f28cbf89b40ed04
   specs:
-    cyberarm_engine (0.17.1)
+    cyberarm_engine (0.18.0)
       clipboard (~> 1.3.5)
       excon (~> 0.78.0)
       gosu (~> 1.1)
@@ -25,18 +25,18 @@ GEM
     concurrent-ruby (1.1.8)
     cri (2.1.0)
     excon (0.78.1)
-    gosu (1.1.0)
+    gosu (1.2.0)
     gosu_more_drawables (0.3.1)
-    i18n (1.8.8)
+    i18n (1.8.10)
       concurrent-ruby (~> 1.0)
-    mini_portile2 (2.5.1)
-    nokogiri (1.11.4)
+    mini_portile2 (2.5.3)
+    nokogiri (1.11.6)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
-    nokogiri (1.11.4-x64-mingw32)
+    nokogiri (1.11.6-x64-mingw32)
       racc (~> 1.4)
     ocra (1.3.11)
-    opengl-bindings (1.6.10)
+    opengl-bindings (1.6.11)
     racc (1.5.2)
     rake (13.0.3)
     rubyzip (2.3.0)

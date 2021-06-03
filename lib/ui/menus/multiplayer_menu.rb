@@ -12,7 +12,7 @@ class IMICFPS
       link "Profile" do
         push_state(MultiplayerProfileMenu)
       end
-      link I18n.t("menus.back") do
+      link I18n.t("menus.back"), margin_top: 25 do
         pop_state
       end
     end

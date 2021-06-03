@@ -66,7 +66,10 @@ class IMICFPS
             },
             active: {
               color: Gosu::Color.rgb(64, 128, 255),
-            }
+            },
+            disabled: {
+              color: Gosu::Color.rgb(175, 175, 175),
+            },
           },
           Button:
           {

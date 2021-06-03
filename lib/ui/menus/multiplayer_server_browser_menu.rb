@@ -39,12 +39,12 @@ class IMICFPS
             title "Server Browser"
 
             flow(width: 1.0) do
-              link I18n.t("menus.back"), width: 0.32 do
+              link I18n.t("menus.back"), width: 0.333 do
                 pop_state
               end
 
-              button "Host Game", width: 0.32
-              button "Direct Connect", width: 0.32
+              button "Host Game", width: 0.333
+              button "Direct Connect", width: 0.333
             end
           end
 
@@ -55,22 +55,22 @@ class IMICFPS
                 background i.even? ? 0x55000000 : 0x55ff5500
 
                 flow width: 0.1 do
-                  label game[:game_type], text_size: text_size
+                  label game[:game_type], text_size: text_size, text_wrap: :none, font: i.zero? ? BOLD_SANS_FONT : SANS_FONT
                 end
                 flow width: 0.3 do
-                  label game[:host], text_size: text_size
+                  label game[:host], text_size: text_size, text_wrap: :none, font: i.zero? ? BOLD_SANS_FONT : SANS_FONT
                 end
                 flow width: 0.3 do
-                  label game[:map], text_size: text_size
+                  label game[:map], text_size: text_size, text_wrap: :none, font: i.zero? ? BOLD_SANS_FONT : SANS_FONT
                 end
                 flow width: 0.1 do
-                  label game[:players], text_size: text_size
+                  label game[:players], text_size: text_size, text_wrap: :none, font: i.zero? ? BOLD_SANS_FONT : SANS_FONT
                 end
                 flow width: 0.1 do
-                  label game[:ping], text_size: text_size
+                  label game[:ping], text_size: text_size, text_wrap: :none, font: i.zero? ? BOLD_SANS_FONT : SANS_FONT
                 end
                 flow width: 0.1 do
-                  label game[:source], text_size: text_size
+                  label game[:source], text_size: text_size, text_wrap: :none, font: i.zero? ? BOLD_SANS_FONT : SANS_FONT
                 end
               end
             end

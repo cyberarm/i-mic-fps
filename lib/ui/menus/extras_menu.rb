@@ -13,7 +13,7 @@ class IMICFPS
         push_state(IMICFPS::MapEditorTool::MainMenu)
       end
 
-      link I18n.t("menus.back") do
+      link I18n.t("menus.back"), margin_top: 25 do
         pop_state
       end
     end

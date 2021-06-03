@@ -6,7 +6,7 @@ class IMICFPS
       title IMICFPS::NAME
 
       link I18n.t("menus.singleplayer") do
-        push_state(LevelSelectMenu)
+        push_state(SinglePlayerMenu)
       end
 
       link I18n.t("menus.multiplayer") do
@@ -21,7 +21,7 @@ class IMICFPS
         push_state(ExtrasMenu)
       end
 
-      link I18n.t("menus.quit") do
+      link I18n.t("menus.quit"), margin_top: 25 do
         window.close
       end
 

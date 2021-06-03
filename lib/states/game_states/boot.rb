@@ -88,11 +88,7 @@ class IMICFPS
     def button_down(id)
       super
 
-      if (id == Gosu::KbEscape) ||
-         ((id >= Gosu::GP_LEFT) && (id >= Gosu::GP_BUTTON_15)) ||
-         (id == Gosu::MsLeft)
-        push_state(MainMenu)
-      end
+      push_state(MainMenu)
     end
   end
 end

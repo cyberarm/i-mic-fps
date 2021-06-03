@@ -25,11 +25,7 @@ class IMICFPS
     end
 
     def insert_leaf(leaf)
-      @root = if @root
-                @root.insert_subtree(leaf)
-              else
-                leaf
-              end
+      @root = @root ? @root.insert_subtree(leaf) : leaf
     end
 
     def update(object, bounding_box)

@@ -94,7 +94,7 @@ class IMICFPS
         end
       end
 
-      check_box "Fullscreen", padding_top: 25, padding_bottom: 25
+      check_box "Fullscreen", margin_top: 25, margin_bottom: 25
 
       stack do
         longest_string = "Gamma Correction"

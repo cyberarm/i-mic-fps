@@ -11,12 +11,12 @@ class IMICFPS
           title "Profile"
 
           flow width: 1.0 do
-            link I18n.t("menus.back"), width: 0.32 do
+            link I18n.t("menus.back"), width: 0.333 do
               pop_state
             end
 
-            button "Edit Profile", width: 0.32
-            button "Log Out", width: 0.32
+            button "Edit Profile", width: 0.333
+            button "Log Out", width: 0.333
           end
 
           flow(width: 1.0, padding: 4) do
@@ -42,7 +42,7 @@ class IMICFPS
             end
 
             stack margin_left: 16 do
-              label "0.72"
+              label "0.75"
               label "21"
               label "28"
               label "14"
