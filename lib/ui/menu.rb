@@ -93,6 +93,8 @@ class IMICFPS
           }
         }
       )
+
+      SoundManager.play_playlist("base", "menus")
     end
 
     def draw

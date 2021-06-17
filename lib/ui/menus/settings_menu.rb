@@ -5,12 +5,18 @@ class IMICFPS
     include CommonMethods
 
     def self.set_defaults
-      if $window.config.get(:options, :audio, :volume_sound).nil?
-        $window.config[:options, :audio, :volume_sound]    = 1.0
+      if $window.config.get(:options, :audio, :volume_master).nil?
+        $window.config[:options, :audio, :volume_master]    = 1.0
       end
+
+      if $window.config.get(:options, :audio, :volume_sound_effects).nil?
+        $window.config[:options, :audio, :volume_sound_effects]    = 1.0
+      end
+
       if $window.config.get(:options, :audio, :volume_music).nil?
         $window.config[:options, :audio, :volume_music]    = 0.7
       end
+
       if $window.config.get(:options, :audio, :volume_dialogue).nil?
         $window.config[:options, :audio, :volume_dialogue] = 0.7
       end
@@ -77,6 +83,8 @@ class IMICFPS
       @page_container.clear do
         send(:"page_#{page}")
       end
+
+      @page_container.scroll_top = 0
     end
 
     def page_display
@@ -128,20 +136,28 @@ class IMICFPS
     def page_audio
       label "Audio", text_size: 50
       longest_string = "Dialogue".length
-      volumes = %i[sound music dialogue]
+      volumes = %i[master sound_effects music dialogue]
 
-      stack do
+      stack(width: 1.0) do
         volumes.each do |volume|
           config_value = window.config.get(:options, :audio, :"volume_#{volume}")
 
-          flow do
-            label volume.to_s.split("_").join(" ").capitalize.ljust(longest_string, " ")
-            instance_variable_set(:"@volume_#{volume}", slider(range: 0.0..1.0, value: config_value))
-            instance_variable_get(:"@volume_#{volume}").subscribe(:changed) do |_sender, value|
-              instance_variable_get(:"@volume_#{volume}_label").value = format("%03.2f%%", value * 100.0)
-              window.config[:options, :audio, :"volume_#{volume}"] = value
+          flow(width: 1.0, margin_bottom: 10) do
+            flow(width: 0.25) do
+              label volume.to_s.split("_").map(&:capitalize).join(" ").ljust(longest_string, " ")
             end
-            instance_variable_set(:"@volume_#{volume}_label", label(format("%03.2f%%", config_value * 100.0)))
+
+            flow(width: 0.5) do
+              instance_variable_set(:"@volume_#{volume}", slider(range: 0.0..1.0, value: config_value, width: 1.0))
+              instance_variable_get(:"@volume_#{volume}").subscribe(:changed) do |_sender, value|
+                instance_variable_get(:"@volume_#{volume}_label").value = format("%03.2f%%", value * 100.0)
+                window.config[:options, :audio, :"volume_#{volume}"] = value
+              end
+            end
+
+            flow(width: 0.25) do
+              instance_variable_set(:"@volume_#{volume}_label", label(format("%03.2f%%", config_value * 100.0)))
+            end
           end
         end
       end

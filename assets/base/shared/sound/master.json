@@ -1,0 +1,22 @@
+{
+  "playlists": {
+    "menus": [
+      "menu_background"
+    ],
+    "nighttime": [],
+    "daytime": []
+  },
+  "music": [
+    {
+      "name": "menu_background",
+      "path": "music/untitled-2-revised-extended_mixed.ogg"
+    }
+  ],
+  "sounds": [
+    {
+      "name": "shield_regen",
+      "type": "sfx",
+      "path": "sfx/shield_regen.wav"
+    }
+  ]
+}
