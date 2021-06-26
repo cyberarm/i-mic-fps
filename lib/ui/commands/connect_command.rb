@@ -2,7 +2,7 @@
 
 class IMICFPS
   class Commands
-    class ConnectCommand < Command
+    class ConnectCommand < CyberarmEngine::Console::Command
       def group
         :global
       end
@@ -15,7 +15,7 @@ class IMICFPS
       end
 
       def usage
-        "Connect to a server.\n#{Style.highlight('connect')} #{Style.notice('[example.com:56789]')}"
+        "Connect to a server.\n#{Console::Style.highlight('connect')} #{Style.notice('example.com[:56789]')}"
       end
     end
   end

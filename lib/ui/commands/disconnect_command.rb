@@ -2,7 +2,7 @@
 
 class IMICFPS
   class Commands
-    class DisconnectCommand < Command
+    class DisconnectCommand < CyberarmEngine::Console::Command
       def group
         :global
       end

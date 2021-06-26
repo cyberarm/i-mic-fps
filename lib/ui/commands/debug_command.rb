@@ -2,7 +2,7 @@
 
 class IMICFPS
   class Commands
-    class DebugCommand < Command
+    class DebugCommand < CyberarmEngine::Console::Command
       def group
         :global
       end

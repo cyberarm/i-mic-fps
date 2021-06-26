@@ -2,7 +2,7 @@
 
 class IMICFPS
   class Commands
-    class RendererInfoCommand < Command
+    class RendererInfoCommand < CyberarmEngine::Console::Command
       def group
         :global
       end
@@ -12,14 +12,14 @@ class IMICFPS
       end
 
       def handle(_arguments, console)
-        console.stdin("OpenGL Vendor:                  #{Style.notice(glGetString(GL_VENDOR))}")
-        console.stdin("OpenGL Renderer:                #{Style.notice(glGetString(GL_RENDERER))}")
-        console.stdin("OpenGL Version:                 #{Style.notice(glGetString(GL_VERSION))}")
-        console.stdin("OpenGL Shader Language Version: #{Style.notice(glGetString(GL_SHADING_LANGUAGE_VERSION))}")
+        console.stdin("OpenGL Vendor:                  #{Console::Style.notice(glGetString(GL_VENDOR))}")
+        console.stdin("OpenGL Renderer:                #{Console::Style.notice(glGetString(GL_RENDERER))}")
+        console.stdin("OpenGL Version:                 #{Console::Style.notice(glGetString(GL_VERSION))}")
+        console.stdin("OpenGL Shader Language Version: #{Console::Style.notice(glGetString(GL_SHADING_LANGUAGE_VERSION))}")
       end
 
       def usage
-        "#{Style.highlight('renderer_info')} #{Style.notice('Returns OpenGL renderer information')}"
+        "#{Console::Style.highlight('renderer_info')} #{Console::Style.notice('Returns OpenGL renderer information')}"
       end
     end
   end

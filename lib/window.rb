@@ -22,7 +22,8 @@ class IMICFPS
       @config = CyberarmEngine::ConfigFile.new(file: "#{IMICFPS::GAME_ROOT_PATH}/data/config.json")
       @show_console = false
       @console = Console.new
-      Commands::Command.setup
+      CyberarmEngine::Console::Command.setup
+      @console.stdin("=== #{IMICFPS::NAME} v#{IMICFPS::VERSION} (#{IMICFPS::RELEASE_NAME}) ===\n\n")
       SettingsMenu.set_defaults
 
       @renderer = Renderer.new
@@ -105,7 +106,7 @@ class IMICFPS
       end
 
       if id == Gosu::KbBacktick
-        @show_console ? @console.blur : @console.focus
+        @show_console ? @console.blur : @console.focus && InputMapper.reset_keys
         @show_console = !@show_console
       end
     end

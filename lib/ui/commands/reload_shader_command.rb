@@ -2,7 +2,7 @@
 
 class IMICFPS
   class Commands
-    class ReloadShaderCommand < Command
+    class ReloadShaderCommand < CyberarmEngine::Console::Command
       def group
         :reload_shader
       end
@@ -13,7 +13,7 @@ class IMICFPS
 
       def handle(arguments, console)
         if arguments.size > 2
-          console.stdin("to many arguments for #{Style.highlight(command.to_s)}, got #{Style.error(arguments.size)} expected #{Style.notice(1)}.")
+          console.stdin("to many arguments for #{Console::Style.highlight(command.to_s)}, got #{Console::Style.error(arguments.size)} expected #{Console::Style.notice(1)}.")
           return
         end
 
@@ -51,9 +51,9 @@ class IMICFPS
         string = $stdout.string
 
         if shader.compiled?
-          console.stdin("#{Style.notice('Successfully reloaded shader')}: #{shader.name}")
+          console.stdin("#{Console::Style.notice('Successfully reloaded shader')}: #{shader.name}")
         else
-          console.stdin(Style.error("Failed to reload #{shader.name}").to_s)
+          console.stdin(Console::Style.error("Failed to reload #{shader.name}").to_s)
           console.stdin(string)
         end
       ensure
@@ -62,7 +62,7 @@ class IMICFPS
       end
 
       def usage
-        "#{Style.highlight(command)} #{Style.notice('vertex_name [fragment_name]')}"
+        "#{Console::Style.highlight(command)} #{Console::Style.notice('vertex_name [fragment_name]')}"
       end
     end
   end
