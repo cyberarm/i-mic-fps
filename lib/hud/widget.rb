@@ -65,11 +65,11 @@ class IMICFPS
       end
 
       def hijack_input!
-        $window.input_hijack = self
+        CyberarmEngine::Window.instance.input_hijack = self
       end
 
       def release_input!
-        $window.input_hijack = nil
+        CyberarmEngine::Window.instance.input_hijack = nil
       end
     end
   end

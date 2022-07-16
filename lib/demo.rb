@@ -77,12 +77,12 @@ class IMICFPS
             when "up"
               input = InputMapper.get(data.last.to_sym)
               key = input.is_a?(Array) ? input.first : input
-              $window.current_state.button_up(key) if key
+              CyberarmEngine::Window.instance.current_state.button_up(key) if key
 
             when "down"
               input = InputMapper.get(data.last.to_sym)
               key = input.is_a?(Array) ? input.first : input
-              $window.current_state.button_down(key) if key
+              CyberarmEngine::Window.instance.current_state.button_down(key) if key
 
             when "mouse"
               @camera.orientation.z = data[1].to_f

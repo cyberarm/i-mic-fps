@@ -12,7 +12,7 @@ class IMICFPS
     end
 
     def map
-      $window.director.map
+      CyberarmEngine::Window.instance.director.map
     end
   end
 end

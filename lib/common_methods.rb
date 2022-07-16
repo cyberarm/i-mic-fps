@@ -7,7 +7,7 @@ class IMICFPS
 
   module CommonMethods
     def window
-      $window
+      CyberarmEngine::Window.instance
     end
 
     def delta_time

@@ -12,20 +12,20 @@ class IMICFPS
       end
 
       def set(key, value)
-        $window.config[:debug_options, key] = value
+        CyberarmEngine::Window.instance.config[:debug_options, key] = value
       end
 
       def get(key)
-        $window.config.get(:debug_options, key)
+        CyberarmEngine::Window.instance.config.get(:debug_options, key)
       end
 
       def setup
-        set(:boundingboxes, false) if $window.config.get(:debug_options, :boundingboxes).nil?
-        set(:wireframe, false) if $window.config.get(:debug_options, :wireframe).nil?
-        set(:stats, false) if $window.config.get(:debug_options, :stats).nil?
-        set(:skydome, true) if $window.config.get(:debug_options, :skydome).nil?
-        set(:use_shaders, true) if $window.config.get(:debug_options, :use_shaders).nil?
-        set(:opengl_error_panic, false) if $window.config.get(:debug_options, :opengl_error_panic).nil?
+        set(:boundingboxes, false) if CyberarmEngine::Window.instance.config.get(:debug_options, :boundingboxes).nil?
+        set(:wireframe, false) if CyberarmEngine::Window.instance.config.get(:debug_options, :wireframe).nil?
+        set(:stats, false) if CyberarmEngine::Window.instance.config.get(:debug_options, :stats).nil?
+        set(:skydome, true) if CyberarmEngine::Window.instance.config.get(:debug_options, :skydome).nil?
+        set(:use_shaders, true) if CyberarmEngine::Window.instance.config.get(:debug_options, :use_shaders).nil?
+        set(:opengl_error_panic, false) if CyberarmEngine::Window.instance.config.get(:debug_options, :opengl_error_panic).nil?
 
         subcommand(:boundingboxes, :boolean)
         subcommand(:wireframe, :boolean)

@@ -9,7 +9,7 @@ end
 class Window < Gosu::Window
   def initialize
     super(Gosu.screen_width, Gosu.screen_height, fullscreen: true)
-    $window = self
+    CyberarmEngine::Window.instance = self
     @size = 50
     @slope = 250
     @color_step = 10

@@ -19,12 +19,12 @@ class IMICFPS
 
         case arguments.last
         when "", nil
-          console.stdin("#{Console::Style.highlight('fps')}: #{$window.config.get(:options, :fps)}")
+          console.stdin("#{Console::Style.highlight('fps')}: #{CyberarmEngine::Window.instance.config.get(:options, :fps)}")
         when "on"
-          var = $window.config[:options, :fps] = true
+          var = CyberarmEngine::Window.instance.config[:options, :fps] = true
           console.stdin("fps => #{Console::Style.highlight(var)}")
         when "off"
-          var = $window.config[:options, :fps] = false
+          var = CyberarmEngine::Window.instance.config[:options, :fps] = false
           console.stdin("fps => #{Console::Style.highlight(var)}")
         else
           console.stdin("Invalid argument for #{Console::Style.highlight(command.to_s)}, got #{Console::Style.error(arguments.last)} expected #{Console::Style.notice('on')}, or #{Console::Style.notice('off')}.")

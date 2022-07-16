@@ -5,20 +5,20 @@ class IMICFPS
     include CommonMethods
 
     def self.set_defaults
-      if $window.config.get(:options, :audio, :volume_master).nil?
-        $window.config[:options, :audio, :volume_master]    = 1.0
+      if CyberarmEngine::Window.instance.config.get(:options, :audio, :volume_master).nil?
+        CyberarmEngine::Window.instance.config[:options, :audio, :volume_master]    = 1.0
       end
 
-      if $window.config.get(:options, :audio, :volume_sound_effects).nil?
-        $window.config[:options, :audio, :volume_sound_effects]    = 1.0
+      if CyberarmEngine::Window.instance.config.get(:options, :audio, :volume_sound_effects).nil?
+        CyberarmEngine::Window.instance.config[:options, :audio, :volume_sound_effects]    = 1.0
       end
 
-      if $window.config.get(:options, :audio, :volume_music).nil?
-        $window.config[:options, :audio, :volume_music]    = 0.7
+      if CyberarmEngine::Window.instance.config.get(:options, :audio, :volume_music).nil?
+        CyberarmEngine::Window.instance.config[:options, :audio, :volume_music]    = 0.7
       end
 
-      if $window.config.get(:options, :audio, :volume_dialogue).nil?
-        $window.config[:options, :audio, :volume_dialogue] = 0.7
+      if CyberarmEngine::Window.instance.config.get(:options, :audio, :volume_dialogue).nil?
+        CyberarmEngine::Window.instance.config[:options, :audio, :volume_dialogue] = 0.7
       end
     end
 

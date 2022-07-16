@@ -5,7 +5,7 @@ class IMICFPS
     attr_reader :camera, :entities, :lights
 
     def initialize
-      @camera = PerspectiveCamera.new(position: Vector.new, aspect_ratio: $window.aspect_ratio)
+      @camera = PerspectiveCamera.new(position: Vector.new, aspect_ratio: CyberarmEngine::Window.instance.aspect_ratio)
       @entities = []
       @lights = []
 

@@ -12,7 +12,7 @@ class IMICFPS
       end
 
       def setup
-        $window.config[:options, :hud] = true if $window.config.get(:options, :hud).nil?
+        CyberarmEngine::Window.instance.config[:options, :hud] = true if CyberarmEngine::Window.instance.config.get(:options, :hud).nil?
       end
 
       def handle(arguments, console)
@@ -23,12 +23,12 @@ class IMICFPS
 
         case arguments.last
         when "", nil
-          console.stdin("#{Console::Style.highlight(command.to_s)}: #{$window.config.get(:options, command)}")
+          console.stdin("#{Console::Style.highlight(command.to_s)}: #{CyberarmEngine::Window.instance.config.get(:options, command)}")
         when "on"
-          var = $window.config[:options, command] = true
+          var = CyberarmEngine::Window.instance.config[:options, command] = true
           console.stdin("#{command} => #{Console::Style.highlight(var)}")
         when "off"
-          var = $window.config[:options, command] = false
+          var = CyberarmEngine::Window.instance.config[:options, command] = false
           console.stdin("#{command} => #{Console::Style.highlight(var)}")
         else
           console.stdin("Invalid argument for #{Console::Style.highlight(command.to_s)}, got #{Console::Style.error(arguments.last)} expected #{Console::Style.notice('on')}, or #{Console::Style.notice('off')}.")

@@ -19,7 +19,7 @@ class IMICFPS
         return unless @text_input
 
         Gosu.draw_rect(
-          Widget.horizontal_margin, $window.height / 2 - (@text.height / 2 + Widget.horizontal_padding),
+          Widget.horizontal_margin, CyberarmEngine::Window.instance.height / 2 - (@text.height / 2 + Widget.horizontal_padding),
           @width - Widget.horizontal_padding * 2, @text.height + Widget.vertical_padding * 2,
           @background
         )
@@ -44,11 +44,11 @@ class IMICFPS
       def update
         @deliver_to_text.text = "#{@deliver_to}: "
         @deliver_to_text.x = Widget.horizontal_margin + Widget.horizontal_padding
-        @deliver_to_text.y = $window.height / 2 - (@text.height / 2)
+        @deliver_to_text.y = CyberarmEngine::Window.instance.height / 2 - (@text.height / 2)
 
         @text.text = @text_input&.text.to_s
         @text.x = Widget.horizontal_margin + Widget.horizontal_padding + @deliver_to_text.width
-        @text.y = $window.height / 2 - (@text.height / 2)
+        @text.y = CyberarmEngine::Window.instance.height / 2 - (@text.height / 2)
       end
 
       def button_down(id)
