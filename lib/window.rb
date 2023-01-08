@@ -27,7 +27,6 @@ class IMICFPS
       SettingsMenu.set_defaults
 
       @renderer = Renderer.new
-      preload_default_shaders
       @scene = TurnTableScene.new
       @overlay = Overlay.new
 
@@ -40,18 +39,6 @@ class IMICFPS
       push_state(CyberarmEngine::IntroState, forward: Boot)
 
       @delta_time = Gosu.milliseconds
-    end
-
-    def preload_default_shaders
-      shaders = %w[g_buffer lighting]
-      shaders.each do |shader|
-        Shader.new(
-          name: shader,
-          includes_dir: "shaders/include",
-          vertex: "shaders/vertex/#{shader}.glsl",
-          fragment: "shaders/fragment/#{shader}.glsl"
-        )
-      end
     end
 
     def input_hijack=(hijacker)
