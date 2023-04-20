@@ -11,7 +11,7 @@ class IMICFPS
     end
 
     def delta_time
-      (Gosu.milliseconds - window.delta_time) / 1000.0
+      window.delta_time
     end
 
     def button_down?(id)

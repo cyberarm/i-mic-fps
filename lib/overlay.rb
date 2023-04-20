@@ -21,6 +21,31 @@ class IMICFPS
       Gosu.draw_rect(2, 2, width - 4, (@text.height + 4) - 4, Gosu::Color.rgba(100, 100, 100, 100))
 
       @text.draw
+
+      sample_points = 256
+      frame_stats = CyberarmEngine::Stats.frames.select(&:complete?)
+      return if frame_stats.empty?
+
+      right_origin = CyberarmEngine::Vector.new(10, 128)
+      nodes = Array.new(sample_points) { [] }
+
+      slice = 0
+      frame_stats.each_slice((CyberarmEngine::Stats.max_frame_history / sample_points.to_f).ceil) do |bucket|
+        bucket.each do |frame|
+          nodes[slice] << frame.frame_timing.duration
+        end
+
+        slice += 1
+      end
+
+      points = []
+      nodes.each_with_index do |cluster, i|
+        break if cluster.empty?
+
+        points << CyberarmEngine::Vector.new(right_origin.x + 1 * i, right_origin.y - cluster.max)
+      end
+
+      Gosu.draw_path(points, Gosu::Color::WHITE, Float::INFINITY) if points.size > 1
     end
 
     def update
@@ -33,7 +58,7 @@ class IMICFPS
       if window.config.get(:options, :fps)
         create_slot "FPS: #{Gosu.fps}"
         if window.config.get(:debug_options, :stats)
-          create_slot "Frame time: #{(Gosu.milliseconds - window.delta_time).to_s.rjust(3, '0')}ms"
+          create_slot "Frame time: #{(window.delta_time * 1000).round.to_s}ms"
         end
       end
 

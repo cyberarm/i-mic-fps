@@ -29,7 +29,7 @@ class IMICFPS
 
       def update
         super
-        Publisher.instance.publish(:tick, Gosu.milliseconds - window.delta_time)
+        Publisher.instance.publish(:tick, window.delta_time)
 
         control_editor
 

@@ -37,8 +37,6 @@ class IMICFPS
       end
 
       push_state(CyberarmEngine::IntroState, forward: Boot)
-
-      @delta_time = Gosu.milliseconds
     end
 
     def input_hijack=(hijacker)
@@ -75,8 +73,6 @@ class IMICFPS
       @console.update if @show_console
       @overlay.update
       SoundManager.update
-
-      @delta_time = Gosu.milliseconds
     end
 
     def close

@@ -46,7 +46,7 @@ class IMICFPS
       def tick(delta_time)
         return unless @map
 
-        Publisher.instance.publish(:tick, delta_time * 1000.0)
+        Publisher.instance.publish(:tick, delta_time)
 
         @map.update
         @server&.update
