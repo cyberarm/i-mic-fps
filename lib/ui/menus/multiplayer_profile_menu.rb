@@ -25,30 +25,30 @@ class IMICFPS
             image "#{GAME_ROOT_PATH}/static/logo.png", width: 64
 
             stack do
-              label "[Clan TAG] Username", text_size: 36
-              label "\"Title Badge Thingy\""
+              tagline "[Clan TAG] Username", text_size: 36
+              tagline "\"Title Badge Thingy\""
             end
           end
 
-          flow(margin_top: 4) do
+          flow(margin_top: 4, width: 1.0) do
             stack do
-              label "Kiil/Death Ratio"
-              label "Kills"
-              label "Deaths"
-              label "Assists"
-              label "Buildings Destroyed"
-              label "Vehicles Destroyed"
-              label "Repair Points"
+              tagline "Kiil/Death Ratio"
+              tagline "Kills"
+              tagline "Deaths"
+              tagline "Assists"
+              tagline "Buildings Destroyed"
+              tagline "Vehicles Destroyed"
+              tagline "Repair Points"
             end
 
             stack margin_left: 16 do
-              label "0.75"
-              label "21"
-              label "28"
-              label "14"
-              label "111"
-              label "41"
-              label "4,451"
+              tagline "0.75"
+              tagline "21"
+              tagline "28"
+              tagline "14"
+              tagline "111"
+              tagline "41"
+              tagline "4,451"
             end
           end
         end

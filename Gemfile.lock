@@ -1,11 +1,9 @@
 GIT
   remote: https://github.com/cyberarm/cyberarm_engine
-  revision: 72037efc735089cf1ff4b56ec57eb793699b27c6
+  revision: 9694cc2270198005bc2388fc6dacddfbb9629f60
   specs:
-    cyberarm_engine (0.23.0)
-      excon (~> 0.88)
+    cyberarm_engine (0.24.4)
       gosu (~> 1.1)
-      gosu_more_drawables (~> 0.3)
 
 GIT
   remote: https://github.com/gosu/releasy.git
@@ -20,21 +18,20 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    concurrent-ruby (1.2.2)
+    concurrent-ruby (1.2.3)
     cri (2.1.0)
-    excon (0.99.0)
-    gosu (1.4.5)
-    gosu_more_drawables (0.3.1)
-    i18n (1.12.0)
+    excon (0.110.0)
+    gosu (1.4.6)
+    i18n (1.14.4)
       concurrent-ruby (~> 1.0)
-    mini_portile2 (2.8.1)
-    nokogiri (1.14.2)
-      mini_portile2 (~> 2.8.0)
+    mini_portile2 (2.8.5)
+    nokogiri (1.16.3)
+      mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     ocra (1.3.11)
-    opengl-bindings (1.6.13)
-    racc (1.6.2)
-    rake (13.0.6)
+    opengl-bindings (1.6.14)
+    racc (1.7.3)
+    rake (13.2.1)
     rubyzip (2.3.2)
 
 PLATFORMS

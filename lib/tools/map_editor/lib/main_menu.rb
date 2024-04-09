@@ -32,7 +32,7 @@ class IMICFPS
               button "New Map", width: 0.64
             end
 
-            label "Edit Map", width: 1.0, text_align: :center, text_size: 50
+            banner "Edit Map", width: 1.0, text_align: :center, text_size: 50
             flow(width: 1.0, height: 1.0) do
               @maps.each do |map|
                 button map.metadata.name do
